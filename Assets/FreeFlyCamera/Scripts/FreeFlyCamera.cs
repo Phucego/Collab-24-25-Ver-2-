@@ -101,6 +101,10 @@ public class FreeFlyCamera : MonoBehaviour
     {
         _initPosition = transform.position;
         _initRotation = transform.eulerAngles;
+
+        _wantedMode = CursorLockMode.None;
+        Cursor.visible = true;
+        _enableMovement = true;
     }
 
     private void OnEnable()
@@ -112,14 +116,18 @@ public class FreeFlyCamera : MonoBehaviour
     // Apply requested cursor state
     private void SetCursorState()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Cursor.lockState = _wantedMode = CursorLockMode.None;
-        }
-
-        if (Input.GetMouseButtonDown(0))
+        //Functions when the player hold down the RMB
+        if (Input.GetMouseButton(1))
         {
             _wantedMode = CursorLockMode.Locked;
+            _enableRotation = true;
+            _enableMovement = true;
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            _wantedMode = CursorLockMode.None;
+            _enableRotation = false;
+            
         }
 
         // Apply cursor state
