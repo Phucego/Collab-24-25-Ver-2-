@@ -221,7 +221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   center: {x: -0.08, y: 3.66, z: 1.74}
-  size: {x: 12.4, y: 5, z: 20}
+  size: {x: 12.6, y: 5, z: 19.6}
 --- !u!4 &227340081
 Transform:
   m_ObjectHideFlags: 0

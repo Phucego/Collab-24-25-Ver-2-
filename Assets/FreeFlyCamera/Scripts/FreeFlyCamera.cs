@@ -121,6 +121,16 @@ public class FreeFlyCamera : MonoBehaviour
         {
             _wantedMode = CursorLockMode.Locked;
         }
+        if (Input.GetMouseButtonDown(1))
+        {
+            _enableRotation = true;
+        }
+        //TODO: Disable rotation and make the cursor visible when release RMB
+        if (Input.GetMouseButtonUp(1)) 
+        {
+            _enableRotation = false;
+            Cursor.lockState = _wantedMode = CursorLockMode.None;
+        }
 
         // Apply cursor state
         Cursor.lockState = _wantedMode;
