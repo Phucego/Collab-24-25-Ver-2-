@@ -27,14 +27,17 @@ public class BuildingManager : MonoBehaviour
             }
 
         }
-
-
         //Take the middle point of the screen instead of the mouse pos
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
 
         if(Physics.Raycast(ray, out hit, Mathf.Infinity, placeableLayer))
         {
             pos = hit.point;    
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RotateObj();
         }
     }
     public void PlaceObject()
@@ -45,5 +48,10 @@ public class BuildingManager : MonoBehaviour
     public void SelectObject(int index)
     {
         pendingObj = Instantiate(gameObjects[index], pos, transform.rotation);
+    }
+
+    public void RotateObj()
+    {
+        pendingObj.transform.Rotate(Vector3.up, rotationAMT);
     }
 }

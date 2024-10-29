@@ -565,6 +565,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 464870995}
+  - component: {fileID: 464870996}
   m_Layer: 0
   m_Name: TowerSelectionManager
   m_TagString: Untagged
@@ -587,6 +588,19 @@ Transform:
   m_Father: {fileID: 1192606830}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &464870996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464870994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f39eaefc2b51374eb823057cedf54bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedObj: {fileID: 0}
 --- !u!1 &597401151
 GameObject:
   m_ObjectHideFlags: 0
@@ -736,7 +750,7 @@ MonoBehaviour:
   cam: {fileID: 597401153}
   towerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   selectedTower: {fileID: 0}
 --- !u!114 &597401158
 MonoBehaviour:
@@ -1241,7 +1255,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -834.9, y: 558.8}
+  m_AnchoredPosition: {x: -834.9, y: 497}
   m_SizeDelta: {x: 50, y: 30}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1430094445
@@ -1375,7 +1389,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -834.9, y: 693.4}
+  m_AnchoredPosition: {x: -834.9, y: 702}
   m_SizeDelta: {x: 50, y: 30}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1514644042
@@ -1752,7 +1766,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -834.9, y: 421.7}
+  m_AnchoredPosition: {x: -834.9, y: 270.7}
   m_SizeDelta: {x: 50, y: 30}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1665282585
