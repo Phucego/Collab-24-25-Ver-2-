@@ -4,8 +4,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Tower_DB", menuName = "Tower Data/Tower") ]
 public class TowerDataSO : ScriptableObject
 {
-    public string name;
-
-    public int hp;
-    
+    public int towerId;
+    public string towerName;
+    public int towerHp;
+    public GameObject towerPrefab;
 }
