@@ -4,10 +4,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EnemyData_DB", menuName = "Enemy/EnemyData")]
 public class BaseEnemySO : ScriptableObject
 {
-    public int health;
+    public new string name;
+    public string description;
+    public bool towerTarget = false;
+    public bool airborneType = false;
+
     public int maxHealth;
-    
-    public int moveSpeed;
-    
+    public float moveSpeed;
     
 }
