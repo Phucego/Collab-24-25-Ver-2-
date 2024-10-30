@@ -479,6 +479,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!108 &281185021
 Light:
   m_ObjectHideFlags: 0
@@ -709,6 +720,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    quality: 3
+    frameInfluence: 0.1
+    jitterScale: 1
+    mipBias: 0
+    varianceClampScale: 0.9
+    contrastAdaptiveSharpening: 0
 --- !u!114 &597401156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -925,6 +968,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1296733997}
   - {fileID: 464870995}
   - {fileID: 2108838502}
   - {fileID: 227340081}
@@ -1008,6 +1052,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1226386277}
   m_CullTransparentMesh: 1
+--- !u!1 &1296733996
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1296733997}
+  - component: {fileID: 1296733998}
+  m_Layer: 0
+  m_Name: PlacementCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1296733997
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296733996}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 8.221081, y: 2.911224, z: -5.926792}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1192606830}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1296733998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296733996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f1d85c1131c5d44b9fe8bff1e818d74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1520183727
 GameObject:
   m_ObjectHideFlags: 0
@@ -1158,7 +1246,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58ebf4ebcbaac644fba0b31d1e6daf1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LevelDataSO: {fileID: 11400000, guid: a1cba5178a06a7742968ab20651c8297, type: 2}
+  m_LevelDataSO: {fileID: 11400000, guid: 29ec557f4ade41d4b8504af0b33bcbc5, type: 2}
   m_TestEnemy: {fileID: 6789797728904536780, guid: 211999fe03067194fb9520881e61159d, type: 3}
 --- !u!1 &1901617698
 GameObject:
@@ -1507,7 +1595,12 @@ MonoBehaviour:
   pendingObj: {fileID: 0}
   m_SpawnTowerButtonPrefab: {fileID: 6632295204436862685, guid: 8b9c33699615b7a4fbbf6f2f565190cc, type: 3}
   m_SpawnTowerButtonParent: {fileID: 929175305}
+  placementMats:
+  - {fileID: 2100000, guid: 0725356c37523d64c89066305ad10b22, type: 2}
+  - {fileID: 2100000, guid: 427b618baf3b85a44900f01c0efd1f17, type: 2}
+  - {fileID: 2100000, guid: 264303201f8d5d2419fc53f8cd9ca71f, type: 2}
   rotationAMT: 45
   placeableLayer:
     serializedVersion: 2
     m_Bits: 256
+  canPlace: 1

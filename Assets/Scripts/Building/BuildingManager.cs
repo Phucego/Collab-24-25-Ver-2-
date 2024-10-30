@@ -8,7 +8,7 @@ public class BuildingManager : MonoBehaviour
     public GameObject pendingObj;
     [SerializeField] private GameObject m_SpawnTowerButtonPrefab;
     [SerializeField] private Transform m_SpawnTowerButtonParent;
-
+    [SerializeField] private Material[] placementMats;
     public float rotationAMT;
     public delegate void OnCountCompleted(int i);
     public OnCountCompleted onCountCompleted;
@@ -16,7 +16,9 @@ public class BuildingManager : MonoBehaviour
     private Vector3 pos;
     RaycastHit hit;
     [SerializeField] private LayerMask placeableLayer;
-
+    
+    public bool canPlace = true;
+    
     private void Start()
     {
         for(int i = 0; i < LevelManager.instance.LevelDataSO.towerData.Length; i++)
@@ -26,7 +28,7 @@ public class BuildingManager : MonoBehaviour
             go.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Tower_" + count;
             go.GetComponent<Button>().onClick.AddListener(() =>
             {
-                Debug.Log(count);
+                
                 SelectObject(LevelManager.instance.LevelDataSO.towerData[count].towerPrefab);
             });
         }
@@ -53,12 +55,12 @@ public class BuildingManager : MonoBehaviour
         {
             pendingObj.transform.position = pos;
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && canPlace)
             {
                 PlaceObject();
 
             }
-
+            MaterialUpdate();
         }
         //Take the middle point of the screen instead of the mouse pos
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
@@ -72,19 +74,35 @@ public class BuildingManager : MonoBehaviour
         {
             RotateObj();
         }
+
+   
     }
     public void PlaceObject()
     {
+        pendingObj.GetComponent<MeshRenderer>().material = placementMats[2];
         pendingObj = null; 
     }
 
-    public void SelectObject(/*int index*/ GameObject prefab)
+    public void SelectObject(GameObject prefab)
     {
-        pendingObj = Instantiate(/*gameobjects[index]*/prefab, pos, transform.rotation);
+        pendingObj = Instantiate(prefab, pos, transform.rotation);
     }
 
     public void RotateObj()
     {
         pendingObj.transform.Rotate(Vector3.up, rotationAMT);
+    }
+
+    void MaterialUpdate()
+    {
+        if(canPlace)
+        {
+            pendingObj.GetComponent<MeshRenderer>().material = placementMats[0];
+        }
+        else
+        {
+            canPlace = false;
+            pendingObj.GetComponent<MeshRenderer>().material = placementMats[1];
+        }
     }
 }
