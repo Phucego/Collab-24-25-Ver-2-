@@ -15,7 +15,6 @@ MonoBehaviour:
   color: {r: 0.82906425, g: 0.32452828, b: 1, a: 1}
   name: Peon
   description: Just a starting enemy.
-  towerTarget: 0
-  airborneType: 0
+  type: 00000000
   maxHealth: 100
   maxSpeed: 10
