@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d848d119cef2d05478e47e5986df311c, type: 3}
   m_Name: Peon
   m_EditorClassIdentifier: 
+  color: {r: 0.82906425, g: 0.32452828, b: 1, a: 1}
   name: Peon
   description: Just a starting enemy.
   towerTarget: 0
   airborneType: 0
   maxHealth: 100
-  moveSpeed: 10
+  maxSpeed: 10
