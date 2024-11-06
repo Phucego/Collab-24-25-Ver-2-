@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Selectable
+  - Enemy
+  - Tower
+  - Projectile
   layers:
   - Default
   - TransparentFX
@@ -13,8 +16,8 @@ TagManager:
   - Water
   - UI
   - Tower
-  - 
-  - 
+  - Enemy
+  - TowerProjectile
   - 
   - 
   - 
