@@ -16,7 +16,10 @@ public class BuildingManager : MonoBehaviour
     private Vector3 pos;
     RaycastHit hit;
     [SerializeField] private LayerMask placeableLayer;
-    
+    [SerializeField] private LayerMask otherLayer;
+ 
+    public List<Vector3> placedTowers = new List<Vector3>();       
+    public float snapHeight = 1.5f;
     public bool canPlace = true;
     
     private void Start()
@@ -64,22 +67,27 @@ public class BuildingManager : MonoBehaviour
         }
         //Take the middle point of the screen instead of the mouse pos
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-
-        if(Physics.Raycast(ray, out hit, Mathf.Infinity, placeableLayer))
+        
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, placeableLayer) && !IsOccupied())
         {
-            pos = hit.point;    
+            
+            canPlace = true;
+            pos = hit.point + Vector3.up * snapHeight;
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        else if (Physics.Raycast(ray, out hit, Mathf.Infinity, otherLayer))
         {
-            RotateObj();
+            
+            canPlace = false;
+            pos = hit.point + Vector3.up * snapHeight;
         }
-
-   
+        
+       
     }
     public void PlaceObject()
     {
         pendingObj.GetComponent<MeshRenderer>().material = placementMats[2];
+        placedTowers.Add(pos);
         pendingObj = null; 
     }
 
@@ -88,13 +96,10 @@ public class BuildingManager : MonoBehaviour
         pendingObj = Instantiate(prefab, pos, transform.rotation);
     }
 
-    public void RotateObj()
-    {
-        pendingObj.transform.Rotate(Vector3.up, rotationAMT);
-    }
-
-    void MaterialUpdate()
-    {
+   void MaterialUpdate()
+   {
+        //Placement materials order:
+        //0 = green, 1 = red, 2 = default
         if(canPlace)
         {
             pendingObj.GetComponent<MeshRenderer>().material = placementMats[0];
@@ -104,5 +109,18 @@ public class BuildingManager : MonoBehaviour
             canPlace = false;
             pendingObj.GetComponent<MeshRenderer>().material = placementMats[1];
         }
+   }
+
+    bool IsOccupied()
+    {
+        // Check if a tower is already placed at the given position
+        foreach (Vector3 towerPosition in placedTowers)
+        {
+            if (Vector3.Distance(towerPosition, pos) < 1f)  // Tolerance for matching positions
+            {
+                return canPlace;  
+            }
+        }
+        return canPlace = false;  
     }
 }
