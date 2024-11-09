@@ -28,9 +28,10 @@ public class BuildingManager : MonoBehaviour
         //TODO: Spawning buttons on the screen based on the number of towers put in the level data
         for (int i = 0; i < LevelManager.instance.LevelDataSO.towerData.Length; i++)
         {
+            
             int count = i;
             GameObject go = Instantiate(m_SpawnTowerButtonPrefab, m_SpawnTowerButtonParent);
-            go.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Tower_" + count;
+            go.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = LevelManager.instance.LevelDataSO.towerData[count].towerPrefab.name;
             go.GetComponent<Button>().onClick.AddListener(() =>
             {
                 SelectObject(LevelManager.instance.LevelDataSO.towerData[count].towerPrefab);
@@ -46,11 +47,11 @@ public class BuildingManager : MonoBehaviour
         StartCoroutine(CheckUpdate(UpdateCompleted));
     }*/
 
-    private IEnumerator CheckUpdate(OnCountCompleted onCompleted)
+    /*private IEnumerator CheckUpdate(OnCountCompleted onCompleted)
     {
         yield return new WaitForSeconds(5);
         onCompleted?.Invoke(3);
-    }
+    }*/
 
     // Update is called once per frame
     void Update()
