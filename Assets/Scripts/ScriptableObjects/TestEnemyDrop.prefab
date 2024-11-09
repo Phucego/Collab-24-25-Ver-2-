@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7882684543365242208}
   - component: {fileID: 1027936624033913506}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: TestEnemyDrop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
