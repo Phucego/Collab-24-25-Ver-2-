@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scripts/Building.meta
 guid: 2e66d5b00b8b4284ba74473776149c0a
+========
+guid: 8e7e8f5a82a3a134e91c54efd2274ea9
+>>>>>>>> HolColLol:Assets/TextMesh Pro/Documentation.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
