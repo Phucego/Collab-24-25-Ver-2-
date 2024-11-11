@@ -1201,9 +1201,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 653c1d62f9f98cb4e9fd0062c5f29d1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LevelDataSO: {fileID: 11400000, guid: b886d4f09e9c7dc4cac46a4158e5e167, type: 2}
-  m_TestEnemy: {fileID: 6789797728904536780, guid: 211999fe03067194fb9520881e61159d, type: 3}
-  score: 0
+  m_LevelDataSO: {fileID: 11400000, guid: a258b7dcfc8dc0b4087de692b285c50a, type: 2}
+  m_TestEnemy: {fileID: 0}
 --- !u!1 &1901617698
 GameObject:
   m_ObjectHideFlags: 0

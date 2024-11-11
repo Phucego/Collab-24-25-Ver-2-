@@ -25,6 +25,7 @@ public class BuildingManager : MonoBehaviour
 
     private void Start()
     {
+        
         //TODO: Spawning buttons on the screen based on the number of towers put in the level data
         for (int i = 0; i < LevelManager.instance.LevelDataSO.towerData.Length; i++)
         {
@@ -56,7 +57,7 @@ public class BuildingManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (pendingObj != null)
+         if (pendingObj != null)
         {
             pendingObj.transform.position = pos;
 

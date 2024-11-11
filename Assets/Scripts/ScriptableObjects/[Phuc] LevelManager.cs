@@ -6,7 +6,7 @@ public class LevelManager : MonoBehaviour
 {
     
     public static LevelManager instance;
-    [SerializeField] private LevelDataSO m_LevelDataSO;
+    public LevelDataSO m_LevelDataSO;
     public LevelDataSO LevelDataSO => m_LevelDataSO;
     [SerializeField] private GameObject m_TestEnemy;
 

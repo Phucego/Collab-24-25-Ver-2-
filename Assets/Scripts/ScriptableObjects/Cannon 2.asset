@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TowerType: 0
   TargetType: 
-  towerPrefab: {fileID: 919132149155446097, guid: 73799ab37de61ee4b9046bfd09d3d0bf, type: 3}
+  towerPrefab: {fileID: 2936294135489644934, guid: 8f0df617bb6697a4891ad047c4126e1f, type: 3}
   Name: Cannon
   Damage: 2
   Health: 10
