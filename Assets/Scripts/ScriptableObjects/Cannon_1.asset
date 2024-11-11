@@ -21,4 +21,7 @@ MonoBehaviour:
   Radius: 3123
   FireRate: 123
   ProjectileSpeed: 123
+  towerLayer:
+    serializedVersion: 2
+    m_Bits: 8
   listUpgrades: []

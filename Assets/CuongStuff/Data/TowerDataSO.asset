@@ -14,9 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TowerType: 0
   TargetType: 00000000
+  towerPrefab: {fileID: 0}
+  Name: 
   Damage: 10
   Health: 100
   Radius: 20
   FireRate: 1
   ProjectileSpeed: 20
+  towerLayer:
+    serializedVersion: 2
+    m_Bits: 8
   listUpgrades: []

@@ -32,6 +32,6 @@ public class TowerDataSO : ScriptableObject
     public float Radius;
     public float FireRate;
     public float ProjectileSpeed;
-
+   
     public List<UpgradeDataSO> listUpgrades;
 }
