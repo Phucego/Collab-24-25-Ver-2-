@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 138271943}
   - component: {fileID: 138271942}
   m_Layer: 7
-  m_Name: Ground (3)
+  m_Name: Unplaceable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -310,7 +310,7 @@ GameObject:
   - component: {fileID: 147712929}
   - component: {fileID: 147712928}
   m_Layer: 7
-  m_Name: Ground (1)
+  m_Name: Unplaceable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1064,7 +1064,7 @@ GameObject:
   - component: {fileID: 1520183730}
   - component: {fileID: 1520183729}
   m_Layer: 7
-  m_Name: Ground (2)
+  m_Name: Unplaceable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1366,7 +1366,7 @@ GameObject:
   - component: {fileID: 2096939202}
   - component: {fileID: 2096939201}
   m_Layer: 8
-  m_Name: Ground
+  m_Name: Placeable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
