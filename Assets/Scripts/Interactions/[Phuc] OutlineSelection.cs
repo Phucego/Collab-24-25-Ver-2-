@@ -28,7 +28,7 @@ public class OutlineSelection : MonoBehaviour
         if (!EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out raycastHit)) 
         {
             highlight = raycastHit.transform;
-            if (highlight.CompareTag("Selectable") && highlight != selection)
+            if (highlight.CompareTag("Tower") && highlight != selection)
             {
                 if (highlight.gameObject.GetComponent<Outline>() != null)
                 {

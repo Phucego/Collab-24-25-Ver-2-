@@ -531,9 +531,10 @@ GameObject:
   - component: {fileID: -7421987276511047522}
   - component: {fileID: -250036890470938514}
   - component: {fileID: -7461215419841710554}
+  - component: {fileID: -4926793323884497211}
   m_Layer: 3
   m_Name: TowerTemplate
-  m_TagString: Selectable
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -705,6 +706,31 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-4926793323884497211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6284695328660236746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b24c6721259696247a15ee4f5f5b9e7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TowerData: {fileID: 11400000, guid: 09002bc3f1993e14a8e70da876ee36f8, type: 2}
+  MainPoint: {fileID: 0}
+  Head: {fileID: 8918866362857270056}
+  AimPoint: {fileID: 3519418215674882475}
+  PrefabProjectile: []
+  TowerType: 0
+  TargetType: 
+  Damage: 10
+  Health: 100
+  Radius: 3.5
+  FireRate: 1
+  ProjectileSpeed: 1
+  EnemyList: []
 --- !u!1 &7260848107440342452
 GameObject:
   m_ObjectHideFlags: 0
