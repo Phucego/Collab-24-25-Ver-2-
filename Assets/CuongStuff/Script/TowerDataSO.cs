@@ -11,7 +11,7 @@ public enum TowerType
 public enum TargetType
 {
     Grounded,
-    Flying,
+    Airborne,
     Invisible
 }
 
@@ -25,13 +25,14 @@ public class TowerDataSO : ScriptableObject
     // damage, health, range, AOE
     public TowerType TowerType;
     public List<TargetType> TargetType;
-    public GameObject towerPrefab;
-    public string Name;
     public float Damage;
     public float Health;
     public float Radius;
     public float FireRate;
     public float ProjectileSpeed;
-   
+    [Range(0,100)] public float CritChance;
+    public float CritAmplifier = 1f;
+    public int Cost;
+
     public List<UpgradeDataSO> listUpgrades;
 }

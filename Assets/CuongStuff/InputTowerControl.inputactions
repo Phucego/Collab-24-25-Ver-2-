@@ -1,0 +1,34 @@
+{
+    "name": "InputTowerControl",
+    "maps": [
+        {
+            "name": "Tower",
+            "id": "ae77c4b0-c4e6-40c1-ae10-a91d9901e9a7",
+            "actions": [
+                {
+                    "name": "UpgradeTower",
+                    "type": "Button",
+                    "id": "50934262-b2c5-4aac-9d3e-972f8ed2692f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "a14a5723-eb30-4eb9-89a2-4a57c5f1e23a",
+                    "path": "<Keyboard>/#(F)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UpgradeTower",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TowerController : MonoBehaviour
@@ -13,6 +14,7 @@ public class TowerController : MonoBehaviour
     [SerializeField] protected GameObject[] PrefabProjectile;
 
     [Header("Tower Stats")]
+    [SerializeField] protected int Level = 0;
     [SerializeField] protected TowerType TowerType;
     [SerializeField] protected List<TargetType> TargetType;
     [SerializeField] protected float Damage;
@@ -20,6 +22,8 @@ public class TowerController : MonoBehaviour
     [SerializeField] protected float Radius;
     [SerializeField] protected float FireRate;
     [SerializeField] protected float ProjectileSpeed;
+    [SerializeField] [Range(0, 100)] protected float CritChance;
+    [SerializeField] protected float CritAmp;
 
     [Header("Tower Test")]
     [SerializeField] protected List<GameObject> EnemyList = new List<GameObject>();
@@ -32,14 +36,16 @@ public class TowerController : MonoBehaviour
     protected LayerMask layerMask;
     protected float TimeBeforeFire = 0f;
 
-
-    void Start()
-    {  
+    private void Awake()
+    {
         MainPoint = GameObject.Find("MainPoint");
         layerMask = LayerMask.GetMask("Enemy");
         InteractScript = GetComponent<TowerInteract>();
         RadiusDetector = GetComponent<SphereCollider>();
+    }
 
+    private void OnEnable()
+    {
         DeepCopyData();
         RadiusDetector.radius = Radius;
         InteractScript.ChangeStat(UpgradeType.Radius, Radius);
@@ -54,6 +60,8 @@ public class TowerController : MonoBehaviour
         Radius = TowerData.Radius;
         FireRate = TowerData.FireRate;
         ProjectileSpeed = TowerData.ProjectileSpeed;
+        CritChance = TowerData.CritChance;
+        CritAmp = TowerData.CritAmplifier;
     }
 
     // Update is called once per frame
@@ -142,6 +150,37 @@ public class TowerController : MonoBehaviour
                 
 
         }
+    }
+
+    public void UpgradeStat()
+    {
+        if (Level >= TowerData.listUpgrades.Count)
+            return;
+
+        Level += 1;
+        UpgradeDataSO Data = TowerData.listUpgrades[Level-1];
+        foreach (var item in Data.upgradeDatas)
+        {
+            switch (item.upgradeType)
+            {
+                case UpgradeType.Health:
+                    Health += item.value;
+                    break;
+                case UpgradeType.Damage:
+                    Damage += item.value;
+                    break;
+                case UpgradeType.FireRate:
+                    FireRate += item.value;
+                    break;
+                case UpgradeType.Radius:
+                    Radius += item.value;
+                    break;
+                case UpgradeType.AOE:
+                    // No AOE
+                    break;
+            }
+        }
+     
     }
 
     private void OnTriggerEnter(Collider target)
