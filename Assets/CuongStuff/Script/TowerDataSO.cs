@@ -21,8 +21,7 @@ public class TowerBaseStat { }
 [CreateAssetMenu(fileName = "TowerDataSO", menuName = "Data/TowerDataSO")]
 public class TowerDataSO : ScriptableObject
 {
-    // attributes of tower
-    // damage, health, range, AOE
+    public GameObject towerPrefab;
     public TowerType TowerType;
     public List<TargetType> TargetType;
     public float Damage;
