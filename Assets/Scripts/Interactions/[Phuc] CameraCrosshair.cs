@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -10,7 +11,11 @@ public class CameraCrosshair : MonoBehaviour
     public LayerMask towerLayer;
 
     [SerializeField] private TowerLogic selectedTower;
-    
+
+    private void Start()
+    {
+        cam = Camera.main;
+    }
     // Update is called once per frame
     void Update()
     {
