@@ -101,6 +101,9 @@ public class FreeFlyCamera : MonoBehaviour
     {
         _initPosition = transform.position;
         _initRotation = transform.eulerAngles;
+
+
+        _wantedMode = CursorLockMode.None;
     }
 
     private void OnEnable()
