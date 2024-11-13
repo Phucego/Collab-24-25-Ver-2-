@@ -33,6 +33,6 @@ public class TowerDataSO : ScriptableObject
     [Range(0,100)] public float CritChance;
     public float CritAmplifier = 1f;
     public int Cost;
-
+    public GameObject towerPrefab;
     public List<UpgradeDataSO> listUpgrades;
 }
