@@ -8,13 +8,16 @@ public enum UpgradeType
     Damage,
     Radius,
     FireRate,
-    AOE
+    AOE,
+    CritChance,
+    CritAmplifier,
 }
 
 [CreateAssetMenu(fileName = "UpgradeDataSO", menuName = "Data/UpgradeDataSO")]
 public class UpgradeDataSO : ScriptableObject
 {
     public string upgradeName;
+    public int Cost;
     public List<UpgradeData> upgradeDatas;
 }
 

@@ -2,17 +2,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.InputSystem;
 
 public class TowerInteract : MonoBehaviour, I_Interactable
 {
+    public InputActionAsset towerAction;
     [SerializeField] public GameObject _RadiusSphere;
     [SerializeField] public GameObject _CanvasInfo;
+
+    private TowerController _Controller;
+    private InputActionMap mapAction;
+    private InputAction upgradeAction, sellAction;
     private float Radius;
     private Camera MainCam;
-    // Start is called before the first frame update
-    void Start()
+
+    void Awake()
     {
+        _Controller = GetComponent<TowerController>();
+        mapAction = towerAction.FindActionMap("Tower");
+        upgradeAction = mapAction.FindAction("UpgradeTower"); 
         //_Radius = GameObject.Find("RadiusDetection");
+    }
+
+    void OnEnable()
+    {
+        upgradeAction.Enable();
+        upgradeAction.performed += Upgrade;
+    }
+
+    void OnDisable()
+    {
+        upgradeAction.Disable();
+        upgradeAction.performed -= Upgrade;
+    }
+
+    public void Upgrade(InputAction.CallbackContext input)
+    {
+        if (_CanvasInfo.activeInHierarchy)
+        {
+            _Controller.UpgradeStat();
+        }
     }
 
     // Update is called once per frame

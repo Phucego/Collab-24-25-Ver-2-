@@ -19,4 +19,9 @@ MonoBehaviour:
   Radius: 20
   FireRate: 1
   ProjectileSpeed: 20
-  listUpgrades: []
+  Cost: 0
+  listUpgrades:
+  - {fileID: 11400000, guid: ba2f103e2f3ecd842a9bb7d620b36422, type: 2}
+  - {fileID: 11400000, guid: bd8b7daecd0584b4ba8fcbb3f1b3f290, type: 2}
+  - {fileID: 11400000, guid: 1d1b5c4b088d3e54a9971b6f590be905, type: 2}
+  - {fileID: 11400000, guid: 1e43ed94fb7365d4a8809cfee62ed45b, type: 2}

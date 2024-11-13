@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 330585546}
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
-  - component: {fileID: 330585548}
+  - component: {fileID: 330585551}
   - component: {fileID: 330585549}
   - component: {fileID: 330585550}
   m_Layer: 0
@@ -325,32 +325,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 26.462, y: 216.687, z: 0}
---- !u!114 &330585548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 330585543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfe01322be59b20419fac17840d4fc9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _active: 1
-  _enableRotation: 0
-  _mouseSense: 1.8
-  _enableTranslation: 1
-  _translationSpeed: 55
-  _enableMovement: 1
-  _movementSpeed: 20
-  _boostedSpeed: 50
-  _boostSpeed: 304
-  _moveUp: 101
-  _moveDown: 113
-  _enableSpeedAcceleration: 0
-  _speedAccelerationFactor: 1.5
-  _initPositonButton: 114
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -407,6 +381,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92534d25a3e2b4c4db894848ddee4511, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &330585551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfe01322be59b20419fac17840d4fc9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _active: 1
+  _enableRotation: 1
+  _mouseSense: 1.8
+  _enableTranslation: 1
+  _translationSpeed: 55
+  _enableMovement: 1
+  _movementSpeed: 10
+  _boostedSpeed: 50
+  _boostSpeed: 304
+  _moveUp: 101
+  _moveDown: 113
+  _enableSpeedAcceleration: 1
+  _speedAccelerationFactor: 1.5
+  _initPositonButton: 114
 --- !u!1 &366569272
 GameObject:
   m_ObjectHideFlags: 0
@@ -2627,6 +2627,7 @@ MonoBehaviour:
   AimPoint: {fileID: 878957150}
   PrefabProjectile:
   - {fileID: 4232055802055314387, guid: ffa192c45b8e6aa46bf07aea73153cbf, type: 3}
+  Level: 0
   TowerType: 0
   TargetType: 00000000
   Damage: 20
@@ -2634,6 +2635,8 @@ MonoBehaviour:
   Radius: 20
   FireRate: 2
   ProjectileSpeed: 0
+  CritChance: 0
+  CritAmp: 0
   EnemyList: []
 --- !u!135 &8442658619390415016
 SphereCollider:
@@ -2734,5 +2737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32ad67faf4ee3c84a8fa8af30c1c35b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  towerAction: {fileID: -944628639613478452, guid: 4bc3b4961bfce7a4a8e2125a805e98af,
+    type: 3}
   _RadiusSphere: {fileID: 625133013}
   _CanvasInfo: {fileID: 1547670990}
