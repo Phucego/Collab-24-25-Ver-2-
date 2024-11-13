@@ -6,6 +6,12 @@ using UnityEngine;
 public class PlacementCheck : MonoBehaviour
 {
     private BuildingManager buildingManager;
+
+
+    public float rayDistance = 10f; // Distance each ray should travel
+    public int numberOfRays = 10;   // Total rays
+    private float angleStep = 36f;  // Angle between each ray
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,7 +20,7 @@ public class PlacementCheck : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Selectable"))
+        if (other.gameObject.CompareTag("Tower"))
         {
             buildingManager.canPlace = false;
         }
@@ -22,10 +28,30 @@ public class PlacementCheck : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Selectable"))
+        if (other.gameObject.CompareTag("Tower"))
         {
             buildingManager.canPlace = true;
         }
     }
+    
+    void Update()
+    {
+        for (int i = 0; i < numberOfRays; i++)
+        {
+            float angle = i * angleStep; // Calculate angle for each ray (0, 36, 72, etc.)
+            Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward; // Rotate forward vector by angle
+            Ray ray = new Ray(transform.position, direction);
 
+            // Cast the ray
+            if (Physics.Raycast(ray, out RaycastHit hit, rayDistance))
+            {
+                Debug.DrawLine(transform.position, hit.point, Color.red);
+                // Do something with the hit information
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, direction * rayDistance, Color.green);
+            }
+        }
+    }
 }

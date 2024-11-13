@@ -58,7 +58,7 @@ public class BuildingManager : MonoBehaviour
     void Update()
     {
          if (pendingObj != null)
-        {
+         {
             pendingObj.transform.position = pos;
 
             if (Input.GetMouseButtonDown(0) && canPlace)
@@ -66,7 +66,7 @@ public class BuildingManager : MonoBehaviour
                 PlaceObject();
             }
             MaterialUpdate();
-        }
+         }
 
         // Take the middle point of the screen instead of the mouse pos
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));

@@ -203,9 +203,9 @@ GameObject:
   - component: {fileID: 138271944}
   - component: {fileID: 138271943}
   - component: {fileID: 138271942}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: Unplaceable
-  m_TagString: Untagged
+  m_TagString: Unplaceable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -309,9 +309,9 @@ GameObject:
   - component: {fileID: 147712930}
   - component: {fileID: 147712929}
   - component: {fileID: 147712928}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: Unplaceable
-  m_TagString: Untagged
+  m_TagString: Unplaceable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -785,7 +785,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &464870994
 GameObject:
@@ -1089,7 +1089,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &597401151
 GameObject:
@@ -1272,7 +1272,7 @@ MonoBehaviour:
   cam: {fileID: 597401153}
   towerLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
   selectedTower: {fileID: 0}
 --- !u!114 &597401158
 MonoBehaviour:
@@ -1444,81 +1444,8 @@ Transform:
   - {fileID: 1520183728}
   - {fileID: 138271941}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &850879587
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: -4926793323884497211, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
-      propertyPath: MainPoint
-      value: 
-      objectReference: {fileID: 1588526631}
-    - target: {fileID: -4926793323884497211, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
-      propertyPath: PrefabProjectile.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -4926793323884497211, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
-      propertyPath: PrefabProjectile.Array.data[0]
-      value: 
-      objectReference: {fileID: 4232055802055314387, guid: ffa192c45b8e6aa46bf07aea73153cbf, type: 3}
-    - target: {fileID: 4584733014359803621, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4584733014359803621, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -1.52
-      objectReference: {fileID: 0}
-    - target: {fileID: 4584733014359803621, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.92
-      objectReference: {fileID: 0}
-    - target: {fileID: 4584733014359803621, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.7748327
-      objectReference: {fileID: 0}
-    - target: {fileID: 4584733014359803621, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4584733014359803621, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4584733014359803621, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4584733014359803621, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4584733014359803621, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4584733014359803621, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4584733014359803621, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6284695328660236746, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
-      propertyPath: m_Name
-      value: TowerTemplate
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d32bd6fd7cafe244087ed7e42e35d1a1, type: 3}
 --- !u!1 &929175304
 GameObject:
   m_ObjectHideFlags: 0
@@ -1677,7 +1604,7 @@ Transform:
   m_Children:
   - {fileID: 1944521950}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1192606829
 GameObject:
@@ -2324,9 +2251,9 @@ GameObject:
   - component: {fileID: 1520183731}
   - component: {fileID: 1520183730}
   - component: {fileID: 1520183729}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: Unplaceable
-  m_TagString: Untagged
+  m_TagString: Unplaceable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2604,7 +2531,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1746009854
 GameObject:
@@ -3305,7 +3232,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2096939200
 GameObject:
@@ -3319,9 +3246,9 @@ GameObject:
   - component: {fileID: 2096939203}
   - component: {fileID: 2096939202}
   - component: {fileID: 2096939201}
-  m_Layer: 8
+  m_Layer: 3
   m_Name: Placeable
-  m_TagString: Untagged
+  m_TagString: Placeable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3511,10 +3438,14 @@ MonoBehaviour:
   rotationAMT: 45
   placeableLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 8
   otherLayer:
     serializedVersion: 2
-    m_Bits: 128
-  placedTowers: []
+    m_Bits: 1024
+  towerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  raycastLength: 0
+  angleStep: 36
   snapHeight: 1.5
   canPlace: 1

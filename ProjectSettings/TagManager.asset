@@ -8,18 +8,20 @@ TagManager:
   - Enemy
   - Tower
   - Projectile
+  - Placeable
+  - Unplaceable
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Placeable
   - Water
   - UI
   - Tower
   - Enemy
   - TowerProjectile
   - EnemyProjectile
-  - 
+  - Unplaceable
   - 
   - 
   - 
