@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 327024065}
   - component: {fileID: 327024067}
   - component: {fileID: 327024066}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: LeftSide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -394,9 +394,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _active: 1
-  _enableRotation: 1
+  _enableRotation: 0
   _mouseSense: 1.8
-  _enableTranslation: 1
+  _enableTranslation: 0
   _translationSpeed: 55
   _enableMovement: 1
   _movementSpeed: 10
@@ -524,7 +524,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 52cbdb045477d164c96ee3647ff344a7,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -556,7 +556,7 @@ GameObject:
   - component: {fileID: 538006307}
   - component: {fileID: 538006309}
   - component: {fileID: 538006308}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: RightSide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -633,7 +633,7 @@ GameObject:
   - component: {fileID: 625133014}
   - component: {fileID: 625133016}
   - component: {fileID: 625133015}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: RadiusDetection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -718,7 +718,7 @@ GameObject:
   - component: {fileID: 629301567}
   - component: {fileID: 629301566}
   - component: {fileID: 629301565}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Enemy (2)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -884,7 +884,7 @@ GameObject:
   - component: {fileID: 823605764}
   - component: {fileID: 823605763}
   - component: {fileID: 823605762}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Enemy (1)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -1016,7 +1016,7 @@ GameObject:
   m_Component:
   - component: {fileID: 878957151}
   - component: {fileID: 878957152}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: AimPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1069,7 +1069,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1211889752}
   - component: {fileID: 1211889753}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Head
   m_TagString: Tower
   m_Icon: {fileID: 0}
@@ -1692,7 +1692,7 @@ GameObject:
   - component: {fileID: 1547670994}
   - component: {fileID: 1547670993}
   - component: {fileID: 1547670992}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1795,7 +1795,7 @@ GameObject:
   - component: {fileID: 1565156658}
   - component: {fileID: 1565156660}
   - component: {fileID: 1565156659}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1958,7 +1958,7 @@ GameObject:
   - component: {fileID: 1618385124}
   - component: {fileID: 1618385123}
   - component: {fileID: 1618385122}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Upgrade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2251,7 +2251,7 @@ GameObject:
   - component: {fileID: 2067903137}
   - component: {fileID: 2067903136}
   - component: {fileID: 2067903139}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -2459,7 +2459,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 683c837839e42e148bdc24c8f38c877d,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2602,7 +2602,7 @@ GameObject:
   - component: {fileID: 8442658619390415018}
   - component: {fileID: 8442658619390415015}
   - component: {fileID: 8442658619390415020}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: TowerTemplate
   m_TagString: Tower
   m_Icon: {fileID: 0}
