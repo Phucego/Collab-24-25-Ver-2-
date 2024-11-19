@@ -47,10 +47,12 @@ public class PlacementCheck : MonoBehaviour
             {
                 Debug.DrawLine(transform.position, hit.point, Color.red);
                 // Do something with the hit information
+                buildingManager.canPlace = false;
             }
             else
             {
                 Debug.DrawRay(transform.position, direction * rayDistance, Color.green);
+                buildingManager.canPlace = true;
             }
         }
     }

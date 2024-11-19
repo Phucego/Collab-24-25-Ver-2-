@@ -19,17 +19,14 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private LayerMask placeableLayer;
     [SerializeField] private LayerMask otherLayer;
 
-    public List<Vector3> placedTowers = new List<Vector3>();
     public float snapHeight = 1.5f;
     public bool canPlace = true;
 
     private void Start()
     {
-        
-        //TODO: Spawning buttons on the screen based on the number of towers put in the level data
+        // Spawning buttons on the screen based on the number of towers in the level data
         for (int i = 0; i < LevelManager.instance.LevelDataSO.towerData.Length; i++)
         {
-            
             int count = i;
             GameObject go = Instantiate(m_SpawnTowerButtonPrefab, m_SpawnTowerButtonParent);
             go.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = LevelManager.instance.LevelDataSO.towerData[count].towerPrefab.name;
@@ -38,70 +35,60 @@ public class BuildingManager : MonoBehaviour
                 SelectObject(LevelManager.instance.LevelDataSO.towerData[count].towerPrefab);
             });
         }
-
-        //StartCoroutine(CheckUpdate(UpdateCompleted));
     }
 
-    /*private void UpdateCompleted(int i)
-    {
-        Debug.Log("Count Completed " + i);
-        StartCoroutine(CheckUpdate(UpdateCompleted));
-    }*/
-
-    /*private IEnumerator CheckUpdate(OnCountCompleted onCompleted)
-    {
-        yield return new WaitForSeconds(5);
-        onCompleted?.Invoke(3);
-    }*/
-
-    // Update is called once per frame
     void Update()
     {
-         if (pendingObj != null)
-         {
-            pendingObj.transform.position = pos;
+        if (pendingObj != null)
+        {
+            HandlePlacement();
 
             if (Input.GetMouseButtonDown(0) && canPlace)
             {
                 PlaceObject();
             }
+
             MaterialUpdate();
-         }
+        }
+    }
 
-        // Take the middle point of the screen instead of the mouse pos
-        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, placeableLayer))
+    private void HandlePlacement()
+    {
+        if (Camera.main != null)
         {
-            pos = hit.point + Vector3.up * snapHeight;
+            Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
 
-            // Check if the current position is occupied
-            if (IsOccupied())
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, placeableLayer))
             {
+                // Valid placement position
+                pos = hit.point + Vector3.up * snapHeight;
+                pendingObj.transform.position = pos; // Snap to the valid position
+                canPlace = true; // Allow placement
+            }
+            else if (Physics.Raycast(ray, out hit, Mathf.Infinity, otherLayer))
+            {
+                // Non-placeable layer hit, prevent placement
                 canPlace = false;
             }
             else
             {
-                canPlace = true;
+                // No valid layers hit, maintain the current position
+                canPlace = false;
             }
-        }
-        else if (Physics.Raycast(ray, out hit, Mathf.Infinity, otherLayer))
-        {
-            canPlace = false;
-            pos = hit.point + Vector3.up * snapHeight;
         }
     }
 
     public void PlaceObject()
     {
         pendingObj.GetComponent<MeshRenderer>().material = placementMats[2];
-        placedTowers.Add(pos);
         pendingObj = null;
     }
 
     public void SelectObject(GameObject prefab)
     {
-        pendingObj = Instantiate(prefab, pos, transform.rotation);
+        // Instantiate the pending object and immediately set its position based on the snapped position
+        pendingObj = Instantiate(prefab, pos, Quaternion.identity);
+        pendingObj.transform.position = pos; // Ensure it snaps to the raycast position immediately
     }
 
     void MaterialUpdate()
@@ -116,24 +103,5 @@ public class BuildingManager : MonoBehaviour
         {
             pendingObj.GetComponent<MeshRenderer>().material = placementMats[1]; // Red for invalid placement
         }
-    }
-
-    bool IsOccupied()
-    {
-        // Check if a tower is already placed at the given position
-        foreach (Vector3 towerPosition in placedTowers)
-        {
-            // Tolerance for matching positions (1f can be adjusted for precision)
-            if (Vector3.Distance(towerPosition, pos) < 1f)
-            {
-                return true; // Position is occupied
-            }
-        }
-        return false; // Position is free
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawSphere(new Vector3(Screen.width / 2, Screen.height / 2, 0), 3f);
     }
 }
