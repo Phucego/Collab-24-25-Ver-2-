@@ -14,7 +14,7 @@ public class BuildingManager : MonoBehaviour
     public delegate void OnCountCompleted(int i);
     public OnCountCompleted onCountCompleted;
 
-    private Vector3 pos;
+    private Vector3 towerPos;
     RaycastHit hit;
     [SerializeField] private LayerMask placeableLayer;
     [SerializeField] private LayerMask otherLayer;
@@ -53,20 +53,19 @@ public class BuildingManager : MonoBehaviour
 
     private void HandlePlacement()
     {
-        if (Camera.main == null) return;
-
+   
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, placeableLayer))
         {
-            pos = hit.point + Vector3.up * snapHeight;
-            canPlace = true;
-            pendingObj.transform.position = pos;
+            towerPos = hit.point /*+ Vector3.up * snapHeight*/;
+            pendingObj.transform.position = towerPos;    
+           
         }
         else if(Physics.Raycast(ray, out hit, Mathf.Infinity, otherLayer))
         {
-            pos = hit.point + Vector3.up * snapHeight;
+            towerPos = hit.point /*+ Vector3.up * snapHeight*/;
             canPlace = false;
-            pendingObj.transform.position = pos;
+
         }
     }
 
@@ -81,7 +80,7 @@ public class BuildingManager : MonoBehaviour
     public void SelectObject(GameObject prefab)
     {
         // Instantiate the pending object at the valid position
-        pendingObj = Instantiate(prefab, pos, Quaternion.identity);
+        pendingObj = Instantiate(prefab, towerPos, Quaternion.identity);
     }
 
     void MaterialUpdate()
