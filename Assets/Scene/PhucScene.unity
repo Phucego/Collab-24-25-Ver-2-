@@ -3252,7 +3252,7 @@ GameObject:
   - component: {fileID: 2096939201}
   m_Layer: 3
   m_Name: Placeable
-  m_TagString: Placeable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

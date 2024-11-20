@@ -20,7 +20,7 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private LayerMask otherLayer;
 
     public float snapHeight = 1.5f;
-    public bool canPlace = true;
+    public bool canPlace;
 
     private void Start()
     {
@@ -42,7 +42,6 @@ public class BuildingManager : MonoBehaviour
         if (pendingObj != null)
         {
             HandlePlacement();
-
             if (Input.GetMouseButtonDown(0) && canPlace)
             {
                 PlaceObject();
@@ -54,45 +53,41 @@ public class BuildingManager : MonoBehaviour
 
     private void HandlePlacement()
     {
-        if (Camera.main != null)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        if (Camera.main == null) return;
 
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, placeableLayer))
-            {
-                // Valid placement position
-                pos = hit.point + Vector3.up * snapHeight;
-                pendingObj.transform.position = pos; // Snap to the valid position
-                canPlace = true; // Allow placement
-            }
-            else if (Physics.Raycast(ray, out hit, Mathf.Infinity, otherLayer))
-            {
-                // Non-placeable layer hit, prevent placement
-                canPlace = false;
-            }
-            else
-            {
-                // No valid layers hit, maintain the current position
-                canPlace = false;
-            }
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, placeableLayer))
+        {
+            pos = hit.point + Vector3.up * snapHeight;
+            canPlace = true;
+            pendingObj.transform.position = pos;
+        }
+        else if(Physics.Raycast(ray, out hit, Mathf.Infinity, otherLayer))
+        {
+            pos = hit.point + Vector3.up * snapHeight;
+            canPlace = false;
+            pendingObj.transform.position = pos;
         }
     }
 
     public void PlaceObject()
     {
+        if (pendingObj == null) return;
+        
         pendingObj.GetComponent<MeshRenderer>().material = placementMats[2];
         pendingObj = null;
     }
 
     public void SelectObject(GameObject prefab)
     {
-        // Instantiate the pending object and immediately set its position based on the snapped position
+        // Instantiate the pending object at the valid position
         pendingObj = Instantiate(prefab, pos, Quaternion.identity);
-        pendingObj.transform.position = pos; // Ensure it snaps to the raycast position immediately
     }
 
     void MaterialUpdate()
     {
+        if (pendingObj == null) return;
+
         // Placement materials order:
         // 0 = green, 1 = red, 2 = default
         if (canPlace)
@@ -104,4 +99,5 @@ public class BuildingManager : MonoBehaviour
             pendingObj.GetComponent<MeshRenderer>().material = placementMats[1]; // Red for invalid placement
         }
     }
+    
 }
