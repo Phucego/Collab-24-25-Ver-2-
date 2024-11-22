@@ -12,6 +12,8 @@ public class PlacementCheck : MonoBehaviour
     public int numberOfRays = 10;   // Total rays
     private float angleStep = 36f;  // Angle between each ray
 
+    public bool isRayHit;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -22,7 +24,7 @@ public class PlacementCheck : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Tower"))
         {
-            buildingManager.canPlace = false;
+            buildingManager.canPlace = true;
         }
     }
 
@@ -30,7 +32,7 @@ public class PlacementCheck : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Tower"))
         {
-            buildingManager.canPlace = true;
+            buildingManager.canPlace = false;
         }
     }
     
@@ -46,14 +48,31 @@ public class PlacementCheck : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit, rayDistance))
             {
                 Debug.DrawLine(transform.position, hit.point, Color.red);
-                // Do something with the hit information
-                buildingManager.canPlace = false;
+
+                // Check if the hit object is a tower
+                if (hit.collider.CompareTag("Tower")) // Assumes towers are tagged as "Tower"
+                {
+                    Debug.Log("Ray hit a tower. Placement not allowed.");
+                    buildingManager.canPlace = false;
+                }
+                else
+                {
+                    buildingManager.canPlace = true;
+                }
             }
             else
             {
                 Debug.DrawRay(transform.position, direction * rayDistance, Color.green);
-                buildingManager.canPlace = true;
+                buildingManager.canPlace = true; // No obstruction
             }
         }
+    }
+    
+    public bool allowPlacement = true;
+
+    public bool CanPlace()
+    {
+        // Custom logic for placement rules
+        return allowPlacement;
     }
 }

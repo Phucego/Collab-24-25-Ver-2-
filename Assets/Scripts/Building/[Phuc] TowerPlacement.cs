@@ -17,7 +17,7 @@ public class TowerPlacement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
             RaycastHit hit;
@@ -33,7 +33,7 @@ public class TowerPlacement : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             Deselect();
-        }*/
+        }
     }
 
     private void Select(GameObject obj)

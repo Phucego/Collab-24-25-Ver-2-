@@ -16,9 +16,7 @@ public class LevelManager : MonoBehaviour
     }
 
     private int score = 0;
-
-
-
+    
     private IEnumerator SpawnEnemyRoutine()
     {
         yield return new WaitForSeconds(4);

@@ -205,7 +205,7 @@ GameObject:
   - component: {fileID: 138271942}
   m_Layer: 10
   m_Name: Unplaceable
-  m_TagString: Unplaceable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -311,7 +311,7 @@ GameObject:
   - component: {fileID: 147712928}
   m_Layer: 10
   m_Name: Unplaceable
-  m_TagString: Unplaceable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -826,7 +826,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 464870994}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8f39eaefc2b51374eb823057cedf54bb, type: 3}
   m_Name: 
@@ -1549,7 +1549,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -246, y: -106}
+  m_AnchoredPosition: {x: -246, y: 0}
   m_SizeDelta: {x: 351.68774, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &998645748
@@ -1757,7 +1757,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 224, y: -71}
+  m_AnchoredPosition: {x: 224, y: 0}
   m_SizeDelta: {x: 351.6878, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1304354742
@@ -1944,7 +1944,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -256, y: 169}
+  m_AnchoredPosition: {x: -256, y: 0}
   m_SizeDelta: {x: 351.68774, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1399596360
@@ -2257,7 +2257,7 @@ GameObject:
   - component: {fileID: 1520183729}
   m_Layer: 10
   m_Name: Unplaceable
-  m_TagString: Unplaceable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3439,12 +3439,11 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 0725356c37523d64c89066305ad10b22, type: 2}
   - {fileID: 2100000, guid: 427b618baf3b85a44900f01c0efd1f17, type: 2}
   - {fileID: 2100000, guid: 264303201f8d5d2419fc53f8cd9ca71f, type: 2}
-  rotationAMT: 45
   placeableLayer:
     serializedVersion: 2
     m_Bits: 8
-  otherLayer:
+  unplaceableLayer:
     serializedVersion: 2
     m_Bits: 1024
   snapHeight: 1.5
-  canPlace: 1
+  canPlace: 0
