@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class InteractController : MonoBehaviour
 {
-    private LayerMask LayerMask;
+    private LayerMask layerMask;
     private I_Interactable LatestInteract;
 
     void Start()
     {
-        LayerMask = LayerMask.GetMask("Tower", "Enemy");
+        layerMask = LayerMask.GetMask("Tower", "Enemy");
     }
 
     // Update is called once per frame
@@ -19,7 +19,7 @@ public class InteractController : MonoBehaviour
         {
             bool targethit = false;  
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit[] hit = Physics.RaycastAll(ray, 150f, LayerMask);
+            RaycastHit[] hit = Physics.RaycastAll(ray, 150f, layerMask);
             for (int i = 0; i < hit.Length; i++) 
             {
                 if (hit[i].collider == null)

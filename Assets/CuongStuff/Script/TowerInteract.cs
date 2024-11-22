@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
 
 public class TowerInteract : MonoBehaviour, I_Interactable
 {
     public InputActionAsset towerAction;
-    [SerializeField] public GameObject _RadiusSphere;
-    [SerializeField] public GameObject _CanvasInfo;
+    public GameObject _RadiusSphere;
+    public GameObject _CanvasInfo;
+    public UnityEvent UpgradeTower;
 
-    private TowerController _Controller;
     private InputActionMap mapAction;
     private InputAction upgradeAction, sellAction;
     private float Radius;
@@ -18,9 +19,9 @@ public class TowerInteract : MonoBehaviour, I_Interactable
 
     void Awake()
     {
-        _Controller = GetComponent<TowerController>();
         mapAction = towerAction.FindActionMap("Tower");
-        upgradeAction = mapAction.FindAction("UpgradeTower"); 
+        upgradeAction = mapAction.FindAction("UpgradeTower");
+        //_CallChangeStat.AddListener(ChangeStat);
         //_Radius = GameObject.Find("RadiusDetection");
     }
 
@@ -40,7 +41,7 @@ public class TowerInteract : MonoBehaviour, I_Interactable
     {
         if (_CanvasInfo.activeInHierarchy)
         {
-            _Controller.UpgradeStat();
+            UpgradeTower.Invoke();
         }
     }
 

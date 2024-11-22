@@ -7,19 +7,18 @@ using UnityEngine;
 public class ProjectileController : MonoBehaviour
 {
     protected Rigidbody rb;
-    protected float Speed = 10f;
     protected float Damage = 10f;
+    [SerializeField] protected float Speed = 10f;
+
     private Vector3 shootDirection;
-    // Start is called before the first frame update
-    void Start()
+
+    protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        //rb.AddForce(forwardVector * Speed, ForceMode.Impulse);
         rb.velocity = transform.forward * Speed;
     }
 
@@ -28,8 +27,13 @@ public class ProjectileController : MonoBehaviour
         shootDirection = direction;
     }
 
+    private void OnEnable()
+    {
+        rb.velocity = Vector3.zero;
+    }
 
-    protected void OnCollisionEnter(Collision collision)
+
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision != null)
         {
