@@ -8,12 +8,13 @@ public class EnemyDrops : MonoBehaviour
     private OnDead onDead;
     int score = 10;
 
+    //TODO: Initialize call back to update currencies
     public void InitEnemy(OnDead deadCallback)
     {
         onDead = deadCallback;
         StartCoroutine(DeadCountDown());
     }
-
+    //TODO: Add score before destroy the enemy
     IEnumerator DeadCountDown()
     {
         yield return new WaitForSeconds(5);

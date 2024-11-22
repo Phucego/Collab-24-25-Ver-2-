@@ -26,8 +26,6 @@ public class BuildingManager : MonoBehaviour
 
     private void Start()
     {
-        
-      
         ButtonSpawner();
     }
 
