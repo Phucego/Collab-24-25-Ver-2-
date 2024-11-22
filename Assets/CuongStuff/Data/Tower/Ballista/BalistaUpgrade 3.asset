@@ -10,9 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d62fa5b5054766948b074ec4e5dcd815, type: 3}
-  m_Name: UpgradeDataSO
+  m_Name: BalistaUpgrade 3
   m_EditorClassIdentifier: 
-  upgradeName: Lvl1
-  upgradeDatas:
-  - upgradeType: 1
-    value: 20
+  upgradeName: 
+  Cost: 0
+  upgradeDatas: []

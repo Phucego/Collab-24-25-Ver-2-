@@ -1,17 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TowerController : MonoBehaviour
 {
     // Start is called before the first frame update
     [Header("Tower Set Up")]
-    [SerializeField] protected TowerDataSO TowerData;
-    [SerializeField] protected GameObject MainPoint;
-    [SerializeField] protected GameObject Head;
-    [SerializeField] protected GameObject AimPoint;
-    [SerializeField] protected GameObject[] PrefabProjectile;
+    public TowerDataSO TowerData;
+    
+    public GameObject MainPoint, Head, AimPoint, HeadParent, BodyParent;
+    public GameObject[] PrefabProjectile;
+    public UnityEvent<UpgradeType, float> CallChangeStat;
 
     [Header("Tower Stats")]
     [SerializeField] protected int Level = 0;
@@ -25,13 +25,15 @@ public class TowerController : MonoBehaviour
     [SerializeField] [Range(0, 100)] protected float CritChance;
     [SerializeField] protected float CritAmp;
 
-    [Header("Tower Test")]
-    [SerializeField] protected List<GameObject> EnemyList = new List<GameObject>();
-    protected List<GameObject> ProjectileList = new List<GameObject>();
+    //[Header("Tower Test")]
+    protected List<GameObject> _EnemyList = new List<GameObject>();
+    protected TowerDataSO _DeepCopyTowerData;
+    protected GameObject[] _HeadModel = new GameObject[] { };
+    protected GameObject[] _BodyModel = new GameObject[] { };
+    protected List<GameObject> _ProjectileList = new List<GameObject>();
     //protected List<GameObject> ProjectileList = new List<GameObject>();
-    protected TowerInteract InteractScript;
     protected SphereCollider RadiusDetector;
-    protected GameObject Target;
+    protected GameObject Target, CurrentHead, CurrentBody;
     protected Vector3 TargetPos = new Vector3(0,0,0);
     protected LayerMask layerMask;
     protected float TimeBeforeFire = 0f;
@@ -40,36 +42,62 @@ public class TowerController : MonoBehaviour
     {
         MainPoint = GameObject.Find("MainPoint");
         layerMask = LayerMask.GetMask("Enemy");
-        InteractScript = GetComponent<TowerInteract>();
         RadiusDetector = GetComponent<SphereCollider>();
+        _HeadModel = new GameObject[TowerData.listUpgrades.Count + 1];
+        _BodyModel = new GameObject[TowerData.listUpgrades.Count + 1];
     }
 
     private void OnEnable()
     {
         DeepCopyData();
         RadiusDetector.radius = Radius;
-        InteractScript.ChangeStat(UpgradeType.Radius, Radius);
+        CallChangeStat.Invoke(UpgradeType.Radius, Radius);
+        GetAllModels(HeadParent, 1);
+        GetAllModels(BodyParent, 2);
+        CurrentHead = _HeadModel[0];
+        CurrentBody = _BodyModel[0];
+
     }
 
+    protected virtual void GetAllModels(GameObject parent, int index)
+    {
+        for (int i = 0; i < parent.transform.childCount; i++)
+        {
+            GameObject model = parent.transform.GetChild(i).gameObject;
+            switch (index)
+            {
+                case 1: //Get Head
+                    _HeadModel[i] = model;
+                    break;
+                case 2: //Get Model
+                    _BodyModel[i] = model;
+                    break;
+            }
+        }
+    }
+
+    // Get data from the scriptable object and get a copy of it
     protected virtual void DeepCopyData()
     {
-        TowerType = TowerData.TowerType;
-        TargetType = TowerData.TargetType;
-        Damage = TowerData.Damage;
-        Health = TowerData.Health;
-        Radius = TowerData.Radius;
-        FireRate = TowerData.FireRate;
-        ProjectileSpeed = TowerData.ProjectileSpeed;
-        CritChance = TowerData.CritChance;
-        CritAmp = TowerData.CritAmplifier;
+        _DeepCopyTowerData = TowerData;
+        TowerType = _DeepCopyTowerData.TowerType;
+        TargetType = _DeepCopyTowerData.TargetType;
+        Damage = _DeepCopyTowerData.Damage;
+        Health = _DeepCopyTowerData.Health;
+        Radius = _DeepCopyTowerData.Radius;
+        FireRate = _DeepCopyTowerData.FireRate;
+        ProjectileSpeed = _DeepCopyTowerData.ProjectileSpeed;
+        CritChance = _DeepCopyTowerData.CritChance;
+        CritAmp = _DeepCopyTowerData.CritAmplifier;
+        
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (Target != null && TimeBeforeFire <= 0)
         {
-            LOSCheck();
+            StartCoroutine(LOSCheck());
             TimeBeforeFire = FireRate;
         }
         else if (TimeBeforeFire >= 0)
@@ -77,47 +105,47 @@ public class TowerController : MonoBehaviour
             TimeBeforeFire -= Time.deltaTime;
         }
         FindNearestEnemy();
+
     }
 
-    protected virtual void LOSCheck()
+    // Check if enemy in within the sight of the aimpoint
+    protected virtual IEnumerator LOSCheck()
     {
         TargetPos = Target.transform.position;
         Head.transform.LookAt(TargetPos);
         RaycastHit hit;
         // Does the ray intersect any objects excluding the player layer
-        if (Physics.Raycast(AimPoint.transform.position, AimPoint.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
+        if (Physics.Raycast(AimPoint.transform.position, AimPoint.gameObject.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
         {
             Debug.DrawRay(AimPoint.transform.position, AimPoint.transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             StartCoroutine(FireProjectile(hit.transform.position - AimPoint.transform.position));
         }
-        else
-        {
-            Debug.DrawRay(AimPoint.transform.position, AimPoint.transform.TransformDirection(Vector3.forward) * 100, Color.white);
-        }
+        yield return new WaitForSeconds(0f);
     }
     protected virtual IEnumerator FireProjectile(Vector3 direction)
     {
         GameObject Projectile = GetPooledObject();
         Projectile.transform.position = AimPoint.transform.position;
         Projectile.transform.rotation = AimPoint.transform.rotation;
-        //Projectile.GetComponent<ProjectileController>().SetDirection(direction.normalized);
         Projectile.SetActive(true);
-         
+        //Projectile.GetComponent<ProjectileController>().SetDirection(direction.normalized);
+
         yield return new WaitForSeconds(0f);
     }
 
+    // Pooling objects
     protected virtual GameObject GetPooledObject()
     {
-        for (int i = 0; i < ProjectileList.Count; i++) {
-            if (!ProjectileList[i].activeInHierarchy)
+        for (int i = 0; i < _ProjectileList.Count; i++) {
+            if (!_ProjectileList[i].activeInHierarchy)
             {
-                return ProjectileList[i];
+                return _ProjectileList[i];
             }
         }
 
         // Create more projectiles if no more objects are pooled
-        GameObject NewProjectile = Instantiate(PrefabProjectile[0], transform.position, Quaternion.identity, GameObject.Find("_Projectiles").transform);
-        ProjectileList.Add(NewProjectile);
+        GameObject NewProjectile = Instantiate(PrefabProjectile[0], AimPoint.transform.position, Quaternion.identity, GameObject.Find("_Projectiles").transform);
+        _ProjectileList.Add(NewProjectile);
         return NewProjectile;
     }
 
@@ -125,34 +153,52 @@ public class TowerController : MonoBehaviour
     // Will plan on expanding this if the first semester goes well
     public void FindNearestEnemy()
     {
-        foreach (var enemy in EnemyList)
-        {
+        foreach (var enemy in _EnemyList)
+        {  
             if (enemy != null)
             {
+                int point = 0;
+                TargetType[] enemyType = enemy.GetComponent<I_GetType>().GetTargetType();
+                // Check if they have matching target type
+                foreach (TargetType enemytype in enemyType)
+                    if (TargetType.Contains(enemytype))
+                        point += 1;
+                // Reset the enemy target if they dont match target type
+                if (point == 0)
+                {
+                    if (enemy == Target)
+                    {
+                        TargetPos = new Vector3(0, 0, 0);
+                        Target = null;
+                    }
+                    continue;
+                }
+
                 float distance = Vector3.Distance(transform.position, enemy.transform.position);
                 float lastdistance = Vector3.Distance(transform.position, TargetPos);
 
                 float mainpointdistance = Vector3.Distance(MainPoint.transform.position, enemy.transform.position);
                 float mainpointlastdistance = Vector3.Distance(MainPoint.transform.position, TargetPos);
-
+                
                 if (mainpointdistance < mainpointlastdistance)
                 {
                     Target = enemy;
                     TargetPos = Target.transform.position;
                 }
             }
-            else
+            /*else
             {
-                EnemyList.RemoveAll(gameobject => gameobject == null);
+                EnemyList.Remove(enemy);
                 TargetPos = new Vector3(0,0,0);
                 Target = null;
-            }
+            }*/
                 
 
         }
     }
 
-    public void UpgradeStat()
+    // Upgrade called
+    public void UpgradeTower()
     {
         if (Level >= TowerData.listUpgrades.Count)
             return;
@@ -180,23 +226,48 @@ public class TowerController : MonoBehaviour
                     break;
             }
         }
-     
+
+        bool HasModelHead = CheckModelValid(_HeadModel, Level);
+        bool HasModelBody = CheckModelValid(_BodyModel, Level); 
+
+        if (HasModelHead)
+        {
+            CurrentHead.SetActive(false);
+            CurrentHead = _HeadModel[Level];
+            CurrentHead.SetActive(true);
+        }
+
+        if (HasModelBody)
+        {
+            CurrentBody.SetActive(false);
+            CurrentBody = _BodyModel[Level];
+            CurrentBody.SetActive(true);
+        }
+
+    }
+
+    // Check if model within the tower exist in the array
+    protected bool CheckModelValid(GameObject[] model, int index)
+    {
+        if (model[index] != null)
+            return true;
+        return false;
     }
 
     private void OnTriggerEnter(Collider target)
     {
-        if (target.gameObject.CompareTag("Enemy") && !EnemyList.Contains(target.gameObject))
+        if (target.gameObject.CompareTag("Enemy") && !_EnemyList.Contains(target.gameObject))
         {
-            EnemyList.Add(target.gameObject);
+            _EnemyList.Add(target.gameObject);
         }
     }
 
     private void OnTriggerExit(Collider target)
     {
-        EnemyList.RemoveAll(gameobject => gameobject == null);
+        _EnemyList.RemoveAll(gameobject => gameobject == null);
         if (target.gameObject.CompareTag("Enemy"))
         {
-            EnemyList.Remove(target.gameObject);
+            _EnemyList.Remove(target.gameObject);
             Target = null;
             TargetPos = new Vector3(0,0,0);
         }
