@@ -15,10 +15,15 @@ public class InteractController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+       ShowTowerUI();
+    }
+
+    public void ShowTowerUI()
+    {
         if (Input.GetMouseButtonDown(0))
         {
             bool targethit = false;  
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
             RaycastHit[] hit = Physics.RaycastAll(ray, 150f, layerMask);
             for (int i = 0; i < hit.Length; i++) 
             {
@@ -50,5 +55,4 @@ public class InteractController : MonoBehaviour
             }
         }
     }
-
 }

@@ -10,7 +10,7 @@ public class CameraCrosshair : MonoBehaviour
 
     public LayerMask towerLayer;
 
-    // [SerializeField] private TowerLogic selectedTower;
+    [SerializeField] private TowerInteract selectedTower;
 
     private void Start()
     {
@@ -24,7 +24,10 @@ public class CameraCrosshair : MonoBehaviour
         {
             TowerInteraction();
         }
-
+        /*else 
+        {
+            selectedTower.Deselect();
+        }*/
     }
 
     void TowerInteraction()
@@ -37,22 +40,22 @@ public class CameraCrosshair : MonoBehaviour
         // Check if the ray hits a tower within range
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, towerLayer))
         {
-            /*TowerLogic tower = hit.collider.GetComponent<TowerLogic>();
+            TowerInteract tower = hit.collider.GetComponent<TowerInteract>();
 
             if (tower != null)
             {
                 Debug.Log("Interacted with tower: " + tower.name);
                 selectedTower = tower;
 
-                tower.OnInteract();
+                tower.Interact(cam);
             }
         }
         else
         {
             Debug.Log("No tower hit!");
             selectedTower = null; // Clear selection if nothing was hit
-        }*/
         }
     }
 }
+
 

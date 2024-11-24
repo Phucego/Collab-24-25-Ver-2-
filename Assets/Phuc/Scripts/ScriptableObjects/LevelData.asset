@@ -15,4 +15,10 @@ MonoBehaviour:
   towerData:
   - {fileID: 11400000, guid: d36ff543d8494e34195da8f45bbd6c47, type: 2}
   - {fileID: 11400000, guid: eeb6b50e3c8f0414f89da8c0b538e711, type: 2}
-  - {fileID: 11400000, guid: e86943e326faaba409ce4989a1b4365f, type: 2}
+  coinCounterParent: {fileID: 0}
+  waveProgressParent: {fileID: 0}
+  PauseandWaveParent: {fileID: 0}
+  coinCounterText: {fileID: 0}
+  waveProgressText: {fileID: 0}
+  startWaveButton: {fileID: 0}
+  pauseButton: {fileID: 0}

@@ -24,6 +24,12 @@ public class BuildingManager : MonoBehaviour
     public float snapHeight = 1.5f;
     public bool canPlace;
 
+    public BuildingManager Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
     private void Start()
     {
         ButtonSpawner();

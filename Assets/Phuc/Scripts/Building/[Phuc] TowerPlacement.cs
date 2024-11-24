@@ -39,14 +39,14 @@ public class TowerPlacement : MonoBehaviour
     private void Select(GameObject obj)
     {
         if (obj == selectedObj) return;
-        Outline outline = obj.GetComponent<Outline>();
+        OutlineScript outline = obj.GetComponent<OutlineScript>();
         if (selectedObj != null)
         {
             Deselect();
         }
         if (outline == null)
         {
-            obj.AddComponent<Outline>();
+            obj.AddComponent<OutlineScript>();
         }
         else
         {
@@ -58,7 +58,7 @@ public class TowerPlacement : MonoBehaviour
 
     private void Deselect()
     {
-        selectedObj.GetComponent<Outline>().enabled = true;
+        selectedObj.GetComponent<OutlineScript>().enabled = true;
         selectedObj = null;
     }
 }

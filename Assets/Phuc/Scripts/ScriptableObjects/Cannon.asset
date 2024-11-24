@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f47bd1e3c4a580c48bc1c32f450bd863, type: 3}
-  m_Name: Cannon 2
+  m_Name: Cannon
   m_EditorClassIdentifier: 
-  towerPrefab: {fileID: 2936294135489644934, guid: 8f0df617bb6697a4891ad047c4126e1f, type: 3}
+  towerPrefab: {fileID: 5935483799654379053, guid: b6050b596c60dac4da449298a964cd5c, type: 3}
   TowerType: 0
   TargetType: 
-  Damage: 2
-  Health: 10
-  Radius: 4
-  FireRate: 4
-  ProjectileSpeed: 3
+  Damage: 10
+  Health: 50
+  Radius: 6
+  FireRate: 7
+  ProjectileSpeed: 8
   CritChance: 0
   CritAmplifier: 1
   Cost: 0
