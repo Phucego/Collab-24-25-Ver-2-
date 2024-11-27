@@ -101,9 +101,6 @@ public class FreeFlyCamera : MonoBehaviour
     {
         _initPosition = transform.position;
         _initRotation = transform.eulerAngles;
-
-
-        _wantedMode = CursorLockMode.None;
     }
 
     private void OnEnable()
@@ -119,18 +116,12 @@ public class FreeFlyCamera : MonoBehaviour
         {
             Cursor.lockState = _wantedMode = CursorLockMode.None;
         }
-        if (Input.GetMouseButton(1))
+
+        if (Input.GetMouseButtonDown(0))
         {
-            _enableRotation = true;
-            _enableMovement = true;
             _wantedMode = CursorLockMode.Locked;
         }
-        if (Input.GetMouseButtonUp(1))
-        {
-            _wantedMode = CursorLockMode.None;
-        }
 
-        
         // Apply cursor state
         Cursor.lockState = _wantedMode;
         // Hide cursor when locking

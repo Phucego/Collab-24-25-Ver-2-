@@ -8,10 +8,10 @@ public class TowerController : MonoBehaviour
     // Start is called before the first frame update
     [Header("Tower Set Up")]
     public TowerDataSO TowerData;
-    
     public GameObject MainPoint, Head, AimPoint, HeadParent, BodyParent;
     public GameObject[] PrefabProjectile;
     public UnityEvent<UpgradeType, float> CallChangeStat;
+    [HideInInspector] public bool TowerPlaced = false;
 
     [Header("Tower Stats")]
     [SerializeField] protected int Level = 0;
@@ -49,6 +49,7 @@ public class TowerController : MonoBehaviour
 
     private void OnEnable()
     {
+        TowerPlaced = true;
         DeepCopyData();
         RadiusDetector.radius = Radius;
         CallChangeStat.Invoke(UpgradeType.Radius, Radius);
@@ -95,6 +96,9 @@ public class TowerController : MonoBehaviour
     // Update is called once per frame
     protected virtual void FixedUpdate()
     {
+        if (!TowerPlaced)
+            return;
+
         if (Target != null && TimeBeforeFire <= 0)
         {
             StartCoroutine(LOSCheck());
