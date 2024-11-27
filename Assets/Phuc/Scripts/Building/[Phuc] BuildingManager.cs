@@ -88,6 +88,7 @@ public class BuildingManager : MonoBehaviour
                 Debug.Log($"Placeable surface hit: {hitObject.name}");
                 towerPos = hit.point + Vector3.up * snapHeight;
                 pendingObj.transform.position = towerPos;
+             
                 canPlace = true;
             }
             else
@@ -114,6 +115,7 @@ public class BuildingManager : MonoBehaviour
         if (pendingObj == null || !canPlace) return;
 
         pendingObj.GetComponent<MeshRenderer>().material = placementMats[2]; // Set to default material
+        pendingObj.GetComponent<TowerController>().TowerPlaced = true;
         pendingObj = null;
     }
 

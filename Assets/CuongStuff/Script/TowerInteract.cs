@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
+//using DG.Tweening;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class TowerInteract : MonoBehaviour, I_Interactable
 {
@@ -63,20 +64,22 @@ public class TowerInteract : MonoBehaviour, I_Interactable
                 break;
         }
     }
-
-    public void Interact(Camera camera)
+    public void ToggleOutline(bool enable)
     {
-        MainCam = camera;
-        _RadiusSphere.transform.localScale = new Vector3(Radius * 2, Radius * 2, Radius * 2);
-        _RadiusSphere.SetActive(true);
-        _CanvasInfo.SetActive(true);
-        Debug.Log("Tower interact!");
+        // Assuming the outline is managed via a Renderer or an Outline component
+        Outline outline = GetComponent<Outline>(); // Replace with your outline logic
+        if (outline != null)
+        {
+            outline.enabled = enable;
+
+        }
     }
 
-    public void Deselect()
+    public void TowerInfo(bool enable)
     {
-        _RadiusSphere.SetActive(false);
-        _CanvasInfo.SetActive(false);
+        _RadiusSphere.transform.localScale = new Vector3(Radius * 2, Radius * 2, Radius * 2);
+        _RadiusSphere.SetActive(enable);
+        _CanvasInfo.SetActive(enable);
     }
 
 }

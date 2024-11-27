@@ -2370,6 +2370,7 @@ MonoBehaviour:
     m_Bits: 1024
   snapHeight: 3.77
   canPlace: 0
+  Instance: {fileID: 0}
 --- !u!1001 &9090227092309201277
 PrefabInstance:
   m_ObjectHideFlags: 0

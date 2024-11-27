@@ -629,7 +629,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5935483799654379053}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b24c6721259696247a15ee4f5f5b9e7b, type: 3}
+  m_Script: {fileID: 11500000, guid: be6804e19f4a07647901d2a8953c8365, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   TowerData: {fileID: 11400000, guid: eeb6b50e3c8f0414f89da8c0b538e711, type: 2}
@@ -638,30 +638,20 @@ MonoBehaviour:
   AimPoint: {fileID: 8566862212565911319}
   HeadParent: {fileID: 8320038080401838669}
   BodyParent: {fileID: 4387202882567533643}
-  PrefabProjectile: []
+  PrefabProjectile:
+  - {fileID: 7753407126714748281, guid: fe3bb92c438817a459bb4340ee494d0b, type: 3}
   CallChangeStat:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6285087150755690320}
-        m_TargetAssemblyTypeName: TowerController, Assembly-CSharp
-        m_MethodName: UpgradeTower
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+  TowerPlaced: 0
   Level: 1
   TowerType: 0
   TargetType: 
-  Damage: 0
-  Health: 0
-  Radius: 0
-  FireRate: 0
-  ProjectileSpeed: 0
+  Damage: 5
+  Health: 5
+  Radius: 5
+  FireRate: 5
+  ProjectileSpeed: 5
   CritChance: 0
   CritAmp: 0
 --- !u!114 &7326884739503594039
