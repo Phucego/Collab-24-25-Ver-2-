@@ -18,3 +18,5 @@ MonoBehaviour:
   type: 00000000
   maxHealth: 100
   maxSpeed: 10
+  acceleration: 4
+  gravity: 7

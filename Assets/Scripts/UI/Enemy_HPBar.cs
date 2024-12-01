@@ -10,15 +10,27 @@ public class Enemy_HPBar : MonoBehaviour
     [SerializeField] private Slider slider;
     [SerializeField] private TMP_Text number;
 
+    [Header("Camera:")]
+    [SerializeField] private Camera cameraToTrack;
+
     [Header("Positioning:")]
-    [SerializeField] private Camera camera;
     [SerializeField] private Transform target;
     [SerializeField] private Vector3 offset;
 
+    void Start()
+    {
+        cameraToTrack = Camera.main;
+    }
+
     void Update()
     {
-        transform.rotation = camera.transform.rotation;
+        if (cameraToTrack == null)
+            return;
+
+        transform.rotation = cameraToTrack.transform.rotation;
         transform.position = target.position + offset;
+
+        number.rectTransform.rotation = cameraToTrack.transform.rotation;
         number.rectTransform.position = target.position + offset;
     }
 

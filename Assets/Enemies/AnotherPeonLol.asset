@@ -15,7 +15,8 @@ MonoBehaviour:
   color: {r: 1, g: 0.5017092, b: 0.30566037, a: 1}
   name: AnotherPeonLol
   description: yeh
-  towerTarget: 0
-  airborneType: 0
+  type: 00000000
   maxHealth: 200
   maxSpeed: 5
+  acceleration: 1
+  gravity: 9
