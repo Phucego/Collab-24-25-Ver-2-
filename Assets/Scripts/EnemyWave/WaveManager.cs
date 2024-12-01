@@ -12,11 +12,11 @@ public class WaveManager : MonoBehaviour
 
     [Header("Enemy Data:")]
     [SerializeField] GameObject _enemyPrefab;
-    private List<GameObject> eList = new List<GameObject>();
+    private List<GameObject> _eList = new List<GameObject>();
     [SerializeField] BaseEnemySO[] _dataList;
 
     [Header("Camera")]
-    [SerializeField] private Camera mainCamera;
+    [SerializeField] private Camera _mainCamera;
 
     void Start()
     {
@@ -30,8 +30,8 @@ public class WaveManager : MonoBehaviour
             _spawnLocation = tempSpawnPoint.transform;
         }
 
-        if (mainCamera == null)
-            mainCamera = Camera.main;
+        if (_mainCamera == null)
+            _mainCamera = Camera.main;
     }
 
     void Update()
@@ -42,9 +42,9 @@ public class WaveManager : MonoBehaviour
 
             EnemyBehavior enemyBehavior = anEnemy.GetComponent<EnemyBehavior>();
             if (enemyBehavior != null && _dataList.Length > 0)
-                enemyBehavior._data = _dataList[Random.Range(0, _dataList.Length)];
+                enemyBehavior.data = _dataList[Random.Range(0, _dataList.Length)];
             Capture(anEnemy);
-            eList.Add(anEnemy);
+            _eList.Add(anEnemy);
 
             //Debug.Log("An Enemy has spawned at " + _spawnLocation.position + "!");
         }
@@ -63,21 +63,21 @@ public class WaveManager : MonoBehaviour
 
     private void CheckENull()
     {
-        for (int i = eList.Count - 1; i >= 0; i--)
+        for (int i = _eList.Count - 1; i >= 0; i--)
         {
-            if (eList[i] == null)
-                eList.RemoveAt(i);
+            if (_eList[i] == null)
+                _eList.RemoveAt(i);
         }
     }
 
     private void SetDestination()
     {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Vector3 targetPosition = hit.point;
 
-            foreach (var e in eList)
+            foreach (var e in _eList)
                 e.GetComponent<EnemyBehavior>().SetDestination(targetPosition);
         }
     }

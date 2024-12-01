@@ -7,36 +7,36 @@ using TMPro;
 public class Enemy_HPBar : MonoBehaviour
 {
     [Header("UI:")]
-    [SerializeField] private Slider slider;
-    [SerializeField] private TMP_Text number;
+    [SerializeField] Slider _slider;
+    [SerializeField] TMP_Text _number;
 
     [Header("Camera:")]
-    [SerializeField] private Camera cameraToTrack;
+    [SerializeField] Camera _cameraToTrack;
 
     [Header("Positioning:")]
-    [SerializeField] private Transform target;
-    [SerializeField] private Vector3 offset;
+    [SerializeField] Transform _target;
+    [SerializeField] Vector3 _offset;
 
     void Start()
     {
-        cameraToTrack = Camera.main;
+        _cameraToTrack = Camera.main;
     }
 
     void Update()
     {
-        if (cameraToTrack == null)
+        if (_cameraToTrack == null)
             return;
 
-        transform.rotation = cameraToTrack.transform.rotation;
-        transform.position = target.position + offset;
+        transform.rotation = _cameraToTrack.transform.rotation;
+        transform.position = _target.position + _offset;
 
-        number.rectTransform.rotation = cameraToTrack.transform.rotation;
-        number.rectTransform.position = target.position + offset;
+        _number.rectTransform.rotation = _cameraToTrack.transform.rotation;
+        _number.rectTransform.position = _target.position + _offset;
     }
 
     public void setHealth(float curHealth, float maxHealth)
     {
-        slider.value = curHealth/maxHealth;
-        number.text = curHealth.ToString() + '/' + maxHealth.ToString();
+        _slider.value = curHealth/maxHealth;
+        _number.text = curHealth.ToString() + '/' + maxHealth.ToString();
     }
 }

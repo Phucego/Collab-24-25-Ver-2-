@@ -5,96 +5,99 @@ using UnityEngine.UI;
 
 public class EnemyBehavior : MonoBehaviour
 {
-    [HideInInspector] public BaseEnemySO _data;
+    [HideInInspector] public BaseEnemySO data;
 
     // [ ENEMY'S UI ] //
-    private Enemy_HPBar bar;
+    private Enemy_HPBar _bar;
 
     // [ ENEMY'S DATA] //
-    private float health, speed, acceleration, gravity;
+    private float _health, _speed, _acceleration, _gravity;
 
     // [ Rigidbody & CharacterController ] //
-    private Rigidbody rb; //For external forces like knockbacks and explosion forces
-    private CharacterController ctrl; //For moving basically
+    private Rigidbody _rb; //For external forces like knockbacks and explosion forces
+    private CharacterController _ctrl; //For moving basically
 
-    private bool isMoving = false;
-    private Vector3 startPosition, targetPosition;
-
-    private Vector3 velocity;
-    private float moveTime = 0f, curSpeed = 0f;
-    [SerializeField] private float heightAboveGround = 1f; //Avoid clipping through the floor
+    private bool _isMoving = false;
+    private Vector3 _startPosition, _targetPosition, _velocity;
+    private float _moveTime = 0f, _curSpeed = 0f;
+    [SerializeField] float _heightAboveGround = 0.5f; //Avoid clipping through the floor
 
     void Start()
     {
-        health = _data.maxHealth;
-        speed = _data.maxSpeed;
-        acceleration = _data.acceleration;
-        gravity = _data.gravity * -1;
+        _health = data.maxHealth;
+        _speed = data.maxSpeed;
+        _acceleration = data.acceleration;
+        _gravity = data.gravity * -1;
 
-        bar = GetComponentInChildren<Enemy_HPBar>();
+        _bar = GetComponentInChildren<Enemy_HPBar>();
 
-        GetComponent<Renderer>().material.color = _data.color;
+        GetComponent<Renderer>().material.color = data.color;
 
-        rb = GetComponent<Rigidbody>();
-        rb.useGravity = false;
-        ctrl = GetComponent<CharacterController>();
+        _rb = GetComponent<Rigidbody>();
+        _rb.useGravity = false;
+        _ctrl = GetComponent<CharacterController>();
     }
 
     public void SetDestination(Vector3 position)
     {
-        startPosition = transform.position;
-        targetPosition = position;
-        moveTime = 0f;
-        curSpeed = 0f;
+        _startPosition = transform.position;
+        _targetPosition = position;
+        _moveTime = 0f;
+        _curSpeed = 0f;
 
-        isMoving = true;
+        _isMoving = true;
     }
 
     void Update()
     {
         // [Health] //
-        if (health > 0)
-            bar.setHealth(health, _data.maxHealth);
+        if (_health > 0)
+            _bar.setHealth(_health, data.maxHealth);
         else
             Death();
         ////////////////////////////////////////////////////////////
         // [Movement] //
-        if (isMoving)
+        if (_isMoving)
             MoveToward();
         
-        if (!ctrl.isGrounded) //Gravity
-            velocity.y += gravity * Time.deltaTime;
+        if (!_ctrl.isGrounded) //Gravity
+            _velocity.y += _gravity * Time.deltaTime;
         else
-            velocity.y = -2f;
+            _velocity.y = -2f;
         
         // ==>
-        ctrl.Move(velocity * Time.deltaTime);
+        _ctrl.Move(_velocity * Time.deltaTime);
     }
 
     void MoveToward()
     {
         // Calculate and setting Xasix and Zasix 
-        Vector3 direction = (targetPosition - transform.position).normalized;
-        if (moveTime < acceleration)
+        Vector3 direction = (_targetPosition - transform.position).normalized;
+        if (_moveTime < _acceleration)
         {
-            moveTime += Time.deltaTime;
-            curSpeed = Mathf.Lerp(0f, speed, moveTime * acceleration);
+            _moveTime += Time.deltaTime;
+            _curSpeed = Mathf.Lerp(0f, _speed, _moveTime * _acceleration);
 
-            if (curSpeed > speed)
-                curSpeed = speed;
+            if (_curSpeed > _speed)
+                _curSpeed = _speed;
         }
-        Vector3 movement = direction * curSpeed;
-        ctrl.Move(movement * Time.deltaTime);
+        Vector3 movement = direction * _curSpeed;
+        _ctrl.Move(movement * Time.deltaTime);
+
+        // Rotating toward the direction it's going
+        direction.y = 0;
+        if (direction != Vector3.zero)
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), _acceleration*2.5f * Time.deltaTime);
 
         // Setting only Yasix
-        if (ctrl.isGrounded)
+        if (_ctrl.isGrounded)
         {
-            Vector3 posY = new Vector3(transform.position.x, heightAboveGround, transform.position.z);
+            Vector3 posY = new Vector3(transform.position.x, _heightAboveGround, transform.position.z);
             transform.position = posY;
         }
 
-        if (Vector3.Distance(transform.position, targetPosition) < 1f)
-            isMoving = false;
+        if (Vector3.Distance(transform.position, _targetPosition) < 1f)
+            _isMoving = false;
     }
 
     public void Death()
