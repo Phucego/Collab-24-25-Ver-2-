@@ -20,7 +20,7 @@ public class FreeFlyCamera : MonoBehaviour
 
     [SerializeField]
     [Tooltip("Camera rotation by mouse movement is active")]
-    private bool _enableRotation = true;
+    public bool _enableRotation = true;
 
     [SerializeField]
     [Tooltip("Sensitivity of mouse rotation")]

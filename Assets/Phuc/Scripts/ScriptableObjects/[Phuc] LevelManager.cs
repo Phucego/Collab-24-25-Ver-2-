@@ -10,13 +10,7 @@ public class LevelManager : MonoBehaviour
     public LevelDataSO m_LevelDataSO;
     public LevelDataSO LevelDataSO => m_LevelDataSO;
     
-    public GameObject coinCounterParent; 
-    public GameObject waveProgressParent;
-    public GameObject PauseandWaveParent;
-    public GameObject crosshair;
-    
-    public Button startWaveButton;
-    public Button pauseButton;
+  
 
   
     [SerializeField] private GameObject m_TestEnemy;
@@ -27,17 +21,8 @@ public class LevelManager : MonoBehaviour
     }
 
     
-    //TODO: Call back the score when the enemy dies
-    private IEnumerator AddScoreAfterEnemyDies()
-    {
-        yield return new WaitForSeconds(4);
-        GameObject go = Instantiate(m_TestEnemy, Vector3.zero, Quaternion.identity);
-        
-        
-        go.GetComponent<EnemyDrops>().InitEnemy((coin) => {
-            this.coinCounter += coin;
-            Debug.Log(this.coinCounter);
-        });
-        StartCoroutine(AddScoreAfterEnemyDies());
-    }
+    
+    
+    
+
 }

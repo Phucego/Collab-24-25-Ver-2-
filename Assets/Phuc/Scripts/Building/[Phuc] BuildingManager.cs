@@ -69,14 +69,14 @@ public class BuildingManager : MonoBehaviour
                 // Use the PlacementCheck component's decision
                 if (placementCheck.CanPlace())
                 {
-                    Debug.Log($"Valid placement on {hitObject.name}");
+                   // Debug.Log($"Valid placement on {hitObject.name}");
                     towerPos = hit.point + Vector3.up * snapHeight;
                     pendingObj.transform.position = towerPos;
                     canPlace = true;
                 }
                 else
                 {
-                    Debug.Log($"Invalid placement on {hitObject.name}: PlacementCheck denied.");
+                    //Debug.Log($"Invalid placement on {hitObject.name}: PlacementCheck denied.");
                     towerPos = hit.point + Vector3.up * snapHeight;
                     pendingObj.transform.position = towerPos;
                     canPlace = false;
@@ -85,7 +85,7 @@ public class BuildingManager : MonoBehaviour
             else if ((placeableLayer & (1 << hitObject.layer)) != 0)
             {
                 // Check the placeable layer only if no PlacementCheck component is found
-                Debug.Log($"Placeable surface hit: {hitObject.name}");
+               // Debug.Log($"Placeable surface hit: {hitObject.name}");
                 towerPos = hit.point + Vector3.up * snapHeight;
                 pendingObj.transform.position = towerPos;
              
@@ -94,7 +94,7 @@ public class BuildingManager : MonoBehaviour
             else
             {
                 // Unplaceable surface or other case
-                Debug.Log($"Unplaceable Hit: {hitObject.name}");
+               // Debug.Log($"Unplaceable Hit: {hitObject.name}");
                 towerPos = hit.point + Vector3.up * snapHeight;
                 pendingObj.transform.position = towerPos;
                 canPlace = false;
@@ -102,7 +102,7 @@ public class BuildingManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Raycast hit nothing.");
+           // Debug.Log("Raycast hit nothing.");
             canPlace = false;
         }
 

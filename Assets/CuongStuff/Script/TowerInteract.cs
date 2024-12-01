@@ -17,7 +17,7 @@ public class TowerInteract : MonoBehaviour, I_Interactable
     private InputAction upgradeAction, sellAction;
     private float Radius;
     private Camera MainCam;
-
+    private bool isPlaced = false;
     void Awake()
     {
         mapAction = towerAction.FindActionMap("Tower");
@@ -66,20 +66,25 @@ public class TowerInteract : MonoBehaviour, I_Interactable
     }
     public void ToggleOutline(bool enable)
     {
-        // Assuming the outline is managed via a Renderer or an Outline component
-        Outline outline = GetComponent<Outline>(); // Replace with your outline logic
+      
+        Outline outline = GetComponent<Outline>(); 
         if (outline != null)
         {
             outline.enabled = enable;
 
         }
     }
+   
 
+    public bool IsPlaced()
+    {
+        return isPlaced;
+    }
+    
     public void TowerInfo(bool enable)
     {
         _RadiusSphere.transform.localScale = new Vector3(Radius * 2, Radius * 2, Radius * 2);
         _RadiusSphere.SetActive(enable);
         _CanvasInfo.SetActive(enable);
     }
-
 }
