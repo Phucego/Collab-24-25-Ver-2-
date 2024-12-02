@@ -23,11 +23,11 @@ public class MainMenuUI : MonoBehaviour
     public Button startButton;
     public Button settingsButton;
     public Button quitButton;
-  
+
 
     [Header("Scenes To Load")] 
     [SerializeField]
-    private string _tutorialScene = "TutorialScene";
+    private SceneField _tutorialScene;
 
     private List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
 
