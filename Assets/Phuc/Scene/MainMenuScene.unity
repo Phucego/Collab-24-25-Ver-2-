@@ -729,8 +729,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef06baaaa58c0484d857b607c88baa12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadingBar: {fileID: 0}
+  loadingBarOBJ: {fileID: 0}
+  _loadingBar: {fileID: 0}
   objToHide: []
   levelSelectionCanvas: {fileID: 0}
-  gameName: {fileID: 0}
+  gameName: {fileID: 1302844917}
   _tutorialScene: TutorialScene
