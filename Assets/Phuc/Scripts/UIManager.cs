@@ -4,6 +4,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -23,6 +24,8 @@ public class UIManager : MonoBehaviour
     private Camera cam;
     [SerializeField] private GameObject m_TestEnemy;
 
+    [SerializeField]
+    private SceneField mainMenuScene;
     [Header("Menus")]
     public GameObject pauseMenu;
 
@@ -57,6 +60,10 @@ public class UIManager : MonoBehaviour
         StartCoroutine(PauseGameAfterAnimation());
     }
 
+    public void OnMainMenu()
+    {
+        SceneManager.LoadScene(mainMenuScene);
+    }
     public void OnResumeButton()
     {
         mainUI.SetActive(true);
