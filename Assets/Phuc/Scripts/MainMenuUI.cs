@@ -23,6 +23,7 @@ public class MainMenuUI : MonoBehaviour
     public Button startButton;
     public Button settingsButton;
     public Button quitButton;
+  
 
     [Header("Scenes To Load")] 
     [SerializeField]
@@ -42,11 +43,9 @@ public class MainMenuUI : MonoBehaviour
     {
        
         //loadingBarOBJ.SetActive(true);
-        levelSelectionCanvas.SetActive(true);
         StartCoroutine(MainMenuOut());
-        HideMenu();
+    
        // _scenesToLoad.Add(SceneManager.LoadSceneAsync(_tutorialScene));
-
         StartCoroutine(LoadingBarProgress());
        
     }
@@ -55,13 +54,7 @@ public class MainMenuUI : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(_tutorialScene);
     }
-    void HideMenu()
-    {
-        for (int i = 0; i < objToHide.Length;  i++)
-        {
-            objToHide[i].SetActive(false);
-        }
-    }
+  
 
     private IEnumerator LoadingBarProgress()
     {
@@ -79,16 +72,27 @@ public class MainMenuUI : MonoBehaviour
 
     IEnumerator MainMenuOut()
     {
-        anim.SetBool("fromMainMenu", true);
+        anim.SetBool("fromMenu", true);
+        levelSelectionCanvas.SetActive(true);
         yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+        mainMenuCanvas.SetActive(false);
     }
 
     IEnumerator MainMenuIn()
     {
-        anim.SetBool("fromMainMenu", false);
-        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(1).length);
+        anim.SetBool("fromMenu", false);
+      
+        mainMenuCanvas.SetActive(true);
+        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+        levelSelectionCanvas.SetActive(false);
+    
     }
 
+
+    public void GetBackToMainMenu()
+    {
+        StartCoroutine(MainMenuIn());
+    }
     public void QuitGame()
     {
         Application.Quit();
