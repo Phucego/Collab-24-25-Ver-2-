@@ -3105,7 +3105,7 @@ MonoBehaviour:
   crosshair: {fileID: 9090227092309201281}
   mainUI: {fileID: 622176622}
   coinCounterText: {fileID: 1130766934}
-  coinCount: 27
+  coinCount: 0
   startWaveButton: {fileID: 9090227092309201283}
   pauseButton: {fileID: 9090227092309201282}
   m_TestEnemy: {fileID: 0}

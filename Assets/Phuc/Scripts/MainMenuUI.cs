@@ -10,13 +10,20 @@ using UnityEngine.SceneManagement;
 public class MainMenuUI : MonoBehaviour
 {
     [Header("Main Menu")]
-    public GameObject loadingBarOBJ;
+    /* public GameObject loadingBarOBJ;
 
-    public Image _loadingBar;
+     public Image _loadingBar;*/
+    Animator anim;
     public GameObject[] objToHide;
     public GameObject levelSelectionCanvas;
+    public GameObject mainMenuCanvas;
     public TextMeshProUGUI gameName;
-    
+
+
+    public Button startButton;
+    public Button settingsButton;
+    public Button quitButton;
+
     [Header("Scenes To Load")] 
     [SerializeField]
     private string _tutorialScene = "TutorialScene";
@@ -25,20 +32,23 @@ public class MainMenuUI : MonoBehaviour
 
     private void Awake()
     {
-        loadingBarOBJ.SetActive(false);
-        levelSelectionCanvas.SetActive(false);
+        anim = GetComponent<Animator>();
 
+        //loadingBarOBJ.SetActive(false);
+        levelSelectionCanvas.SetActive(false);
     }
 
     public void ShowLevelSelection()
     {
-        HideMenu();
-        loadingBarOBJ.SetActive(true);
+       
+        //loadingBarOBJ.SetActive(true);
         levelSelectionCanvas.SetActive(true);
-   
-        _scenesToLoad.Add(SceneManager.LoadSceneAsync(_tutorialScene));
+        StartCoroutine(MainMenuOut());
+        HideMenu();
+       // _scenesToLoad.Add(SceneManager.LoadSceneAsync(_tutorialScene));
 
         StartCoroutine(LoadingBarProgress());
+       
     }
 
     public void LoadTutorialScene()
@@ -61,9 +71,26 @@ public class MainMenuUI : MonoBehaviour
             while (!_scenesToLoad[i].isDone)
             {
                 loadProgress = _scenesToLoad[i].progress;
-                _loadingBar.fillAmount = loadProgress / _scenesToLoad.Count;
+                //_loadingBar.fillAmount = loadProgress / _scenesToLoad.Count;
                 yield return null;
             }
         }
+    }
+
+    IEnumerator MainMenuOut()
+    {
+        anim.SetBool("fromMainMenu", true);
+        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+    }
+
+    IEnumerator MainMenuIn()
+    {
+        anim.SetBool("fromMainMenu", false);
+        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(1).length);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }
