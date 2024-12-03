@@ -191,9 +191,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa3cf693b6193c74da8e4e07de4c9fcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _data: {fileID: 0}
-  gravity: -9.8
-  heightAboveGround: 1
+  data: {fileID: 0}
+  _heightAboveGround: 0.5
 --- !u!33 &4932414293563701507
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -710,8 +709,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da8fdd11dc66e6e43b14d54aa5fc1d47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slider: {fileID: 7846931274487237622}
-  number: {fileID: 2972731635654787560}
-  cameraToTrack: {fileID: 0}
-  target: {fileID: 6514783597239382848}
-  offset: {x: 0, y: 1.3, z: 0}
+  _slider: {fileID: 0}
+  _number: {fileID: 0}
+  _cameraToTrack: {fileID: 0}
+  _target: {fileID: 0}
+  _offset: {x: 0, y: 1.35, z: 0}
