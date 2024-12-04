@@ -14,7 +14,7 @@ public class MainMenuUI : MonoBehaviour
 
      public Image _loadingBar;*/
     Animator anim;
-    public GameObject[] objToHide;
+  
     public GameObject levelSelectionCanvas;
     public GameObject mainMenuCanvas;
     public TextMeshProUGUI gameName;
@@ -83,7 +83,7 @@ public class MainMenuUI : MonoBehaviour
         anim.SetBool("fromMenu", false);
       
         mainMenuCanvas.SetActive(true);
-        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(1).length);
         levelSelectionCanvas.SetActive(false);
     
     }
