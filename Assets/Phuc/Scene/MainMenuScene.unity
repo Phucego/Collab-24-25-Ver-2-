@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 123397037}
   - component: {fileID: 123397039}
   - component: {fileID: 123397038}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -762,7 +762,7 @@ GameObject:
   - component: {fileID: 332069288}
   - component: {fileID: 332069287}
   - component: {fileID: 332069286}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: LevelSelectionCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1248,7 +1248,7 @@ GameObject:
   - component: {fileID: 729974118}
   - component: {fileID: 729974120}
   - component: {fileID: 729974119}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: LevelImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2291,7 +2291,7 @@ GameObject:
   - component: {fileID: 1902228353}
   - component: {fileID: 1902228352}
   - component: {fileID: 1902228351}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2449,14 +2449,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef06baaaa58c0484d857b607c88baa12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objToHide:
-  - {fileID: 221886843}
   levelSelectionCanvas: {fileID: 332069284}
   mainMenuCanvas: {fileID: 221886843}
   gameName: {fileID: 1302844917}
   startButton: {fileID: 1796480161}
   settingsButton: {fileID: 925602364}
   quitButton: {fileID: 271462521}
+  backButton: {fileID: 498195880}
   _tutorialScene:
     m_SceneAsset: {fileID: 102900000, guid: 186f304aae5338f4c9e7450d34cd2b39, type: 3}
     m_SceneName: TutorialScene
@@ -2492,7 +2491,7 @@ GameObject:
   - component: {fileID: 2048082608}
   - component: {fileID: 2048082610}
   - component: {fileID: 2048082609}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
