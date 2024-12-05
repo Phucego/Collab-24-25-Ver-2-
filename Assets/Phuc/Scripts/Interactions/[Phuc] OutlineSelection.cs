@@ -25,7 +25,7 @@ public class OutlineSelection : MonoBehaviour
         // Update hasPlacedTower status dynamically in case it changes during gameplay
         UpdatePlacementStatus();
 
-        // Highlight management
+        // Reset highlight
         if (highlight != null)
         {
             highlight.gameObject.GetComponent<OutlineScript>().enabled = false;
@@ -36,29 +36,29 @@ public class OutlineSelection : MonoBehaviour
         Ray ray = cam.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
         if (!EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out raycastHit))
         {
-            highlight = raycastHit.transform;
+            Transform hitTransform = raycastHit.transform;
 
-            if (highlight.CompareTag("Tower") && highlight != selection)
+            // Only highlight towers that have been placed
+            if (hitTransform.CompareTag("Tower") && hitTransform != selection)
             {
-                if (highlight.gameObject.GetComponent<OutlineScript>() != null)
+                TowerInteract towerInteract = hitTransform.GetComponent<TowerInteract>();
+                if (towerInteract != null && towerInteract.isPlaced)
                 {
-                    highlight.gameObject.GetComponent<OutlineScript>().enabled = true;
-                }
-                else
-                {
-                    OutlineScript outline = highlight.gameObject.AddComponent<OutlineScript>();
+                    highlight = hitTransform;
+
+                    OutlineScript outline = highlight.gameObject.GetComponent<OutlineScript>();
+                    if (outline == null)
+                    {
+                        outline = highlight.gameObject.AddComponent<OutlineScript>();
+                        outline.OutlineColor = Color.white;
+                        outline.OutlineWidth = 9.0f;
+                    }
                     outline.enabled = true;
-                    outline.OutlineColor = Color.white;
-                    outline.OutlineWidth = 9.0f;
                 }
-            }
-            else
-            {
-                highlight = null;
             }
         }
 
-        // Toggle selection with the left mouse button if a tower is placed
+        // Handle selection with the left mouse button if a tower is placed
         if (Input.GetMouseButtonDown(0) && hasPlacedTower)
         {
             if (highlight)
@@ -76,7 +76,7 @@ public class OutlineSelection : MonoBehaviour
             }
             else
             {
-                // Deselect current selection if clicking on the tower
+                // Deselect current selection if clicking on empty space
                 if (selection != null)
                 {
                     selection.gameObject.GetComponent<OutlineScript>().enabled = false;
@@ -86,7 +86,8 @@ public class OutlineSelection : MonoBehaviour
         }
     }
 
-    //TODO: Update status based on the Building Manager conditions
+
+    // Updates the placement status based on the Building Manager conditions.
     private void UpdatePlacementStatus()
     {
         hasPlacedTower = _buildingManager != null && _buildingManager.pendingObj == null;

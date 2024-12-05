@@ -12,7 +12,7 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private GameObject m_SpawnTowerButtonPrefab;
     [SerializeField] private Transform m_SpawnTowerButtonParent;
     [SerializeField] private Material[] placementMats;
-
+    private TowerInteract _towerInteract;
     public delegate void OnCountCompleted(int i);
     public OnCountCompleted onCountCompleted;
 
@@ -39,13 +39,11 @@ public class BuildingManager : MonoBehaviour
     {
         if (pendingObj != null)
         {
-           
             HandlePlacement();
             if (Input.GetMouseButtonDown(0) && canPlace)
             {
                 PlaceObject();
             }
-
             /*HandlePlacement();*/
             MaterialUpdate();
         }
@@ -63,7 +61,7 @@ public class BuildingManager : MonoBehaviour
 
             // Check if the hit object has a PlacementCheck component
             PlacementCheck placementCheck = hitObject.GetComponent<PlacementCheck>();
-
+            
             if (placementCheck != null)
             {
                 // Use the PlacementCheck component's decision
@@ -84,17 +82,14 @@ public class BuildingManager : MonoBehaviour
             }
             else if ((placeableLayer & (1 << hitObject.layer)) != 0)
             {
-                // Check the placeable layer only if no PlacementCheck component is found
-               // Debug.Log($"Placeable surface hit: {hitObject.name}");
+              
                 towerPos = hit.point + Vector3.up * snapHeight;
                 pendingObj.transform.position = towerPos;
-             
                 canPlace = true;
             }
             else
             {
-                // Unplaceable surface or other case
-               // Debug.Log($"Unplaceable Hit: {hitObject.name}");
+             
                 towerPos = hit.point + Vector3.up * snapHeight;
                 pendingObj.transform.position = towerPos;
                 canPlace = false;
@@ -108,14 +103,13 @@ public class BuildingManager : MonoBehaviour
 
 
     }
-
-
     public void PlaceObject()
     {
         if (pendingObj == null || !canPlace) return;
 
         pendingObj.GetComponent<MeshRenderer>().material = placementMats[2]; // Set to default material
         pendingObj.GetComponent<TowerController>().TowerPlaced = true;
+        pendingObj.GetComponent<TowerInteract>().isPlaced = true;
         pendingObj = null;
     }
 
