@@ -10,19 +10,10 @@ public class LevelManager : MonoBehaviour
     public LevelDataSO m_LevelDataSO;
     public LevelDataSO LevelDataSO => m_LevelDataSO;
     
-  
-
-  
     [SerializeField] private GameObject m_TestEnemy;
 
     private void Awake()
     {
         instance = this;
     }
-
-    
-    
-    
-    
-
 }

@@ -1,50 +1,35 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlacementCheck : MonoBehaviour
 {
+    [SerializeField]
     private BuildingManager buildingManager;
-
 
     public float rayDistance = 10f; // Distance each ray should travel
     public int numberOfRays = 10;   // Total rays
-    private float angleStep = 36f;  // Angle between each ray
+    private float angleStep;        // Angle between each ray
+    public bool allowPlacement = true; // Indicates if placement is allowed
 
-    public bool isRayHit;
-    
-    // Start is called before the first frame update
     void Start()
     {
         buildingManager = GameObject.Find("BuildingManager").GetComponent<BuildingManager>();
+        angleStep = 360f / numberOfRays; // Divide 360 degrees by the number of rays
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Tower"))
-        {
-            buildingManager.canPlace = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Tower"))
-        {
-            buildingManager.canPlace = false;
-        }
-    }
-    
     void Update()
+    {
+        allowPlacement = PerformRayCheck();
+    }
+
+    private bool PerformRayCheck()
     {
         for (int i = 0; i < numberOfRays; i++)
         {
-            float angle = i * angleStep; // Calculate angle for each ray (0, 36, 72, etc.)
+            float angle = i * angleStep; // Calculate angle for each ray
             Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward; // Rotate forward vector by angle
             Ray ray = new Ray(transform.position, direction);
 
-            // Cast the ray
             if (Physics.Raycast(ray, out RaycastHit hit, rayDistance))
             {
                 Debug.DrawLine(transform.position, hit.point, Color.red);
@@ -52,27 +37,19 @@ public class PlacementCheck : MonoBehaviour
                 // Check if the hit object is a tower
                 if (hit.collider.CompareTag("Tower")) // Assumes towers are tagged as "Tower"
                 {
-                    Debug.Log("Ray hit a tower. Placement not allowed.");
-                    buildingManager.canPlace = false;
-                }
-                else
-                {
-                    buildingManager.canPlace = true;
+                    return buildingManager.canPlace = false; // If any ray hits a tower, placement is not allowed
                 }
             }
             else
             {
                 Debug.DrawRay(transform.position, direction * rayDistance, Color.green);
-                buildingManager.canPlace = true; // No obstruction
             }
         }
+        return true; // No rays hit a tower, placement is allowed
     }
-    
-    public bool allowPlacement = true;
 
     public bool CanPlace()
     {
-        // Custom logic for placement rules
-        return allowPlacement;
+        return buildingManager.canPlace; // Return the current placement status
     }
 }

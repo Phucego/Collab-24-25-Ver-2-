@@ -1,8 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 
 public class BuildingManager : MonoBehaviour
@@ -10,25 +8,23 @@ public class BuildingManager : MonoBehaviour
     public GameObject pendingObj;
     [SerializeField] private GameObject m_SpawnTowerButtonPrefab;
     [SerializeField] private Transform m_SpawnTowerButtonParent;
-    
+
     private Material greenMaterial; // Material for valid placement
     private Material redMaterial;   // Material for invalid placement
-    
-    private TowerInteract _towerInteract;
-    public delegate void OnCountCompleted(int i);
-    public OnCountCompleted onCountCompleted;
 
-    private Vector3 towerPos;
-    RaycastHit hit;
-    [SerializeField] private LayerMask placeableLayer;
-    [SerializeField] private LayerMask unplaceableLayer;
+    public float minimumPlacementDistance = 3.0f; // Minimum distance between towers
+    private List<GameObject> placedTowers = new List<GameObject>(); // List of placed towers
 
     public GameObject placementIndicator; // Reference to the indicator box
-
     public float snapHeight = 1.5f;
     public bool canPlace;
 
     public BuildingManager Instance;
+
+    [SerializeField] private LayerMask placeableLayer;
+    [SerializeField] private LayerMask unplaceableLayer;
+
+    private Vector3 towerPos;
 
     private void Awake()
     {
@@ -37,11 +33,6 @@ public class BuildingManager : MonoBehaviour
         // Find the green and red materials by name
         greenMaterial = Resources.Load<Material>("Materials/GreenIndicator");
         redMaterial = Resources.Load<Material>("Materials/RedIndicator");
-
-        if (greenMaterial == null || redMaterial == null)
-        {
-            Debug.LogError("Green or Red material not found! Ensure they are in the 'Resources/Materials' folder and named correctly.");
-        }
     }
 
     private void Start()
@@ -76,27 +67,22 @@ public class BuildingManager : MonoBehaviour
             PlacementCheck placementCheck = hitObject.GetComponent<PlacementCheck>();
             if (placementCheck != null)
             {
-                if (placementCheck.CanPlace())
-                {
-                    towerPos = hit.point + Vector3.up * snapHeight;
-                    pendingObj.transform.position = towerPos;
-                    canPlace = true;
-                }
-                else
-                {
-                    towerPos = hit.point + Vector3.up * snapHeight;
-                    pendingObj.transform.position = towerPos;
-                    canPlace = false;
-                }
+                towerPos = hit.point + Vector3.up * snapHeight;
+                pendingObj.transform.position = towerPos;
+                canPlace = placementCheck.CanPlace() && IsFarEnoughFromOthers(towerPos);
             }
             else if ((placeableLayer & (1 << hitObject.layer)) != 0)
             {
+                // Object is on the placeable layer, but check additional conditions
                 towerPos = hit.point + Vector3.up * snapHeight;
                 pendingObj.transform.position = towerPos;
-                canPlace = true;
+
+                // Verify no nearby towers and that placement is allowed
+                canPlace = IsFarEnoughFromOthers(towerPos);
             }
             else
             {
+                // Unplaceable layer or invalid object
                 towerPos = hit.point + Vector3.up * snapHeight;
                 pendingObj.transform.position = towerPos;
                 canPlace = false;
@@ -104,8 +90,22 @@ public class BuildingManager : MonoBehaviour
         }
         else
         {
+            // No valid hit detected
             canPlace = false;
         }
+    }
+
+    bool IsFarEnoughFromOthers(Vector3 position)
+    {
+        // Check distance to all placed towers
+        foreach (GameObject tower in placedTowers)
+        {
+            if (Vector3.Distance(position, tower.transform.position) < minimumPlacementDistance)
+            {
+                return false; // Too close to another tower
+            }
+        }
+        return true; // Far enough from other towers
     }
 
     public void PlaceObject()
@@ -122,11 +122,29 @@ public class BuildingManager : MonoBehaviour
         pendingObj.GetComponent<TowerController>().TowerPlaced = true;
         pendingObj.GetComponent<TowerInteract>().isPlaced = true;
 
+        placedTowers.Add(pendingObj); // Add the placed tower to the list
         pendingObj = null;
     }
 
     public void SelectObject(GameObject prefab)
     {
+        // If the selected tower is the same as the pending one, don't change the pending object
+        if (pendingObj != null && prefab == pendingObj)
+        {
+            return; // Do nothing if the same tower is selected again
+        }
+
+        // If there is already a pending object, discard it
+        if (pendingObj != null)
+        {
+            Destroy(pendingObj); // Destroy the previous pending object
+            if (placementIndicator != null)
+            {
+                placementIndicator.SetActive(false); // Hide the previous indicator
+            }
+        }
+
+        // Instantiate the new tower and set it as the pending object
         pendingObj = Instantiate(prefab, Vector3.zero, Quaternion.identity);
         placementIndicator = pendingObj.transform.Find("PlacementIndicator").gameObject;
 

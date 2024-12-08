@@ -129,7 +129,7 @@ public class UIManager : MonoBehaviour
 
     // TODO: Call back the score when the enemy dies
     private IEnumerator AddScoreAfterEnemyDies()
-    {
+    {   
         m_TestEnemy.GetComponent<EnemyDrops>().InitEnemy((coin) =>
         {
             coinCount += coin;
