@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f47bd1e3c4a580c48bc1c32f450bd863, type: 3}
+  m_Name: StatWizard
+  m_EditorClassIdentifier: 
+  towerPrefab: {fileID: 0}
+  TowerType: 2
+  TargetType: 0000000002000000
+  Damage: 5
+  Health: 100
+  Radius: 25
+  FireRate: 5
+  ProjectileSpeed: 20
+  CritChance: 0
+  CritAmplifier: 1
+  Cost: 0
+  listUpgrades:
+  - {fileID: 11400000, guid: ba2f103e2f3ecd842a9bb7d620b36422, type: 2}
+  - {fileID: 11400000, guid: bd8b7daecd0584b4ba8fcbb3f1b3f290, type: 2}
+  - {fileID: 11400000, guid: 1d1b5c4b088d3e54a9971b6f590be905, type: 2}
+  - {fileID: 11400000, guid: 1e43ed94fb7365d4a8809cfee62ed45b, type: 2}

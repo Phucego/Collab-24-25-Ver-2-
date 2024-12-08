@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f47bd1e3c4a580c48bc1c32f450bd863, type: 3}
+  m_Name: StatCannon
+  m_EditorClassIdentifier: 
+  towerPrefab: {fileID: 0}
+  TowerType: 0
+  TargetType: 00000000
+  Damage: 20
+  Health: 100
+  Radius: 20
+  FireRate: 1
+  ProjectileSpeed: 20
+  CritChance: 0
+  CritAmplifier: 1
+  Cost: 0
+  listUpgrades:
+  - {fileID: 11400000, guid: 56df850642e0f0c469fdde3aff7f1535, type: 2}
+  - {fileID: 11400000, guid: 74bed56d30711ac44ba4b7a566d10bd7, type: 2}
+  - {fileID: 11400000, guid: e1cd993cf92435c4582c25112532bf54, type: 2}
+  - {fileID: 11400000, guid: fa76cbf6716f0f8439e006c59755b3ce, type: 2}
