@@ -4463,15 +4463,15 @@ MonoBehaviour:
   m_SpawnTowerButtonPrefab: {fileID: 6632295204436862685, guid: 8b9c33699615b7a4fbbf6f2f565190cc, type: 3}
   m_SpawnTowerButtonParent: {fileID: 929175305}
   placementMats:
-  - {fileID: 2100000, guid: 0725356c37523d64c89066305ad10b22, type: 2}
-  - {fileID: 2100000, guid: 427b618baf3b85a44900f01c0efd1f17, type: 2}
-  - {fileID: 2100000, guid: 264303201f8d5d2419fc53f8cd9ca71f, type: 2}
+  - {fileID: 2100000, guid: 248dbbd56157b864dbab963a8e19a620, type: 2}
+  - {fileID: 2100000, guid: 599e6cd0ac5d7814193a064a6483f3cb, type: 2}
   placeableLayer:
     serializedVersion: 2
     m_Bits: 8
   unplaceableLayer:
     serializedVersion: 2
     m_Bits: 1024
+  placementIndicator: {fileID: 0}
   snapHeight: 3.77
   canPlace: 0
   Instance: {fileID: 0}
