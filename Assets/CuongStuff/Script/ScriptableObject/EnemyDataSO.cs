@@ -8,7 +8,7 @@ public class EnemyDataSO : ScriptableObject
     public Color color = Color.white;
     public new string name;
     public string description;
-    public TargetType[] type;
+    public TargetTypeEnum[] type;
 
     public int maxHealth;
     public float maxSpeed;
@@ -16,7 +16,7 @@ public class EnemyDataSO : ScriptableObject
     private void OnEnable()
     {
         if (type == null || type.Length == 0)
-            type = new TargetType[] { TargetType.Grounded };
+            type = new TargetTypeEnum[] { TargetTypeEnum.Grounded };
     }
 
 }

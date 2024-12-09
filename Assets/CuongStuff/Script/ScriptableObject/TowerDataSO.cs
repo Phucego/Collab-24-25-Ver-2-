@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public enum TowerType
+public enum TowerTypeEnum
 {
     Normal, // apply for all tower
     AOE, // Apply for AOE tower
     Chain
 }
 
-public enum TargetType
+public enum TargetTypeEnum
 {
     Grounded,
     Airborne,
@@ -22,8 +22,8 @@ public class TowerBaseStat { }
 public class TowerDataSO : ScriptableObject
 {
     public GameObject towerPrefab;
-    public TowerType TowerType;
-    public List<TargetType> TargetType;
+    public TowerTypeEnum TowerType;
+    public List<TargetTypeEnum> TargetType;
     public float Damage;
     public float Health;
     public float Radius;

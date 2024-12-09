@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface I_GetType
 {
-    TargetType[] GetTargetType() { return new TargetType[] { TargetType.Grounded }; }
+    TargetTypeEnum[] GetTargetType() { return new TargetTypeEnum[] { TargetTypeEnum.Grounded }; }
 }
