@@ -29,6 +29,8 @@ public class TowerDataSO : ScriptableObject
     public float Radius;
     public float FireRate;
     public float ProjectileSpeed;
+    public float ProjectileRadius;
+    public float ProjectileInterval;
     [Range(0,100)] public float CritChance;
     public float CritAmplifier = 1f;
     public int Cost;

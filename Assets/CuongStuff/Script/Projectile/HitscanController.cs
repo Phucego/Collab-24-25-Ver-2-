@@ -96,12 +96,17 @@ public class HitscanController : MonoBehaviour, I_TowerProjectile
             StartCoroutine(SetDamagable());
     }
 
-    public void SetDamage(float dmg)
+    public virtual void SetDamage(float dmg)
     {
         Damage = dmg;
     }
 
-    public void SetDebuff(float duration)
+    public virtual void SetDebuff(float duration)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public virtual void SetRadius(float radius)
     {
         throw new System.NotImplementedException();
     }

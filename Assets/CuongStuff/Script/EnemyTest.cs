@@ -20,6 +20,6 @@ public class EnemyTest : MonoBehaviour, I_GetType, I_Damagable
 
     public void TakeDamage(float damage)
     {
-        Debug.Log("Damage taken: " +damage);
+        //Debug.Log("Damage taken: " +damage);
     }
 }

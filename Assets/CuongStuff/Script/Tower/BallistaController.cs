@@ -27,7 +27,6 @@ public class BalistaController : TowerController
         GameObject Projectile = GetPooledObject();
         Projectile.transform.position = AimPoint.transform.position;
         Projectile.transform.rotation = AimPoint.transform.rotation;
-        SetStat(Projectile);
         if (Projectile.GetComponent<HitscanController>() != null)
         {
             Projectile.GetComponent<HitscanController>().SetTarget(Target);

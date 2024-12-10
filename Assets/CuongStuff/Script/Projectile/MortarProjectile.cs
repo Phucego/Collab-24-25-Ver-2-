@@ -10,9 +10,11 @@ public class MortarProjectile : ProjectileController
 
     private float momentum = 1f;
     private float dist, fracCurrent;
+    private float blastradius = 5f;
 
     private bool Flying = false;
 
+    // Flying along the trajectory
     private void FixedUpdate()
     {
         if (!Flying) { return; }
@@ -52,6 +54,7 @@ public class MortarProjectile : ProjectileController
         }
     }
 
+    // Set start and end point of the lerp
     public void SetPositionLerp(Vector3 original, Vector3 destination)
     {
         originalPos = original;
@@ -69,6 +72,34 @@ public class MortarProjectile : ProjectileController
         Flying = true;
     }
 
+    private void SetExplosion()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, blastradius);
+        foreach (var collider in colliders)
+        {
+            if (collider.gameObject.CompareTag("Enemy"))
+            {
+                ApplyDamage(collider.gameObject);
+            }
+        }
+    }
+
+    public override void SetRadius(float radius)
+    {
+        blastradius = radius;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision != null)
+        {
+            SetExplosion();
+            transform.gameObject.SetActive(false);
+            Flying = false;
+            // Some other AOE shit here    
+        }
+    }
+
     // DEBUG 
     private void OnDrawGizmos()
     {
@@ -79,6 +110,7 @@ public class MortarProjectile : ProjectileController
 
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(centerPos, 0.2f);
+        Gizmos.DrawWireSphere(endPos, blastradius);
     }
 
     IEnumerable<Vector3> EvaluateSlerpPoints(Vector3 start, Vector3 end, Vector3 center, int count = 10)
@@ -97,20 +129,6 @@ public class MortarProjectile : ProjectileController
         for (var i = 0f; i < 1 + f; i += f)
         {
             yield return Vector3.Slerp(riseRelCenter, setRelCenter, i) + center;
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision != null)
-        {
-            if (collision.gameObject.CompareTag("Enemy"))
-            {
-                ApplyDamage(collision.gameObject);
-            }
-            transform.gameObject.SetActive(false);
-            Flying = false;
-            // Some other AOE shit here    
         }
     }
 }

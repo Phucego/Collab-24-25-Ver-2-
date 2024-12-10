@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class InteractController : MonoBehaviour
 {
     private LayerMask layerMask;
     private I_Interactable LatestInteract;
+    [SerializeField] private EventSystem eventSystem;
 
     void Start()
     {
@@ -18,6 +21,8 @@ public class InteractController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             bool targethit = false;  
+
+            // Check available colliders
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] hit = Physics.RaycastAll(ray, 150f, layerMask);
             for (int i = 0; i < hit.Length; i++) 
@@ -40,14 +45,25 @@ public class InteractController : MonoBehaviour
                     LatestInteract.Interact(Camera.main);
                     targethit = true;
                 }
-                
                 break;
             }
+
+            // Check available canvas buttons 
+            PointerEventData pointerEventData = new PointerEventData(eventSystem) { position = Input.mousePosition };
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerEventData, results);
+
+            if (results.Count > 0)
+            {
+                targethit = true;
+            }
+
             if (LatestInteract != null && !targethit)
             {
                 LatestInteract.Deselect();
                 LatestInteract = null;
             }
+
         }
     }
 

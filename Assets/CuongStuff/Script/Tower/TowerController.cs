@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEditor.Progress;
 
 public class TowerController : MonoBehaviour
 {
     // Start is called before the first frame update
     [Header("Tower Set Up")]
     public TowerDataSO TowerData;
-    public GameObject MainPoint, Head, AimPoint, HeadParent, BodyParent;
     public GameObject[] PrefabProjectile;
     public UnityEvent<UpgradeType, float> CallChangeStat;
     [HideInInspector] public bool TowerPlaced = false;
@@ -26,22 +28,33 @@ public class TowerController : MonoBehaviour
     [SerializeField] protected float CritAmp;
 
     //[Header("Tower Test")]
-    protected List<GameObject> _EnemyList = new List<GameObject>();
+    protected GameObject MainPoint, Head, AimPoint, HeadParent, BodyParent, CurrentHead, CurrentBody;
     protected GameObject[] _HeadModel = new GameObject[] { };
     protected GameObject[] _BodyModel = new GameObject[] { };
     protected List<GameObject> _ProjectileList = new List<GameObject>();
     //protected List<GameObject> ProjectileList = new List<GameObject>();
+
+    
     protected SphereCollider RadiusDetector;
-    protected GameObject Target, CurrentHead, CurrentBody;
-    protected Vector3 TargetPos = new Vector3(0,0,0);
+    protected TowerDataSO _DeepCopyTowerData; 
     protected LayerMask layerMask;
     protected float TimeBeforeFire = 0f;
 
+    [HideInInspector] public List<GameObject> _EnemyList = new List<GameObject>();
+    [HideInInspector] public GameObject Target;
+    [HideInInspector] public Vector3 TargetPos = new Vector3(0, 0, 0);
+
     private void Awake()
-    {
+    {   
+        // Set up references
         MainPoint = GameObject.Find("MainPoint");
-        layerMask = LayerMask.GetMask("Enemy");
-        RadiusDetector = GetComponent<SphereCollider>();
+        Head = gameObject.transform.GetChild(0).gameObject;
+        AimPoint = Head.transform.GetChild(0).gameObject;
+        HeadParent = Head.transform.GetChild(1).gameObject;
+        BodyParent = gameObject.transform.GetChild(1).gameObject;
+        RadiusDetector = gameObject.transform.GetChild(2).GetComponent<SphereCollider>();
+
+        layerMask = LayerMask.GetMask("Enemy"); 
         _HeadModel = new GameObject[TowerData.listUpgrades.Count + 1];
         _BodyModel = new GameObject[TowerData.listUpgrades.Count + 1];
     }
@@ -79,7 +92,7 @@ public class TowerController : MonoBehaviour
     // Get data from the scriptable object and get a copy of it
     protected virtual void DeepCopyData()
     {
-        TowerDataSO _DeepCopyTowerData = Instantiate(TowerData);
+        _DeepCopyTowerData = Instantiate(TowerData);
         TowerType = _DeepCopyTowerData.TowerType;
         TargetType = _DeepCopyTowerData.TargetType;
         Damage = _DeepCopyTowerData.Damage;
@@ -111,7 +124,7 @@ public class TowerController : MonoBehaviour
 
     }
 
-    // Check if enemy in within the sight of the aimpoint
+    // Check if enemy is within the sight of the aimpoint
     protected virtual IEnumerator LOSCheck()
     {
         TargetPos = Target.transform.position;
@@ -125,18 +138,20 @@ public class TowerController : MonoBehaviour
         }
         yield return null;
     }
+
+    // Fire projectiles
     protected virtual IEnumerator FireProjectile(Vector3 direction)
     {
         GameObject Projectile = GetPooledObject();
         Projectile.transform.position = AimPoint.transform.position;
         Projectile.transform.rotation = AimPoint.transform.rotation;
-        SetStat(Projectile);
         Projectile.SetActive(true);
         //Projectile.GetComponent<ProjectileController>().SetDirection(direction.normalized);
 
         yield return null;
     }
 
+    // Update stats for the projectiles
     protected virtual void SetStat(GameObject projectile)
     {
         projectile.GetComponent<I_TowerProjectile>().SetDamage(Damage);
@@ -152,9 +167,10 @@ public class TowerController : MonoBehaviour
             }
         }
 
-        // Create more projectiles if no more objects are pooled
+        // Create more projectiles if no more pooled objects are available
         GameObject NewProjectile = Instantiate(PrefabProjectile[0], AimPoint.transform.position, Quaternion.identity, GameObject.Find("_Projectiles").transform);
         _ProjectileList.Add(NewProjectile);
+        SetStat(NewProjectile);
         return NewProjectile;
     }
 
@@ -168,12 +184,18 @@ public class TowerController : MonoBehaviour
             {
                 int point = 0;
                 TargetTypeEnum[] enemyType = enemy.GetComponent<I_GetType>().GetTargetType();
+
                 // Check if they have matching target type
                 foreach (TargetTypeEnum enemytype in enemyType)
+                {
                     if (TargetType.Contains(enemytype))
                         point += 1;
+                    if (enemytype == TargetTypeEnum.Invisible) // Haha idk what does this do
+                        point -= 1;
+                }
+                    
                 // Reset the enemy target if they dont match target type
-                if (point == 0)
+                if (point <= 0)
                 {
                     if (enemy == Target)
                     {
@@ -201,33 +223,17 @@ public class TowerController : MonoBehaviour
     }
 
     // Upgrade tower call success
-    public void UpgradeTower()
+    public virtual void UpgradeTower()
     {
         if (Level >= TowerData.listUpgrades.Count)
             return;
 
         Level += 1;
         UpgradeDataSO Data = TowerData.listUpgrades[Level-1];
+        string decoy = "";
         foreach (var item in Data.upgradeDatas)
         {
-            switch (item.upgradeType)
-            {
-                case UpgradeType.Health:
-                    Health += item.value;
-                    break;
-                case UpgradeType.Damage:
-                    Damage += item.value;
-                    break;
-                case UpgradeType.FireRate:
-                    FireRate += item.value;
-                    break;
-                case UpgradeType.Radius:
-                    Radius += item.value;
-                    break;
-                case UpgradeType.AOE:
-                    // No AOE
-                    break;
-            }
+            decoy = ScanUpgrades(item, false);
         }
 
         bool HasModelHead = CheckModelValid(_HeadModel, Level);
@@ -247,8 +253,102 @@ public class TowerController : MonoBehaviour
             CurrentBody.SetActive(true);
         }
 
+        foreach (var projectile in _ProjectileList)
+        {
+            SetStat(projectile);
+        }
     }
 
+    // Return values as string to the tower info canvas
+    public virtual string GetCurrentStats()
+    {
+        string stats = "";
+        stats += "Damage: " + Damage + "\n";
+        stats += "Range: " + Radius + "m \n";
+        stats += "Fire Rate: " + FireRate + "s\n";
+
+        stats += "Crit Chance: " + CritChance + "% \n";
+        stats += "Crit Amp: " + CritAmp + "x \n";
+
+        return stats;
+    }
+
+    public virtual string GetName()
+    {
+        return TowerData.name;
+    }
+
+    public virtual string GetLevelString()
+    {
+        string level = "Level " + Level + " -> Level " + (Level + 1);
+        if (Level + 1 == TowerData.listUpgrades.Count)
+            level = "Level " + Level + " -> MAXED ";
+        else if (Level >= TowerData.listUpgrades.Count)
+            level = "MAXED";
+
+        return level;
+    }
+    public virtual int GetLevelInt()
+    {
+        return Level;
+    }
+
+    public virtual string GetUpgradeStats()
+    {
+        string upgradestats = "";
+        if (Level >= TowerData.listUpgrades.Count)
+            return "YOU HAVE MAXED THIS TOWER";
+
+        UpgradeDataSO Data = TowerData.listUpgrades[Level];
+        foreach (var item in Data.upgradeDatas)
+        {
+            upgradestats += ScanUpgrades(item, true);
+        }
+        return upgradestats;
+    }
+
+    // Get data from the upgrade so
+    public virtual string ScanUpgrades(UpgradeData type, bool returnstring)
+    {
+        string stat = "";
+        switch (type.upgradeType)
+        {
+            case UpgradeType.Health:
+                if (!returnstring)
+                    Health += type.value;
+                break;
+            case UpgradeType.Damage:
+                if (!returnstring)
+                    Damage += type.value;
+                stat = "Damage: " + Damage + " -> " + (Damage + type.value) + "\n";
+                break;
+            case UpgradeType.FireRate:
+                if (!returnstring)
+                    FireRate += type.value;
+                stat = "Fire Rate: " + FireRate + " -> " + (FireRate + type.value) + "s\n";
+                break;
+            case UpgradeType.Radius:
+                if (!returnstring)
+                {
+                    Radius += type.value;
+                    CallChangeStat.Invoke(UpgradeType.Radius, Radius);
+                    RadiusDetector.radius = Radius;
+                }
+                stat = "Range: " + Radius + " -> " + (Radius + type.value) + "m \n";
+                break;
+            case UpgradeType.AOE:
+                // No AOE
+                break;
+        }
+        if (returnstring)
+        {
+            return stat;
+        }
+        return string.Empty;
+    }
+
+
+    // Change target types
     public void ConfigTargetType(TargetTypeEnum type, bool action)
     {
         if (action)
@@ -266,22 +366,4 @@ public class TowerController : MonoBehaviour
         return false;
     }
 
-    private void OnTriggerEnter(Collider target)
-    {
-        if (target.gameObject.CompareTag("Enemy") && !_EnemyList.Contains(target.gameObject))
-        {
-            _EnemyList.Add(target.gameObject);
-        }
-    }
-
-    private void OnTriggerExit(Collider target)
-    {
-        _EnemyList.RemoveAll(gameobject => gameobject == null);
-        if (target.gameObject.CompareTag("Enemy"))
-        {
-            _EnemyList.Remove(target.gameObject);
-            Target = null;
-            TargetPos = new Vector3(0,0,0);
-        }
-    }
 }

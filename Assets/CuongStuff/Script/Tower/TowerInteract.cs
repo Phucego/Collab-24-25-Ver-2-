@@ -7,10 +7,10 @@ using UnityEngine.Events;
 public class TowerInteract : MonoBehaviour, I_Interactable
 {
     public InputActionAsset towerAction;
-    public GameObject _RadiusSphere;
-    public GameObject _CanvasInfo;
     public UnityEvent UpgradeTower;
 
+    private GameObject _RadiusSphere;
+    private GameObject _CanvasInfo;
     private InputActionMap mapAction;
     private InputAction upgradeAction, sellAction;
     private float Radius;
@@ -26,6 +26,8 @@ public class TowerInteract : MonoBehaviour, I_Interactable
 
     void OnEnable()
     {
+        _RadiusSphere = gameObject.transform.GetChild(3).gameObject;
+        _CanvasInfo = gameObject.transform.GetChild(4).gameObject;      
         upgradeAction.Enable();
         upgradeAction.performed += Upgrade;
     }
@@ -40,8 +42,14 @@ public class TowerInteract : MonoBehaviour, I_Interactable
     {
         if (_CanvasInfo.activeInHierarchy)
         {
-            UpgradeTower.Invoke();
+            UpgradeSelected();
         }
+    }
+
+    public void UpgradeSelected()
+    {
+        UpgradeTower.Invoke();
+        _CanvasInfo.GetComponent<TowerCanvasHandler>().Upgrade();
     }
 
     // Update is called once per frame
@@ -59,6 +67,7 @@ public class TowerInteract : MonoBehaviour, I_Interactable
         {
             case UpgradeType.Radius:
                 Radius = value;
+                _RadiusSphere.transform.localScale = new Vector3(Radius * 2, Radius * 2, Radius * 2);
                 break;
         }
     }
@@ -69,7 +78,6 @@ public class TowerInteract : MonoBehaviour, I_Interactable
         _RadiusSphere.transform.localScale = new Vector3(Radius * 2, Radius * 2, Radius * 2);
         _RadiusSphere.SetActive(true);
         _CanvasInfo.SetActive(true);
-        Debug.Log("Tower interact!");
     }
 
     public void Deselect()

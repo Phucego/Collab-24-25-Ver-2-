@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3cda748dd05d4954d99da7168a872e70, type: 3}
-  m_Name: Invis
+  m_Name: Flying
   m_EditorClassIdentifier: 
   color: {r: 1, g: 1, b: 1, a: 1}
-  name: hi
+  name: dasd
   description: 
-  type: 02000000
+  type: 01000000
   maxHealth: 0
   maxSpeed: 0

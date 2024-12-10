@@ -20,7 +20,12 @@ MonoBehaviour:
   Radius: 50
   FireRate: 2
   ProjectileSpeed: 0
+  ProjectileRadius: 0
+  ProjectileInterval: 0
   CritChance: 0
   CritAmplifier: 1
   Cost: 0
-  listUpgrades: []
+  listUpgrades:
+  - {fileID: 11400000, guid: 4b1c75285092405428296e8e385b8a4a, type: 2}
+  - {fileID: 11400000, guid: 346abd744f3dd9a489695a47a308c5db, type: 2}
+  - {fileID: 11400000, guid: 080bd37dd498e8d429c5335a21c28e41, type: 2}

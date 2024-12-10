@@ -10,8 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d62fa5b5054766948b074ec4e5dcd815, type: 3}
-  m_Name: UpgradeBallista4
+  m_Name: LVL1Mortar
   m_EditorClassIdentifier: 
   upgradeName: 
   Cost: 0
-  upgradeDatas: []
+  upgradeDatas:
+  - upgradeType: 2
+    value: 10
+  - upgradeType: 1
+    value: 10

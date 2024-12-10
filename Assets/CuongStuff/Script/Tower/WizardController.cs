@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class WizardController : TowerController
 {
-    [SerializeField] private List<GameObject> _TowerList = new List<GameObject>();
+    
     private List<HitscanController> hitscanControllers = new List<HitscanController>();
+    private float DamageInterval = 0.7f;
     private bool Firing = false;
+    private bool UnlockBeam = false;
 
     protected override void Update()
     {
@@ -44,7 +46,6 @@ public class WizardController : TowerController
         GameObject Projectile = GetPooledObject();
         Projectile.transform.position = AimPoint.transform.position;
         Projectile.transform.rotation = AimPoint.transform.rotation;
-        SetStat(Projectile);
         Projectile.GetComponent<HitscanController>().SetTarget(Target);
 
         Projectile.SetActive(true);  
@@ -55,6 +56,7 @@ public class WizardController : TowerController
     // Pooling objects
     protected override GameObject GetPooledObject()
     {
+        GameObject projectile = base.GetPooledObject();
         for (int i = 0; i < _ProjectileList.Count; i++)
         {
             if (!_ProjectileList[i].activeInHierarchy)
@@ -63,11 +65,8 @@ public class WizardController : TowerController
             }
         }
 
-        // Create more projectiles if no more objects are pooled
-        GameObject NewProjectile = Instantiate(PrefabProjectile[0], AimPoint.transform.position, Quaternion.identity, GameObject.Find("_Projectiles").transform);
-        hitscanControllers.Add(NewProjectile.GetComponent<HitscanController>());
-        _ProjectileList.Add(NewProjectile);
-        return NewProjectile;
+        hitscanControllers.Add(projectile.GetComponent<HitscanController>());
+        return projectile;
     }
 
     private IEnumerator Cooldown()
@@ -76,43 +75,37 @@ public class WizardController : TowerController
         Firing = false;
     }
 
-    private void OnTriggerEnter(Collider target)
+    public override string GetCurrentStats()
     {
-        if (target.gameObject.CompareTag("Enemy") && !_EnemyList.Contains(target.gameObject))
-        {
-            _EnemyList.Add(target.gameObject);
-        }
-        else if (target.gameObject.CompareTag("Tower") && !_TowerList.Contains(target.gameObject))
-        {
-            _TowerList.Add(target.gameObject);
-            target.gameObject.GetComponent<TowerController>().ConfigTargetType(TargetTypeEnum.Invisible,true);
-        }
+        string basecall = base.GetCurrentStats();
+        basecall += "Damage Interval: " + DamageInterval + "\n";
+        basecall += "Hidden Detection Buff: Provide all towers nearby hidden detection \n";
+
+        return basecall;
     }
 
-    private void OnTriggerExit(Collider target)
+    public override string ScanUpgrades(UpgradeData type, bool returnstring)
     {
-        _EnemyList.RemoveAll(gameobject => gameobject == null);
-        _TowerList.RemoveAll(gameobject => gameobject == null);
-        if (target.gameObject.CompareTag("Enemy"))
-        {
-            _EnemyList.Remove(target.gameObject);
-            Target = null;
-            TargetPos = new Vector3(0, 0, 0);
-        }
-        else if (target.gameObject.CompareTag("Tower"))
-        {
-            _TowerList.Remove(target.gameObject);
-            target.gameObject.GetComponent<TowerController>().ConfigTargetType(TargetTypeEnum.Invisible, false);
-        }
-    }
+        string basecall = base.ScanUpgrades(type, returnstring);
 
-    private void OnDestroy()
-    {
-        foreach (GameObject obj in _TowerList)
+        switch (type.upgradeType)
         {
-            if (obj != null)
-                obj.GetComponent<TowerController>().ConfigTargetType(TargetTypeEnum.Invisible, false);
-
+            case UpgradeType.Interval:
+                if (!returnstring)
+                    DamageInterval += type.value;
+                basecall += "Damage Interval: " + DamageInterval + " -> " + (DamageInterval + type.value) + "s \n";
+                break;
         }
+        if (Level == 1)
+        {
+            basecall += "Unlock: Lightning Beam \n";
+            basecall += "Lightning Beam: Fire an electric beam that rapidly deals damage to a single target \n";
+        }
+
+        if (returnstring)
+        {
+            return basecall;
+        }
+        return string.Empty;
     }
 }

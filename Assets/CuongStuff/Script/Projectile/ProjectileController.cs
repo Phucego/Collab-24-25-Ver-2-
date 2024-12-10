@@ -1,14 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 
 public class ProjectileController : MonoBehaviour, I_TowerProjectile
 {
     protected Rigidbody rb;
     protected float Damage = 10f;
+    protected float CritChance = 0f;
+    protected float CritAmp = 1f;
     [SerializeField] protected float Speed = 10f;
 
     private Vector3 shootDirection;
@@ -47,16 +46,22 @@ public class ProjectileController : MonoBehaviour, I_TowerProjectile
 
     protected virtual void ApplyDamage(GameObject target)
     {
+
         target.GetComponent<I_Damagable>().TakeDamage(Damage);
     }
 
-    public void SetDamage(float dmg)
+    public virtual void SetDamage(float dmg)
     {
         Damage = dmg;
     }
 
-    public void SetDebuff(float duration)
+    public virtual void SetDebuff(float duration)
     {
-        throw new System.NotImplementedException();
+        
+    }
+
+    public virtual void SetRadius(float radius)
+    {
+        
     }
 }
