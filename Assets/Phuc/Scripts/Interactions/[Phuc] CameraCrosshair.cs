@@ -26,7 +26,7 @@ public class CameraCrosshair : MonoBehaviour
     private void TowerInteraction()
     {
         // Cast a ray from the center of the screen
-        Ray ray = cam.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, towerLayer))
         {
             TowerInteract tower = hit.collider.GetComponent<TowerInteract>();

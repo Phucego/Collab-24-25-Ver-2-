@@ -57,7 +57,7 @@ public class BuildingManager : MonoBehaviour
     #region Building System Logics
     void HandlePlacement()
     {
-        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, placeableLayer | unplaceableLayer))
@@ -146,14 +146,26 @@ public class BuildingManager : MonoBehaviour
 
         // Instantiate the new tower and set it as the pending object
         pendingObj = Instantiate(prefab, Vector3.zero, Quaternion.identity);
-        placementIndicator = pendingObj.transform.Find("PlacementIndicator").gameObject;
+        placementIndicator = pendingObj.transform.Find("PlacementIndicator")?.gameObject;
+
+        if (placementIndicator == null)
+        {
+            Debug.LogWarning("PlacementIndicator not found in the prefab.");
+            return; // Exit early to avoid further errors
+        }
 
         // Set the initial placement indicator material to red
-        if (placementIndicator != null)
+        MeshRenderer renderer = placementIndicator.GetComponent<MeshRenderer>();
+        if (renderer != null)
         {
-            placementIndicator.GetComponent<MeshRenderer>().material = redMaterial;
+            renderer.material = redMaterial;
+        }
+        else
+        {
+            Debug.LogWarning("MeshRenderer not found on PlacementIndicator.");
         }
     }
+
 
     void MaterialUpdate()
     {
@@ -181,6 +193,7 @@ public class BuildingManager : MonoBehaviour
             go.GetComponent<Button>().onClick.AddListener(() =>
             {
                 SelectObject(LevelManager.instance.LevelDataSO.towerData[count].towerPrefab);
+                Debug.Log(LevelManager.instance.LevelDataSO.towerData[count].towerPrefab);
             });
         }
     }

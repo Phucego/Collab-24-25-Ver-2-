@@ -702,7 +702,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be39759db26269340b8228a37626c7c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TowerData: {fileID: 11400000, guid: a06e621a06652f545aa6d4e31e0b1b7a, type: 2}
+  TowerData: {fileID: 11400000, guid: d36ff543d8494e34195da8f45bbd6c47, type: 2}
   MainPoint: {fileID: 0}
   Head: {fileID: 644278453089424235}
   AimPoint: {fileID: 2136376045720153831}
@@ -728,7 +728,7 @@ MonoBehaviour:
   TowerPlaced: 0
   Level: 1
   TowerType: 0
-  TargetType: 
+  TargetType: 00000000
   Damage: 10
   Health: 10
   Radius: 7.25
@@ -780,9 +780,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f1d85c1131c5d44b9fe8bff1e818d74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buildingManager: {fileID: 0}
   rayDistance: 10
   numberOfRays: 10
-  isRayHit: 0
   allowPlacement: 1
 --- !u!23 &-5933803277995610689
 MeshRenderer:

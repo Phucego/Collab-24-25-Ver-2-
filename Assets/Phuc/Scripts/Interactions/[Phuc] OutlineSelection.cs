@@ -32,8 +32,8 @@ public class OutlineSelection : MonoBehaviour
             highlight = null;
         }
 
-        // Fixed raycast from screen center
-        Ray ray = cam.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+       
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (!EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out raycastHit))
         {
             Transform hitTransform = raycastHit.transform;

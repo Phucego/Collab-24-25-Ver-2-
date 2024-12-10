@@ -3916,7 +3916,7 @@ MonoBehaviour:
   coinCounterParent: {fileID: 9090227092309201280}
   waveProgressParent: {fileID: 9090227092309201278}
   pauseAndWaveParent: {fileID: 9090227092309201279}
-  crosshair: {fileID: 9090227092309201281}
+  crosshair: {fileID: 0}
   mainUI: {fileID: 622176622}
   startWaveButton: {fileID: 9090227092309201283}
   pauseButton: {fileID: 9090227092309201282}
@@ -4803,6 +4803,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -357
       objectReference: {fileID: 0}
+    - target: {fileID: 7346334944401020582, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7471729119054136855, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
       propertyPath: m_MatchWidthOrHeight
       value: 0.5
@@ -4852,7 +4856,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 7346334944401020582, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 6909965591573522159, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
       insertIndex: -1
@@ -4872,11 +4877,6 @@ GameObject:
 --- !u!1 &9090227092309201280 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4458921827307625948, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
-  m_PrefabInstance: {fileID: 9090227092309201277}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &9090227092309201281 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7346334944401020582, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
   m_PrefabInstance: {fileID: 9090227092309201277}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &9090227092309201282 stripped
