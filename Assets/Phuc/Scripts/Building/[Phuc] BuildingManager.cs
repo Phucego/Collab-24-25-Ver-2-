@@ -45,13 +45,22 @@ public class BuildingManager : MonoBehaviour
         if (pendingObj != null)
         {
             HandlePlacement();
+    // Place the object on left mouse click if placement is valid
             if (Input.GetMouseButtonDown(0) && canPlace)
             {
-                PlaceObject();
+                    PlaceObject();
+            }
+
+            // Delete the pending object on pressing Escape
+            if (Input.GetKeyDown(KeyCode.Escape)) 
+            {
+                DeletePendingObject();
             }
 
             MaterialUpdate();
         }
+        
+
     }
 
     #region Building System Logics
@@ -166,6 +175,21 @@ public class BuildingManager : MonoBehaviour
         }
     }
 
+    void DeletePendingObject()
+    {
+        //TODO: Delete pending obj if the player does not want to choose 
+        if (pendingObj != null)
+        {
+            Destroy(pendingObj); // Destroy the pending tower object
+            pendingObj = null;
+
+            // Hide the placement indicator if it exists
+            if (placementIndicator != null)
+            {
+                placementIndicator.SetActive(false);
+            }
+        }
+    }
 
     void MaterialUpdate()
     {
