@@ -61,7 +61,7 @@ public class TowerController : MonoBehaviour
 
     private void OnEnable()
     {
-        TowerPlaced = true;
+        //TowerPlaced = true;
         DeepCopyData();
         RadiusDetector.radius = Radius;
         CallChangeStat.Invoke(UpgradeType.Radius, Radius);

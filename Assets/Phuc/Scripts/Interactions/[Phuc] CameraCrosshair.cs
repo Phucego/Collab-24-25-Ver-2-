@@ -1,61 +1,80 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class CameraCrosshair : MonoBehaviour
 {
-    public Camera cam;
+    public Camera cam; 
+    public LayerMask towerLayer; 
 
-    public LayerMask towerLayer;
+    [SerializeField] private TowerInteract selectedTower; 
 
-    [SerializeField] private TowerInteract selectedTower;
-
+    // Initialize the camera reference
     private void Start()
     {
         cam = Camera.main;
     }
 
-    // Update is called once per frame
-    void Update()
+    // Handle player input for tower interaction
+    private void Update()
     {
         if (Input.GetMouseButtonDown(0))
-        {
             TowerInteraction();
-        }
-        /*else 
-        {
-            selectedTower.Deselect();
-        }*/
     }
 
-    void TowerInteraction()
+   
+    /// Handles interactions with towers when the player clicks.
+    /// Ensures only placed towers can be interacted with.
+    private void TowerInteraction()
     {
-        // Create a ray from the center of the screen
-        Ray ray = cam.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-        RaycastHit hit;
-
-
-        // Check if the ray hits a tower within range
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, towerLayer))
+        // Cast a ray from the center of the screen
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, towerLayer))
         {
             TowerInteract tower = hit.collider.GetComponent<TowerInteract>();
 
-            if (tower != null)
+            // Check if the hit object is a placed tower
+            if (tower == null || !tower.isPlaced)
             {
-                Debug.Log("Interacted with tower: " + tower.name);
-                selectedTower = tower;
+                Debug.Log(tower == null ? "No tower hit!" : "Tower is pending placement!");
+                ClearSelection(); // Deselect any currently selected tower
+                return;
+            }
 
-                tower.Interact(cam);
+            // Toggle selection if the same tower is clicked, or switch selection to a new tower
+            if (selectedTower == tower)
+            {
+                ToggleSelection(tower, false);
+                selectedTower = null;
+            }
+            else
+            {
+                ClearSelection();
+                ToggleSelection(tower, true);
+                selectedTower = tower;
             }
         }
         else
         {
             Debug.Log("No tower hit!");
-            selectedTower = null; // Clear selection if nothing was hit
+            ClearSelection(); // Deselect if no tower is hit
+        }
+    }
+
+   
+    /// Toggles the selection state of a tower.
+    private void ToggleSelection(TowerInteract tower, bool state)
+    {
+        tower.ToggleOutline(state); 
+        tower.TowerInfo(state);    
+    }
+
+  
+    //Clears the currently selected tower, if any.
+    private void ClearSelection()
+    {
+        if (selectedTower != null)
+        {
+            ToggleSelection(selectedTower, false);
+            selectedTower = null;
         }
     }
 }
-
-

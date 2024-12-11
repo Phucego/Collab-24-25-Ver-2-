@@ -6,7 +6,7 @@ public class EnemyDrops : MonoBehaviour
 {
     public delegate void OnDead(int score);
     private OnDead onDead;
-    int score = 10;
+    public int coin;
 
     //TODO: Initialize call back to update currencies
     public void InitEnemy(OnDead deadCallback)
@@ -18,7 +18,7 @@ public class EnemyDrops : MonoBehaviour
     IEnumerator DeadCountDown()
     {
         yield return new WaitForSeconds(5);
-        onDead?.Invoke(score);
+        onDead?.Invoke(coin);
         Destroy(gameObject);
     }
 }

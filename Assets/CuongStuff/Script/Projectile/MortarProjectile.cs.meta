@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Phuc/Scripts/MainMenuUI.cs.meta
+guid: b9877f9a9175d0244acefcf0ee294a8d
+========
 guid: 527aca914917aad4a86559ed3b3ec4f2
+>>>>>>>> HolColLol:Assets/CuongStuff/Script/Projectile/MortarProjectile.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

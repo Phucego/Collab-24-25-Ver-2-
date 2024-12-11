@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Phuc/Scripts/SceneField.cs.meta
-guid: 7789305bae1c110449c636dd82fff4ca
+<<<<<<<< HEAD:Assets/Phuc/Scripts/MainMenuUI.cs.meta
+guid: ef06baaaa58c0484d857b607c88baa12
 ========
-guid: 89484a3ee1be01845866fd1cab18d5da
->>>>>>>> HolColLol:Assets/CuongStuff/Script/Projectile/ProjectileBase.cs.meta
+guid: 527aca914917aad4a86559ed3b3ec4f2
+>>>>>>>> HolColLol:Assets/CuongStuff/Script/Projectile/MortarProjectile.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
