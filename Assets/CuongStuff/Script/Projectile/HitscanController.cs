@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.Port;
 
 public class HitscanController : MonoBehaviour, I_TowerProjectile
 {
@@ -14,6 +15,8 @@ public class HitscanController : MonoBehaviour, I_TowerProjectile
 
     private bool damagable = true;
     private bool lingering;
+    float opacity = 1f;
+    private Vector3[] linepos;
      
     protected virtual void Awake()
     {
@@ -22,20 +25,25 @@ public class HitscanController : MonoBehaviour, I_TowerProjectile
         defaultColor = lineRenderer.material.color;
     }
 
-    private void OnEnable()
+    protected void Update()
     {
-        damagable = true;
-        lingering = false;
-        StartCoroutine(DisableObject());
+        Color rendererColor = defaultColor; 
+        if (opacity > 0f && lingering)
+        {
+            opacity -= 0.005f;
+            rendererColor.a = opacity;
+            lineRenderer.material.SetColor("_Color", rendererColor);
+        }
     }
 
     public void SetTarget(GameObject enemy)
     {
         if (target != enemy)
             target = enemy;
-   
+
+        opacity = 1f;
         Vector3 pos = target.transform.position;
-        Vector3[] linepos = new Vector3[2] { transform.position, pos};
+        linepos = PlayZap(transform.position, pos);
         
         Vector3 dir = (pos - transform.position).normalized;
         float dist = Vector3.Distance(transform.position, pos) + 2f;
@@ -46,7 +54,7 @@ public class HitscanController : MonoBehaviour, I_TowerProjectile
             {
                 //target = hit.collider.gameObject;
                 Vector3 newpos = hit.collider.transform.position;
-                linepos[1] = hit.point;
+                linepos = PlayZap(transform.position, hit.point);
                 if (damagable && lingering)
                     ApplyDamage(hit.collider.gameObject);
                     
@@ -54,6 +62,14 @@ public class HitscanController : MonoBehaviour, I_TowerProjectile
         }
 
         lineRenderer.SetPositions(linepos);
+    }
+
+    private void OnEnable()
+    {
+        damagable = true;
+        lingering = true;
+        opacity = 1f;
+        StartCoroutine(DisableObject());
     }
 
     private void OnDisable()
@@ -72,21 +88,34 @@ public class HitscanController : MonoBehaviour, I_TowerProjectile
 
     private IEnumerator DisableObject()
     {
-        lingering = true;
         yield return new WaitForSeconds(3f);
-        Color rendererColor = lineRenderer.startColor;
-        float opacity = 1f;
-        yield return new WaitForSeconds(0.3f);
+        Color rendererColor = defaultColor;
         lingering = false;
+
         while (opacity > 0f)
         {
-            opacity -= 0.1f;
+            opacity -= 0.05f;
             rendererColor.a = opacity;
             lineRenderer.material.SetColor("_Color", rendererColor);
             yield return new WaitForFixedUpdate();
         }
-        yield return new WaitForSeconds(1f);
+
         gameObject.SetActive(false);
+    }
+
+    private Vector3[] PlayZap(Vector3 original, Vector3 end)
+    {
+        Vector3[] linepos = new Vector3[10];
+        linepos[0] = original;
+        linepos[9] = end;
+        for (int i = 0; i < 8; i++)
+        { 
+            float point = ((float)i + 1f) / 10f;
+            Vector3 offsetline = Vector3.Lerp(original, end, point);
+            offsetline = new Vector3(offsetline.x, offsetline.y + Random.Range(-1f, 1f), offsetline.z);
+            linepos[i + 1] = offsetline;     
+        }
+        return linepos;
     }
 
     protected virtual void ApplyDamage(GameObject target)
@@ -96,12 +125,17 @@ public class HitscanController : MonoBehaviour, I_TowerProjectile
             StartCoroutine(SetDamagable());
     }
 
-    public void SetDamage(float dmg)
+    public virtual void SetDamage(float dmg)
     {
         Damage = dmg;
     }
 
-    public void SetDebuff(float duration)
+    public virtual void SetDebuff(float duration)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public virtual void SetRadius(float radius)
     {
         throw new System.NotImplementedException();
     }

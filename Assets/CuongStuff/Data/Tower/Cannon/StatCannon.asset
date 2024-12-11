@@ -20,11 +20,12 @@ MonoBehaviour:
   Radius: 20
   FireRate: 1
   ProjectileSpeed: 20
+  ProjectileRadius: 0
+  ProjectileInterval: 0
   CritChance: 0
   CritAmplifier: 1
   Cost: 0
   listUpgrades:
-  - {fileID: 11400000, guid: 56df850642e0f0c469fdde3aff7f1535, type: 2}
-  - {fileID: 11400000, guid: 74bed56d30711ac44ba4b7a566d10bd7, type: 2}
-  - {fileID: 11400000, guid: e1cd993cf92435c4582c25112532bf54, type: 2}
-  - {fileID: 11400000, guid: fa76cbf6716f0f8439e006c59755b3ce, type: 2}
+  - {fileID: 11400000, guid: ba2f103e2f3ecd842a9bb7d620b36422, type: 2}
+  - {fileID: 11400000, guid: bd8b7daecd0584b4ba8fcbb3f1b3f290, type: 2}
+  - {fileID: 11400000, guid: 1d1b5c4b088d3e54a9971b6f590be905, type: 2}

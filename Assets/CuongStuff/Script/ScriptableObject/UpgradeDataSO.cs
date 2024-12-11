@@ -11,6 +11,7 @@ public enum UpgradeType
     AOE,
     CritChance,
     CritAmplifier,
+    Interval,
 }
 
 [CreateAssetMenu(fileName = "UpgradeDataSO", menuName = "Data/UpgradeDataSO")]

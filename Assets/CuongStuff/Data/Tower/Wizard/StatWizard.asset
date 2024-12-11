@@ -17,14 +17,15 @@ MonoBehaviour:
   TargetType: 0000000002000000
   Damage: 5
   Health: 100
-  Radius: 25
+  Radius: 10
   FireRate: 5
   ProjectileSpeed: 20
+  ProjectileRadius: 0
+  ProjectileInterval: 0
   CritChance: 0
   CritAmplifier: 1
   Cost: 0
   listUpgrades:
-  - {fileID: 11400000, guid: ba2f103e2f3ecd842a9bb7d620b36422, type: 2}
-  - {fileID: 11400000, guid: bd8b7daecd0584b4ba8fcbb3f1b3f290, type: 2}
-  - {fileID: 11400000, guid: 1d1b5c4b088d3e54a9971b6f590be905, type: 2}
-  - {fileID: 11400000, guid: 1e43ed94fb7365d4a8809cfee62ed45b, type: 2}
+  - {fileID: 11400000, guid: c3be4f4b7f72e1646a08e87e2b3bbf99, type: 2}
+  - {fileID: 11400000, guid: 587c19609f113774593ce911bb17df01, type: 2}
+  - {fileID: 11400000, guid: 8f85e82a427fc1b4ea861308772f0a83, type: 2}

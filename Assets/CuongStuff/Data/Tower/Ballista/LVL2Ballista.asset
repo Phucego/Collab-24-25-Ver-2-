@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d62fa5b5054766948b074ec4e5dcd815, type: 3}
-  m_Name: UpgradeCannon3
+  m_Name: LVL2Ballista
   m_EditorClassIdentifier: 
-  upgradeName: Lvl1
+  upgradeName: 
+  Cost: 0
   upgradeDatas:
-  - upgradeType: 1
-    value: 20
   - upgradeType: 2
-    value: 10
+    value: 15
+  - upgradeType: 3
+    value: -1
