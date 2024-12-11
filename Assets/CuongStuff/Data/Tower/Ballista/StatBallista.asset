@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f47bd1e3c4a580c48bc1c32f450bd863, type: 3}
   m_Name: StatBallista
   m_EditorClassIdentifier: 
-  towerPrefab: {fileID: 0}
+  towerPrefab: {fileID: 2511547511679108423, guid: 4a1171a543ced5d498d39bf45644701e, type: 3}
   TowerType: 0
   TargetType: 0000000001000000
   Damage: 40

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fd699892011f0847b765e05f08c3728, type: 3}
+  m_Name: LevelDataTut
+  m_EditorClassIdentifier: 
+  towerData:
+  - {fileID: 11400000, guid: a06e621a06652f545aa6d4e31e0b1b7a, type: 2}
+  - {fileID: 11400000, guid: 09002bc3f1993e14a8e70da876ee36f8, type: 2}
+  - {fileID: 11400000, guid: a2c145c7e49c0394390fefe15654cb57, type: 2}
+  - {fileID: 11400000, guid: d889353c56c7f0e46877c955b1eac10e, type: 2}
