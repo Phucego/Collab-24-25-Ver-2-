@@ -15,7 +15,5 @@ MonoBehaviour:
   upgradeName: 
   Cost: 0
   upgradeDatas:
-  - upgradeType: 2
-    value: 10
   - upgradeType: 1
     value: 10

@@ -19,3 +19,5 @@ MonoBehaviour:
     value: 5
   - upgradeType: 1
     value: 5
+  - upgradeType: 2
+    value: 5

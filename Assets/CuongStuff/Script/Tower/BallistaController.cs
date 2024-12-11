@@ -10,7 +10,7 @@ public class BalistaController : TowerController
     protected override void Update()
     {
         base.Update();
-        if (lockedIn)
+        if (lockedIn && Target != null)
         {
             TargetPos = Target.transform.position;
             Vector3 dir = Head.transform.position - TargetPos;

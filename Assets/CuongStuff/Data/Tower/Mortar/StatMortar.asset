@@ -17,7 +17,7 @@ MonoBehaviour:
   TargetType: 00000000
   Damage: 30
   Health: 0
-  Radius: 50
+  Radius: 12
   FireRate: 2
   ProjectileSpeed: 0
   ProjectileRadius: 0
