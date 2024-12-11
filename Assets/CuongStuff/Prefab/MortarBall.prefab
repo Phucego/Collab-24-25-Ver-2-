@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8761895816627674692}
   - component: {fileID: 1428817711805364620}
   - component: {fileID: 1354355681503678831}
-  - component: {fileID: 2217052489219695286}
+  - component: {fileID: 2785542342538469941}
   m_Layer: 8
   m_Name: MortarBall
   m_TagString: Projectile
@@ -134,7 +134,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!114 &2217052489219695286
+--- !u!114 &2785542342538469941
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6844750804862573089}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 527aca914917aad4a86559ed3b3ec4f2, type: 3}
+  m_Script: {fileID: 11500000, guid: b9877f9a9175d0244acefcf0ee294a8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 20
+  Speed: 10
