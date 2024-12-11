@@ -22,15 +22,14 @@ public class TowerInteract : MonoBehaviour, I_Interactable
     {
         mapAction = towerAction.FindActionMap("Tower");
         upgradeAction = mapAction.FindAction("UpgradeTower");
+        _RadiusSphere = gameObject.transform.GetChild(3).gameObject;
+        _CanvasInfo = gameObject.transform.GetChild(4).gameObject;
         //_CallChangeStat.AddListener(ChangeStat);
         //_Radius = GameObject.Find("RadiusDetection");
     }
 
     void OnEnable()
-    {
-        
-        _RadiusSphere = gameObject.transform.GetChild(3).gameObject;
-        _CanvasInfo = gameObject.transform.GetChild(4).gameObject;      
+    {   
         upgradeAction.Enable();
         upgradeAction.performed += Upgrade;
     }
@@ -66,6 +65,9 @@ public class TowerInteract : MonoBehaviour, I_Interactable
 
     public void ChangeStat(UpgradeType type, float value)
     {
+        if (_RadiusSphere == null)
+            return;
+
         switch (type)
         {
             case UpgradeType.Radius:
@@ -86,6 +88,7 @@ public class TowerInteract : MonoBehaviour, I_Interactable
 
     public void Deselect()
     {
+        MainCam = null;
         _RadiusSphere.SetActive(false);
         _CanvasInfo.SetActive(false);
     }

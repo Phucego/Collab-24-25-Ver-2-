@@ -1748,6 +1748,7 @@ GameObject:
   - component: {fileID: 597401156}
   - component: {fileID: 597401157}
   - component: {fileID: 597401158}
+  - component: {fileID: 597401159}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1929,6 +1930,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapBoundary: {fileID: 227340080}
+--- !u!114 &597401159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 597401151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92534d25a3e2b4c4db894848ddee4511, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSystem: {fileID: 119620655}
 --- !u!1 &622176622 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3952736807094252420, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
