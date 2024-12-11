@@ -9,6 +9,7 @@ public class WizardController : TowerController
     private float DamageInterval = 0.7f;
     private bool Firing = false;
     private bool UnlockBeam = false;
+    private float intervalCooldown = 0f;
 
     protected override void Update()
     {
@@ -20,9 +21,10 @@ public class WizardController : TowerController
             StartCoroutine(FireProjectile(new Vector3(0,0,0).normalized));
             StartCoroutine(Cooldown());
             TimeBeforeFire = FireRate;
+            intervalCooldown = 0f;
             Firing = true;
         }
-        else if (TimeBeforeFire >= 0)
+        else if (TimeBeforeFire > 0)
         {
             TimeBeforeFire -= Time.deltaTime;
         }
@@ -31,14 +33,23 @@ public class WizardController : TowerController
         if (!Firing)
             return;
 
-        for (int i = 0; i < _ProjectileList.Count; i++)
+        //Some fucking bullshit
+        if (intervalCooldown <= 0f)
         {
-            if (_ProjectileList[i].activeInHierarchy)
+            intervalCooldown = DamageInterval;
+            for (int i = 0; i < _ProjectileList.Count; i++)
             {
-                hitscanControllers[i].SetTarget(Target);
+                if (_ProjectileList[i].activeInHierarchy)
+                {
+                    hitscanControllers[i].SetTarget(Target);
+                }
             }
+            
         }
-
+        else if (intervalCooldown > 0f)
+        {
+            intervalCooldown -= Time.deltaTime;
+        }  
     }
 
     protected override IEnumerator FireProjectile(Vector3 direction)
