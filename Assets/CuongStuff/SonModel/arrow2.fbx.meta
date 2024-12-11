@@ -3,7 +3,22 @@ guid: f7cc43699fdae66439f99b76d1e26d42
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Longwood1Mtl.001
+    second: {fileID: 2100000, guid: 0d0d6523afd4be84baa0bc6ace039b85, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Tail21Mtl.001
+    second: {fileID: 2100000, guid: c911794cb8db7494cb133a7f5946dde8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Tipbottle1Mtl.001
+    second: {fileID: 2100000, guid: de81f78afc34d8749a715b0d5c1d00bf, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

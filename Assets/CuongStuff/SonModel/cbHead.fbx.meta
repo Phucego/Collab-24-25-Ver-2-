@@ -3,7 +3,32 @@ guid: b05a136e83944444f809722327fc35f8
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Arcl1Mtl
+    second: {fileID: 2100000, guid: cc872f74e3328ed4d89f1b646079905a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Puller1Mtl
+    second: {fileID: 2100000, guid: 50b04bb7baed2a046aab4e3c54bf3341, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rope1Mtl
+    second: {fileID: 2100000, guid: 70bcb78b978c928499974b3db31d2d22, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Stonebottom1Mtl
+    second: {fileID: 2100000, guid: 9b8d63758d71aba468a2322bb0b938bc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Woodtop1Mtl
+    second: {fileID: 2100000, guid: 8d7bc151989ada94f80e0e0132a78611, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

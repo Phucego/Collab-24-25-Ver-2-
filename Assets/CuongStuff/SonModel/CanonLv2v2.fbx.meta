@@ -3,7 +3,32 @@ guid: 6a63c1eb42f318c4d9b8c7f039e9528f
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bottom1Mtl
+    second: {fileID: 2100000, guid: 1bfea55fb49f08a4a92a3a24de965609, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fuse1Mtl.001
+    second: {fileID: 2100000, guid: c5caf590ce2685f4b916c5681889044e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gold1Mtl
+    second: {fileID: 2100000, guid: 8af731c734c59174bb2abb0a752e1e2a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Innerblacksnout1Mtl
+    second: {fileID: 2100000, guid: 5bf816f5bd38b8f448c9c8e7fee6bc92, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Union1Mtl.001
+    second: {fileID: 2100000, guid: e3c6be8678237f949a9eb41b5ff3386a, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

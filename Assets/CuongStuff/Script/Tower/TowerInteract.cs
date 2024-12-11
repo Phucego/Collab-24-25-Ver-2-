@@ -73,7 +73,6 @@ public class TowerInteract : MonoBehaviour, I_Interactable
             case UpgradeType.Radius:
                 Radius = value;
                 _RadiusSphere.transform.localScale = new Vector3(Radius * 2, Radius * 2, Radius * 2);
-                Debug.Log(_RadiusSphere.transform.localScale);
                 break;
         }
     }
