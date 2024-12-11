@@ -14,7 +14,6 @@ public class UIManager : MonoBehaviour
     public GameObject coinCounterParent;
     public GameObject waveProgressParent;
     public GameObject pauseAndWaveParent;
-    public GameObject crosshair;
     public GameObject mainUI;
 
     [Header("Buttons")]
@@ -25,6 +24,11 @@ public class UIManager : MonoBehaviour
     public Button quitButton;
     public Button mainMenuButton;
 
+
+    public Button Quit_Yes;
+    public Button Quit_No;
+    
+    
     [SerializeField] private Button m_StartWaveButton;
 
 
@@ -45,13 +49,15 @@ public class UIManager : MonoBehaviour
     [Header("Menus")]
     public GameObject pauseMenu;
     public GameObject towerSelectMenu;
-    
+    public GameObject confirmationMenu;
 
     private void Start()
     {
         Time.timeScale = 1f;
         pauseMenu.SetActive(false);
         mainUI.SetActive(true);
+        confirmationMenu.SetActive(false);
+        
         //selectionPanelIsOpened = false;
         cam = Camera.main;
         anim = GetComponent<Animator>();
@@ -69,7 +75,7 @@ public class UIManager : MonoBehaviour
         resumeButton.onClick.AddListener(OnResumeButton);
         quitButton.onClick.AddListener(OnQuitButton);
         mainMenuButton.onClick.AddListener(OnMainMenu);
-
+        Quit_Yes.onClick.AddListener(OnConfirmQuit);
 
    /*     if(testAction != null)
         {
@@ -100,7 +106,8 @@ public class UIManager : MonoBehaviour
 
     public void OnMainMenu()
     {
-        SceneManager.LoadScene(mainMenuScene);
+        
+        //SceneManager.LoadScene(mainMenuScene);
     }
     public void OnResumeButton()
     {
@@ -117,9 +124,18 @@ public class UIManager : MonoBehaviour
     {
         mainUI.SetActive(false);
         pauseMenu.SetActive(false);
-        Application.Quit();
+        confirmationMenu.SetActive(true);
+        
     }
 
+    private void OnConfirmQuit()
+    {
+        Application.Quit();
+    }   
+    private void OnConfirmBack()
+    {
+        Application.Quit();
+    }
     // Update the coin counter UI
     private void UpdateCoinCounterUI()
     {
@@ -139,15 +155,13 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
     }
 
-    public void ToggleTowerSelectPanel()
+    private void ToggleTowerSelectPanel()
     {
         // Toggle the boolean value
         selectionPanelIsOpened = !selectionPanelIsOpened;
 
         // Set the animation parameter directly
         anim.SetBool("isTowerSelectPanelOpened", selectionPanelIsOpened);
-
-        
     }
 
     private IEnumerator PauseGameAfterAnimation()

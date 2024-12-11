@@ -59,8 +59,6 @@ public class BuildingManager : MonoBehaviour
 
             MaterialUpdate();
         }
-        
-
     }
 
     #region Building System Logics
