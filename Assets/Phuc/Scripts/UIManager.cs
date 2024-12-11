@@ -27,6 +27,8 @@ public class UIManager : MonoBehaviour
 
     public Button Quit_Yes;
     public Button Quit_No;
+    public Button MainMenu_No;
+    public Button MainMenu_Yes;
     
     
     [SerializeField] private Button m_StartWaveButton;
@@ -50,6 +52,7 @@ public class UIManager : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject towerSelectMenu;
     public GameObject confirmationMenu;
+    public GameObject confirmationMenu_MainMenu;
 
     private void Start()
     {
@@ -57,6 +60,8 @@ public class UIManager : MonoBehaviour
         pauseMenu.SetActive(false);
         mainUI.SetActive(true);
         confirmationMenu.SetActive(false);
+        confirmationMenu_MainMenu.SetActive(false);
+      
         
         //selectionPanelIsOpened = false;
         cam = Camera.main;
@@ -69,16 +74,16 @@ public class UIManager : MonoBehaviour
 
 
         //BUTTON EVENTS
-      //  m_StartWaveButton.onClick.AddListener(StartGame);
         pauseButton.onClick.AddListener(OnPauseButtonClicked);
         toggleTowerSelectButton.onClick.AddListener(ToggleTowerSelectPanel);
         resumeButton.onClick.AddListener(OnResumeButton);
         quitButton.onClick.AddListener(OnQuitButton);
         mainMenuButton.onClick.AddListener(OnMainMenu);
+        
         Quit_Yes.onClick.AddListener(OnConfirmQuit);
         Quit_No.onClick.AddListener(OnConfirmBack);
-
-
+        MainMenu_No.onClick.AddListener(OnConfirmBackMainMenu);
+        MainMenu_Yes.onClick.AddListener(OnConfirmMainMenu);
     }
    
 
@@ -98,8 +103,10 @@ public class UIManager : MonoBehaviour
 
     public void OnMainMenu()
     {
+        confirmationMenu_MainMenu.SetActive(true);
+        anim.SetBool("isConfirmMainMenu", true);
+     
         
-        //SceneManager.LoadScene(mainMenuScene);
     }
     public void OnResumeButton()
     {
@@ -122,7 +129,7 @@ public class UIManager : MonoBehaviour
         
     }
 
-    #region Confirmation Menu
+    #region Confirmation Quit
     private void OnConfirmQuit()
     {
         Application.Quit();
@@ -134,6 +141,20 @@ public class UIManager : MonoBehaviour
        
     }
 
+    #endregion
+    
+    #region Confirmation Main Menu
+    
+    private void OnConfirmMainMenu()
+    {
+        SceneManager.LoadScene(mainMenuScene);
+    }   
+    private void OnConfirmBackMainMenu()
+    {
+        anim.SetBool("isConfirmMainMenu", false);
+        pauseMenu.SetActive(true);
+      
+    }
     #endregion
     // Update the coin counter UI
     private void UpdateCoinCounterUI()
