@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f47bd1e3c4a580c48bc1c32f450bd863, type: 3}
   m_Name: StatWizard
   m_EditorClassIdentifier: 
-  towerPrefab: {fileID: 0}
+  towerPrefab: {fileID: 1530151749540177062, guid: e28cc24f75adcd64694edacc16bd950b, type: 3}
   TowerType: 2
   TargetType: 0000000002000000
   Damage: 5
