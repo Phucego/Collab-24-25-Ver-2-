@@ -76,19 +76,11 @@ public class UIManager : MonoBehaviour
         quitButton.onClick.AddListener(OnQuitButton);
         mainMenuButton.onClick.AddListener(OnMainMenu);
         Quit_Yes.onClick.AddListener(OnConfirmQuit);
+        Quit_No.onClick.AddListener(OnConfirmBack);
 
-   /*     if(testAction != null)
-        {
-            testAction.Invoke(2, "213");
-        }*/
-    }
-    
-/*    private void StartGame()
-    {
 
     }
-*/
-   // private Action<int, string> testAction;
+   
 
     private void Update()
     {
@@ -125,17 +117,24 @@ public class UIManager : MonoBehaviour
         mainUI.SetActive(false);
         pauseMenu.SetActive(false);
         confirmationMenu.SetActive(true);
+        anim.SetBool("isConfirmationMenu", true);
+  
         
     }
 
+    #region Confirmation Menu
     private void OnConfirmQuit()
     {
         Application.Quit();
     }   
     private void OnConfirmBack()
     {
-        Application.Quit();
+        anim.SetBool("isConfirmationMenu", false);
+        pauseMenu.SetActive(true);
+       
     }
+
+    #endregion
     // Update the coin counter UI
     private void UpdateCoinCounterUI()
     {

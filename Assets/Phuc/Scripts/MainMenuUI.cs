@@ -17,6 +17,7 @@ public class MainMenuUI : MonoBehaviour
   
     public GameObject levelSelectionCanvas;
     public GameObject mainMenuCanvas;
+   
     public TextMeshProUGUI gameName;
 
 
@@ -24,6 +25,10 @@ public class MainMenuUI : MonoBehaviour
     public Button settingsButton;
     public Button quitButton;
     public Button backButton;
+    public Button Quit_Yes;
+    public Button Quit_No;
+
+    public GameObject confirmMenuCanvas;
 
 
     [Header("Scenes To Load")] 
@@ -37,13 +42,16 @@ public class MainMenuUI : MonoBehaviour
         Time.timeScale = 1f;
         anim = GetComponent<Animator>();
 
+        confirmMenuCanvas.SetActive(false); 
+
         //loadingBarOBJ.SetActive(false);
         levelSelectionCanvas.SetActive(false);
 
         startButton.onClick.AddListener(MainMenuOut);
         backButton.onClick.AddListener(MainMenuIn);
         quitButton.onClick.AddListener(QuitGame);
-
+        Quit_Yes.onClick.AddListener(OnConfirmQuit);
+        Quit_No.onClick.AddListener(OnConfirmBack);
     }
     public void LoadTutorialScene()
     {
@@ -69,8 +77,7 @@ public class MainMenuUI : MonoBehaviour
     {
         anim.SetBool("fromMenu", true);
         levelSelectionCanvas.SetActive(true);
-       
-        mainMenuCanvas.SetActive(false);
+        //mainMenuCanvas.SetActive(false);
     }
 
     public void MainMenuIn()
@@ -83,10 +90,22 @@ public class MainMenuUI : MonoBehaviour
     
     }
 
+    #region Confirmation Menu
+    private void OnConfirmQuit()
+    {
+        Debug.Log("Quit");
+        Application.Quit();
 
+    }
+    private void OnConfirmBack()
+    {
+        anim.SetBool("isConfirmationMenu", false);
+    }
+
+    #endregion
 
     public void QuitGame()
     {
-        Application.Quit();
+        anim.SetBool("isConfirmationMenu", true);
     }
 }
