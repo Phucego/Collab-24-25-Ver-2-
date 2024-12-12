@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.032, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -4.5551963, y: 0}
+  m_AnchoredPosition: {x: -4.5551987, y: 0.0000009536743}
   m_SizeDelta: {x: -8.889607, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2858771155744719490
@@ -709,8 +709,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da8fdd11dc66e6e43b14d54aa5fc1d47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _slider: {fileID: 0}
-  _number: {fileID: 0}
+  _slider: {fileID: 7846931274487237622}
+  _number: {fileID: 2972731635654787560}
   _cameraToTrack: {fileID: 0}
-  _target: {fileID: 0}
+  _target: {fileID: 6514783597239382848}
   _offset: {x: 0, y: 1.35, z: 0}

@@ -6,17 +6,29 @@ using UnityEngine.UI;
 
 public class MainEditorManager : MonoBehaviour
 {
-    [SerializeField] CanvasGroup _pathManager;
+    [HideInInspector] public static MainEditorManager inEditor; //Global access just in case
+
+    [Header("Editors")]
+    [SerializeField] GameObject _pathManager;
     private EnemyPath_Editor _path;
-    [SerializeField] CanvasGroup _waveManager;
+    [SerializeField] GameObject _waveManager;
     private EnemyWave_Editor _wave;
 
-    public bool _inEditor = true;
+    [Header("UI")]
+    [SerializeField] CanvasGroup _toggles;
 
-    public delegate void OnFadeCompleted();
+    
+    private int _inSection = 0; //1 = Path | 2 = Wave
 
+    //public delegate void OnFadeCompleted();
 
-    private void Start()
+    private void Awake()
+    {
+        if (inEditor == null)
+            inEditor = this;
+    }
+
+    void Start()
     {
         _path = _pathManager.GetComponent<EnemyPath_Editor>();
         _wave = _waveManager.GetComponent<EnemyWave_Editor>();
@@ -24,21 +36,47 @@ public class MainEditorManager : MonoBehaviour
 
     void Update()
     {
-        if (_inEditor)
+        if (Input.GetKeyDown(KeyCode.F1) && _inSection != 2)
         {
-            if (Input.GetKeyDown(KeyCode.F1))
-            {
-                _path.toggleEditor(!_path.getActive());
-                if (_path.getActive())
-                    _pathManager.DOFade(0, 0.25f).SetEase(Ease.InOutCirc);
-                else
-                    _pathManager.DOFade(1, 0.25f).SetEase(Ease.InOutCirc);
-            }
+            _pathManager.SetActive(true);
 
-            //if (Input.GetKeyDown(KeyCode.F2))
-            //{
-            //    _wave.toggleEditor(!_wave.getActive());
-            //}
+            _path.toggleEditor(!_path.getActive());
+            if (_path.getActive())
+            {
+                toggleEditors(1);
+                _pathManager.GetComponent<CanvasGroup>().DOFade(0f, 0.25f).SetEase(Ease.InOutCirc).OnComplete(()
+                    => _pathManager.SetActive(false));
+            }
+            else
+            {
+                toggleEditors(0);
+                _pathManager.GetComponent<CanvasGroup>().DOFade(1f, 0.25f).SetEase(Ease.InOutCirc);
+            }
+        }
+
+        //if (Input.GetKeyDown(KeyCode.F2))
+        //{
+        //    _wave.toggleEditor(!_wave.getActive());
+        //}
+    }
+
+    private Tween _curTween;
+    private void toggleEditors(int section)
+    {
+        _inSection = section;
+
+        if (_curTween != null && _curTween.IsActive())
+            _curTween.Kill();
+
+        if (section == 0)
+        {
+            if (_toggles.alpha < 1f)
+                _curTween = _toggles.DOFade(1f, 0.25f);
+        }
+        else if (section > 0)
+        {
+            if (_toggles.alpha > 0.15f)
+                _curTween = _toggles.DOFade(0.15f, 0.25f);
         }
     }
 }
