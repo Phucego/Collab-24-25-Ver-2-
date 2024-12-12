@@ -13,7 +13,7 @@ public class WizardController : TowerController
 
     protected override void Update()
     {
-        if (!TowerPlaced && !UnlockBeam)
+        if (!TowerPlaced || !UnlockBeam)
             return;
 
         if (Target != null && TimeBeforeFire <= 0)
