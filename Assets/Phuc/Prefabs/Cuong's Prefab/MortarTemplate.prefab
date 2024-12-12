@@ -1326,7 +1326,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6475120448390738826}
   - component: {fileID: 4662946299086608459}
-  - component: {fileID: 7515006240110854522}
   m_Layer: 11
   m_Name: RangeDetector
   m_TagString: Untagged
@@ -1361,27 +1360,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61c5198ff42ac5d47b05a639d0d11fd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!135 &7515006240110854522
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3272914479862344725}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 20
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3299050088533095051
 GameObject:
   m_ObjectHideFlags: 0

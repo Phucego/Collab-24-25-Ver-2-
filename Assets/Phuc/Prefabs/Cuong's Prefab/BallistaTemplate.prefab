@@ -1153,7 +1153,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _RadiusSphere: {fileID: 0}
   isPlaced: 0
 --- !u!23 &1028236952767261229
 MeshRenderer:
@@ -1526,7 +1525,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5316611594078155116}
   - component: {fileID: 9023503555529802583}
-  - component: {fileID: 4298979662845004647}
   m_Layer: 11
   m_Name: RangeDetector
   m_TagString: Untagged
@@ -1561,27 +1559,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61c5198ff42ac5d47b05a639d0d11fd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!135 &4298979662845004647
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3596673854801512112}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 20
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4152124071115595328
 GameObject:
   m_ObjectHideFlags: 0
