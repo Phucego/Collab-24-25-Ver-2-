@@ -102,6 +102,9 @@ public class EnemyPath_Editor : MonoBehaviour
                 _savePanel.SetActive(true);
 
                 _pathDataList.data = JsonConvert.DeserializeObject<List<PathData>>(File.ReadAllText(_getFile));
+
+                displayData(false);
+                displayData();
             }
             else
             {
@@ -126,6 +129,7 @@ public class EnemyPath_Editor : MonoBehaviour
         if (!string.IsNullOrEmpty(_jsonPath))
         {
             Debug.Log($"Created {_jsonPath}.json");
+            displayData(false);
             List<PathData> newData = new List<PathData>
             {
                 new PathData(),
@@ -138,9 +142,33 @@ public class EnemyPath_Editor : MonoBehaviour
             _editablePanel.SetActive(true);
             _savePanel.SetActive(true);
             _createButtonIfEmpty.SetActive(false);
+
+            displayData();
         }
     }
 
+    private void displayData(bool reset = true)
+    {
+        if (!reset)
+        {
+            _beginPoint.GetComponent<PathData_Display>().ResetList();
+            _endPoint.GetComponent<PathData_Display>().ResetList();
+        }
+        else
+        {
+            PathData_Display Dropdown1 = _beginPoint.GetComponent<PathData_Display>();
+            PathData_Display Dropdown2 = _endPoint.GetComponent<PathData_Display>();
+            for (int i = 0; i < _pathDataList.data.Count; i++)
+            {
+                PathData path = _pathDataList.data[i];
+                if (i != _pathDataList.data.Count - 1)
+                    Dropdown1.AddData($"Point {i+1}", path.pos[0], path.pos[1], path.pos[2], path.scale);
+                if (i != 0)
+                    Dropdown2.AddData($"Point {i+1}", path.pos[0], path.pos[1], path.pos[2], path.scale);
+            }
+        }
+
+    }
 
     public void addWaypoint()
     {

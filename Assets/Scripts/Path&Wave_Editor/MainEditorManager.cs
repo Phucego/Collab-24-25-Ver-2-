@@ -43,13 +43,13 @@ public class MainEditorManager : MonoBehaviour
             _path.toggleEditor(!_path.getActive());
             if (_path.getActive())
             {
-                toggleEditors(1);
+                toggleEditors(0);
                 _pathManager.GetComponent<CanvasGroup>().DOFade(0f, 0.25f).SetEase(Ease.InOutCirc).OnComplete(()
                     => _pathManager.SetActive(false));
             }
             else
             {
-                toggleEditors(0);
+                toggleEditors(1);
                 _pathManager.GetComponent<CanvasGroup>().DOFade(1f, 0.25f).SetEase(Ease.InOutCirc);
             }
         }
@@ -71,12 +71,12 @@ public class MainEditorManager : MonoBehaviour
         if (section == 0)
         {
             if (_toggles.alpha < 1f)
-                _curTween = _toggles.DOFade(1f, 0.25f);
+                _curTween = _toggles.DOFade(1f, 0.25f).SetEase(Ease.InOutCirc);
         }
         else if (section > 0)
         {
             if (_toggles.alpha > 0.15f)
-                _curTween = _toggles.DOFade(0.15f, 0.25f);
+                _curTween = _toggles.DOFade(0.15f, 0.25f).SetEase(Ease.InOutCirc);
         }
     }
 }
