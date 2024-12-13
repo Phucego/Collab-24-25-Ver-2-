@@ -7,13 +7,13 @@ public class WizardController : TowerController
     
     private List<HitscanController> hitscanControllers = new List<HitscanController>();
     private float DamageInterval = 0.7f;
+    private float intervalCooldown = 0f;
     private bool Firing = false;
     private bool UnlockBeam = false;
-    private float intervalCooldown = 0f;
 
     protected override void Update()
     {
-        if (!TowerPlaced)
+        if (!TowerPlaced || !UnlockBeam)
             return;
 
         if (Target != null && TimeBeforeFire <= 0)
@@ -33,7 +33,7 @@ public class WizardController : TowerController
         if (!Firing)
             return;
 
-        //Some fucking bullshit
+        // Some fucking bullshit
         if (intervalCooldown <= 0f)
         {
             intervalCooldown = DamageInterval;
@@ -86,12 +86,30 @@ public class WizardController : TowerController
         Firing = false;
     }
 
+    public override void UpgradeTower()
+    {
+        base.UpgradeTower();
+        if (Level == 1)
+            UnlockBeam = true;
+    }
+
     public override string GetCurrentStats()
     {
         string basecall = base.GetCurrentStats();
         basecall += "Damage Interval: " + DamageInterval + "\n";
         basecall += "Hidden Detection Buff: Provide all towers nearby hidden detection \n";
 
+        return basecall;
+    }
+
+    public override string GetUpgradeStats()
+    {
+        string basecall = base.GetUpgradeStats();
+        if (Level == 0)
+        {
+            basecall += "Unlock: Lightning Beam \n";
+            basecall += "Lightning Beam: Fire an electric beam that rapidly deals damage to a single target \n";
+        }
         return basecall;
     }
 
@@ -106,12 +124,7 @@ public class WizardController : TowerController
                     DamageInterval += type.value;
                 basecall += "Damage Interval: " + DamageInterval + " -> " + (DamageInterval + type.value) + "s \n";
                 break;
-        }
-        if (Level == 1)
-        {
-            basecall += "Unlock: Lightning Beam \n";
-            basecall += "Lightning Beam: Fire an electric beam that rapidly deals damage to a single target \n";
-        }
+        }     
 
         if (returnstring)
         {

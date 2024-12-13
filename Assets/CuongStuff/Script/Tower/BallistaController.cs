@@ -10,6 +10,8 @@ public class BalistaController : TowerController
     protected override void Update()
     {
         base.Update();
+
+        // Slowly rotate torward enemies, only fire once the tower has full LOS of them
         if (lockedIn && Target != null)
         {
             TargetPos = Target.transform.position;

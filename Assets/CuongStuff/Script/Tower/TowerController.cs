@@ -35,7 +35,7 @@ public class TowerController : MonoBehaviour
     //protected List<GameObject> ProjectileList = new List<GameObject>();
 
     
-    protected SphereCollider RadiusDetector;
+    protected CapsuleCollider RadiusDetector;
     protected TowerDataSO _DeepCopyTowerData; 
     protected LayerMask layerMask;
     protected float TimeBeforeFire = 0f;
@@ -52,7 +52,7 @@ public class TowerController : MonoBehaviour
         AimPoint = Head.transform.GetChild(0).gameObject;
         HeadParent = Head.transform.GetChild(1).gameObject;
         BodyParent = gameObject.transform.GetChild(1).gameObject;
-        RadiusDetector = gameObject.transform.GetChild(2).GetComponent<SphereCollider>();
+        RadiusDetector = gameObject.transform.GetChild(2).GetComponent<CapsuleCollider>();
 
         layerMask = LayerMask.GetMask("Enemy"); 
         _HeadModel = new GameObject[TowerData.listUpgrades.Count + 1];
@@ -64,6 +64,7 @@ public class TowerController : MonoBehaviour
         //TowerPlaced = true;
         DeepCopyData();
         RadiusDetector.radius = Radius;
+        RadiusDetector.height = Radius*3;
         CallChangeStat.Invoke(UpgradeType.Radius, Radius);
         GetAllModels(HeadParent, 1);
         GetAllModels(BodyParent, 2);
@@ -190,7 +191,7 @@ public class TowerController : MonoBehaviour
                 {
                     if (TargetType.Contains(enemytype))
                         point += 1;
-                    if (enemytype == TargetTypeEnum.Invisible) // Haha idk what does this do
+                    if (enemytype == TargetTypeEnum.Invisible) // If target has invisible and the tower has hidden detection
                         point -= 1;
                 }
                     
@@ -208,6 +209,7 @@ public class TowerController : MonoBehaviour
                 float distance = Vector3.Distance(transform.position, enemy.transform.position);
                 float lastdistance = Vector3.Distance(transform.position, TargetPos);
 
+                //Get distance from the main point to the tower
                 float mainpointdistance = Vector3.Distance(MainPoint.transform.position, enemy.transform.position);
                 float mainpointlastdistance = Vector3.Distance(MainPoint.transform.position, TargetPos);
                 
@@ -259,7 +261,8 @@ public class TowerController : MonoBehaviour
         }
     }
 
-    // Return values as string to the tower info canvas
+    // ========== GET INFO ========== \\
+    // Return values as string to the tower canvas
     public virtual string GetCurrentStats()
     {
         string stats = "";
@@ -306,8 +309,9 @@ public class TowerController : MonoBehaviour
         }
         return upgradestats;
     }
+    // ========== END ========== \\
 
-    // Get data from the upgrade so
+    // Get data from the upgrade scriptable object
     public virtual string ScanUpgrades(UpgradeData type, bool returnstring)
     {
         string stat = "";
@@ -333,6 +337,7 @@ public class TowerController : MonoBehaviour
                     Radius += type.value;
                     CallChangeStat.Invoke(UpgradeType.Radius, Radius);
                     RadiusDetector.radius = Radius;
+                    RadiusDetector.height = Radius * 3;
                 }
                 stat = "Range: " + Radius + " -> " + (Radius + type.value) + "m \n";
                 break;
