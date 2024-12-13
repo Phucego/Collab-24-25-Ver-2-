@@ -24,7 +24,6 @@ public class BalistaController : TowerController
     protected override IEnumerator FireProjectile(Vector3 direction)
     {
         yield return new WaitForSeconds(0.5f);
-
         lockedIn = false;
         GameObject Projectile = GetPooledObject();
         Projectile.transform.position = AimPoint.transform.position;

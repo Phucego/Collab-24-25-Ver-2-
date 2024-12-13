@@ -4585,7 +4585,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backgroundMusic: {fileID: 0}
-  soundEffects: []
+  soundEffects:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!224 &1944521950 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2104853917257386850, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
@@ -4747,6 +4751,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2095981076}
+  - component: {fileID: 2095981077}
   m_Layer: 0
   m_Name: DialogueManager
   m_TagString: Untagged
@@ -4769,6 +4774,22 @@ Transform:
   m_Father: {fileID: 1192606830}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2095981077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2095981075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be000d6421361ed4fa77a04fc28d4f79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogues:
+  - {fileID: 11400000, guid: 668bddbf007e14241b5262f959d09cfd, type: 2}
+  - {fileID: 11400000, guid: 121fda3862df6be4988fe96154b02cec, type: 2}
+  currentDialogueIndex: 0
 --- !u!1 &2104908185
 GameObject:
   m_ObjectHideFlags: 0
