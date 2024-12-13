@@ -29,8 +29,6 @@ public class MainTowerHealthUI : MonoBehaviour, I_Damagable
         {
             easeHealthSlider.value = Mathf.Lerp(easeHealthSlider.value, currentHealth, lerpSpeed);
         }
-
-   
     }
     public void TakeDamage(float damage)
     {
