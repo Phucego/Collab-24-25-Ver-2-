@@ -15,6 +15,8 @@ public class TowerRangeDetection : MonoBehaviour
         if (target.gameObject.CompareTag("Enemy") && !towerController._EnemyList.Contains(target.gameObject))
         {
             towerController._EnemyList.Add(target.gameObject);
+            /*if (towerController._EnemyList.Count == 1) 
+                towerController.TargetPos = target.gameObject.transform.position;*/
         }
     }
 
@@ -24,8 +26,12 @@ public class TowerRangeDetection : MonoBehaviour
         if (target.gameObject.CompareTag("Enemy"))
         {
             towerController._EnemyList.Remove(target.gameObject);
-            towerController.Target = null;
-            towerController.TargetPos = new Vector3(0, 0, 0);
+            if (towerController._EnemyList.Count <= 0)
+            {
+                towerController.Target = null;
+                towerController.TargetPos = new Vector3(0,0,0);
+            }
+            
         }
     }
 }
