@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class WizardController : TowerController
 {
-    
     private List<HitscanController> hitscanControllers = new List<HitscanController>();
     private float DamageInterval = 0.7f;
     private float intervalCooldown = 0f;
@@ -13,7 +12,7 @@ public class WizardController : TowerController
 
     protected override void Update()
     {
-        if (!TowerPlaced || !UnlockBeam)
+        if (!TowerPlaced || !UnlockBeam || _EnemyList.Count <= 0)
             return;
 
         if (Target != null && TimeBeforeFire <= 0)

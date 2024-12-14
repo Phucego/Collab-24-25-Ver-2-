@@ -13,7 +13,7 @@ public class TowerController : MonoBehaviour
     public TowerDataSO TowerData;
     public GameObject[] PrefabProjectile;
     public UnityEvent<UpgradeType, float> CallChangeStat;
-    [HideInInspector] public bool TowerPlaced = false;
+    public bool TowerPlaced = false;
 
     [Header("Tower Stats")]
     [SerializeField] protected int Level = 0;
@@ -42,7 +42,7 @@ public class TowerController : MonoBehaviour
 
     [HideInInspector] public List<GameObject> _EnemyList = new List<GameObject>();
     [HideInInspector] public GameObject Target;
-    [HideInInspector] public Vector3 TargetPos = new Vector3(0, 0, 0);
+    [HideInInspector] public Vector3 TargetPos = new Vector3(0,0,0);
 
     private void Awake()
     {   
@@ -109,7 +109,7 @@ public class TowerController : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        if (!TowerPlaced)
+        if (!TowerPlaced || _EnemyList.Count <= 0)
             return;
 
         if (Target != null && TimeBeforeFire <= 0)
@@ -117,12 +117,11 @@ public class TowerController : MonoBehaviour
             StartCoroutine(LOSCheck());
             TimeBeforeFire = FireRate;
         }
-        else if (TimeBeforeFire >= 0)
+        else if (TimeBeforeFire > 0)
         {
             TimeBeforeFire -= Time.deltaTime;
         }
         FindNearestEnemy();
-
     }
 
     // Check if enemy is within the sight of the aimpoint
@@ -200,7 +199,7 @@ public class TowerController : MonoBehaviour
                 {
                     if (enemy == Target)
                     {
-                        TargetPos = new Vector3(0, 0, 0);
+                        TargetPos = new Vector3(0,0,0);
                         Target = null;
                     }
                     continue;
@@ -208,11 +207,15 @@ public class TowerController : MonoBehaviour
 
                 float distance = Vector3.Distance(transform.position, enemy.transform.position);
                 float lastdistance = Vector3.Distance(transform.position, TargetPos);
-
+                if (Target == null)
+                {
+                    Target = enemy;
+                    TargetPos = Target.transform.position;
+                }
                 //Get distance from the main point to the tower
                 float mainpointdistance = Vector3.Distance(MainPoint.transform.position, enemy.transform.position);
                 float mainpointlastdistance = Vector3.Distance(MainPoint.transform.position, TargetPos);
-                
+
                 if (mainpointdistance < mainpointlastdistance)
                 {
                     Target = enemy;
