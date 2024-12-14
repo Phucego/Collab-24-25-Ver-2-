@@ -18,14 +18,13 @@ public class TowerInteract : MonoBehaviour, I_Interactable
     private Camera MainCam;
 
     public bool isPlaced;
+
     void Awake()
     {
         mapAction = towerAction.FindActionMap("Tower");
         upgradeAction = mapAction.FindAction("UpgradeTower");
         _RadiusSphere = gameObject.transform.GetChild(3).gameObject;
         _CanvasInfo = gameObject.transform.GetChild(4).gameObject;
-        //_CallChangeStat.AddListener(ChangeStat);
-        //_Radius = GameObject.Find("RadiusDetection");
     }
 
     void OnEnable()
@@ -54,7 +53,6 @@ public class TowerInteract : MonoBehaviour, I_Interactable
         _CanvasInfo.GetComponent<TowerCanvasHandler>().Upgrade();
     }
 
-    // Update is called once per frame
     void LateUpdate()
     {
         if (MainCam != null && _CanvasInfo.activeInHierarchy)
@@ -79,6 +77,8 @@ public class TowerInteract : MonoBehaviour, I_Interactable
 
     public void Interact(Camera camera)
     {
+        if (!isPlaced) return; // Prevent interaction if the tower is not placed
+
         MainCam = camera;
         _RadiusSphere.transform.localScale = new Vector3(Radius * 2, Radius * 2, Radius * 2);
         _RadiusSphere.SetActive(true);
@@ -87,34 +87,32 @@ public class TowerInteract : MonoBehaviour, I_Interactable
 
     public void Deselect()
     {
-        MainCam = null;
+        MainCam = null; 
         _RadiusSphere.SetActive(false);
         _CanvasInfo.SetActive(false);
     }
+
     public void TowerInfo(bool enable)
     {
+        if (!isPlaced) return; // Prevent showing info if the tower is not placed
+
         _RadiusSphere.transform.localScale = new Vector3(Radius * 2, Radius * 2, Radius * 2);
         _RadiusSphere.SetActive(enable);
         _CanvasInfo.SetActive(enable);
-        if (isPlaced)
-        {
-            _RadiusSphere.transform.localScale = new Vector3(Radius * 2, Radius * 2, Radius * 2);
-            _RadiusSphere.SetActive(enable);
-            _CanvasInfo.SetActive(enable);
-        }
     }
+
     public void ToggleOutline(bool enable)
     {
-
         Outline outline = GetComponent<Outline>();
         if (!isPlaced)
         {
             outline.enabled = false;
+            return;
         }
+
         if (outline != null)
         {
             outline.enabled = enable;
-
         }
     }
 }

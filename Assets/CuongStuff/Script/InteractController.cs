@@ -63,8 +63,6 @@ public class InteractController : MonoBehaviour
                 LatestInteract.Deselect();
                 LatestInteract = null;
             }
-
         }
     }
-
 }

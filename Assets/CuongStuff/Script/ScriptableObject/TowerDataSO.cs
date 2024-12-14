@@ -36,4 +36,8 @@ public class TowerDataSO : ScriptableObject
     public int Cost;
 
     public List<UpgradeDataSO> listUpgrades;
+
+    public Sprite towerSprite;
+
+
 }
