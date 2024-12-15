@@ -140,7 +140,7 @@ public class BuildingManager : MonoBehaviour
             return;
         }
 
-        int towerCost = towerController.TowerData.Cost; // Assuming TowerDataSO is referenced in TowerController
+        int towerCost = towerController.TowerData.Cost; 
 
         // Check if the player has enough currency
         if (!CurrencyManager.Instance.HasEnoughCurrency(towerCost))
@@ -162,7 +162,7 @@ public class BuildingManager : MonoBehaviour
 
         pendingObj.GetComponent<TowerController>().TowerPlaced = true; // Mark as placed
         pendingObj.GetComponent<TowerInteract>().isPlaced = true;     // Allow interaction
-
+        AudioManager.Instance.PlaySoundEffect("BuildTower_SFX");
         placedTowers.Add(pendingObj); // Add to placed towers list
         pendingObj = null;            // Clear the pending object
 

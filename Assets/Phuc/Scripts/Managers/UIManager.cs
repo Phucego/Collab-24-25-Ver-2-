@@ -49,6 +49,8 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        Time.timeScale = 0f;
+        
         StartCoroutine(ShowUIAfterTransition());
         pauseAndWaveParent.SetActive(false);
         // Initialize the coin counter
@@ -167,8 +169,9 @@ public class UIManager : MonoBehaviour
 
     IEnumerator ShowUIAfterTransition()
     {
-        yield return new WaitForSeconds(2f);
         Time.timeScale = 1f;
+        yield return new WaitForSeconds(2f);
+        
         pauseMenu.SetActive(false);
         mainUI.SetActive(true);
         confirmationMenu.SetActive(false);

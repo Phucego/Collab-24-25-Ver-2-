@@ -2624,7 +2624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05545f2305a1bfc439aa39f528633152, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backgroundMusic: {fileID: 0}
+  backgroundMusic: {fileID: 8300000, guid: b9c92811bc382ab4f896913346415def, type: 3}
   soundEffects: []
 --- !u!1 &2048082607
 GameObject:
