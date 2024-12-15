@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Phuc/Scene/MainMenuScene.unity
+    path: Assets/Individuals/Phuc/Scene/MainMenuScene.unity
     guid: 5ab70225f46419e44b0924c46a99e266
   - enabled: 1
-    path: Assets/Phuc/Scene/TutorialScene.unity
+    path: Assets/Individuals/Phuc/Scene/TutorialScene.unity
     guid: 186f304aae5338f4c9e7450d34cd2b39
   m_configObjects: {}
