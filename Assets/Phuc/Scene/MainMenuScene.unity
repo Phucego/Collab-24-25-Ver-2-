@@ -2625,7 +2625,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backgroundMusic: {fileID: 8300000, guid: b9c92811bc382ab4f896913346415def, type: 3}
-  soundEffects: []
+  soundEffects:
+  - {fileID: 8300000, guid: 1f2813b3c1a72c74fa212445c2911d72, type: 3}
 --- !u!1 &2048082607
 GameObject:
   m_ObjectHideFlags: 0

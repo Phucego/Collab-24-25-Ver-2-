@@ -145,6 +145,7 @@ public class BuildingManager : MonoBehaviour
         // Check if the player has enough currency
         if (!CurrencyManager.Instance.HasEnoughCurrency(towerCost))
         {
+            AudioManager.Instance.PlaySoundEffect("Insufficient_SFX");
             Debug.Log("Not enough currency to place this tower.");
             return; // Exit if the player can't afford the tower
         }
@@ -293,6 +294,7 @@ public class BuildingManager : MonoBehaviour
             go.GetComponent<Button>().onClick.AddListener(() =>
             {
                 SelectObject(sortedTowerData[count].towerPrefab);
+                AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
                 Debug.Log(sortedTowerData[count].towerPrefab.name);
             });
         }

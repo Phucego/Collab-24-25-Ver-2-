@@ -119,6 +119,7 @@ public class MainMenuUI : MonoBehaviour
     IEnumerator StartLevelTransition()
     {
         anim.SetTrigger("isStart");
+        AudioManager.Instance.PlaySoundEffect("Swoosh_SFX");
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene(_tutorialScene);
      

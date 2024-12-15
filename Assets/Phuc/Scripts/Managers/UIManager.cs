@@ -91,6 +91,7 @@ public class UIManager : MonoBehaviour
 
     public void OnPauseButtonClicked()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         mainUI.SetActive(false);
         pauseMenu.SetActive(true);
         StartCoroutine(PauseGameAfterAnimation());
@@ -98,12 +99,14 @@ public class UIManager : MonoBehaviour
 
     public void OnMainMenu()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         confirmationMenu_MainMenu.SetActive(true);
         anim.SetBool("isConfirmMainMenu", true);
     }
 
     public void OnResumeButton()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         mainUI.SetActive(true);
         pauseMenu.SetActive(false);
         anim.SetBool("isPause", false);
@@ -112,6 +115,7 @@ public class UIManager : MonoBehaviour
 
     public void OnQuitButton()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         mainUI.SetActive(false);
         pauseMenu.SetActive(false);
         confirmationMenu.SetActive(true);
@@ -121,11 +125,13 @@ public class UIManager : MonoBehaviour
     #region Confirmation Quit
     private void OnConfirmQuit()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         Application.Quit();
     }
 
     private void OnConfirmBack()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         anim.SetBool("isConfirmationMenu", false);
         pauseMenu.SetActive(true);
     }
@@ -134,11 +140,13 @@ public class UIManager : MonoBehaviour
     #region Confirmation Main Menu
     private void OnConfirmMainMenu()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         SceneManager.LoadScene(mainMenuScene);
     }
 
     private void OnConfirmBackMainMenu()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         anim.SetBool("isConfirmMainMenu", false);
         pauseMenu.SetActive(true);
     }
@@ -146,6 +154,7 @@ public class UIManager : MonoBehaviour
 
     private void ToggleTowerSelectPanel()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         selectionPanelIsOpened = !selectionPanelIsOpened;
         anim.SetBool("isTowerSelectPanelOpened", selectionPanelIsOpened);
         
@@ -177,8 +186,10 @@ public class UIManager : MonoBehaviour
         confirmationMenu.SetActive(false);
         confirmationMenu_MainMenu.SetActive(false);
         pauseAndWaveParent.SetActive(true);
-        
-    
     }
-    
+
+    public void PlaySoundEffect()
+    {
+        AudioManager.Instance.PlaySoundEffect("Swoosh_SFX");
+    }
 }

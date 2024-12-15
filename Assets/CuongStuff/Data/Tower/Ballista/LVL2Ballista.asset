@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d62fa5b5054766948b074ec4e5dcd815, type: 3}
   m_Name: LVL2Ballista
   m_EditorClassIdentifier: 
-  upgradeName: 
-  Cost: 0
+  upgradeName: Level 2
+  Cost: 20
   upgradeDatas:
   - upgradeType: 2
     value: 2.5
