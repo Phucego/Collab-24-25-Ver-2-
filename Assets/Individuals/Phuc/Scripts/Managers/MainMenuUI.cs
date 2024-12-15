@@ -119,7 +119,8 @@ public class MainMenuUI : MonoBehaviour
     IEnumerator StartLevelTransition()
     {
         anim.SetTrigger("isStart");
-        yield return new WaitForSeconds(.7f);
+        AudioManager.Instance.PlaySoundEffect("Swoosh_SFX");
+        yield return new WaitForSeconds(1);
         SceneManager.LoadScene(_tutorialScene);
      
     }

@@ -230,22 +230,37 @@ public class TowerController : MonoBehaviour
         }
     }
 
-    // Upgrade tower call success
     public virtual void UpgradeTower()
     {
         if (Level >= TowerData.listUpgrades.Count)
             return;
 
+        // Determine the cost for this upgrade
+        int upgradeCost = TowerData.listUpgrades[Level].Cost; // Assuming each UpgradeDataSO has a "cost" property
+
+        // Check if the player has enough currency
+        if (!CurrencyManager.Instance.HasEnoughCurrency(upgradeCost))
+        {
+            AudioManager.Instance.PlaySoundEffect("Insufficient_SFX");
+            Debug.Log("Not enough currency to upgrade the tower.");
+            return;
+        }
+
+        // Deduct the cost from the player's currency
+        CurrencyManager.Instance.DeductCurrency(upgradeCost);
+
+        // Proceed with the upgrade
         Level += 1;
-        UpgradeDataSO Data = TowerData.listUpgrades[Level-1];
-        string decoy = "";
+        UpgradeDataSO Data = TowerData.listUpgrades[Level - 1];
+        AudioManager.Instance.PlaySoundEffect("Upgrade_SFX");
+
         foreach (var item in Data.upgradeDatas)
         {
-            decoy = ScanUpgrades(item, false);
+            ScanUpgrades(item, false);
         }
 
         bool HasModelHead = CheckModelValid(_HeadModel, Level);
-        bool HasModelBody = CheckModelValid(_BodyModel, Level); 
+        bool HasModelBody = CheckModelValid(_BodyModel, Level);
 
         if (HasModelHead)
         {
@@ -266,6 +281,7 @@ public class TowerController : MonoBehaviour
             SetStat(projectile);
         }
     }
+
 
     // ========== GET INFO ========== \\
     // Return values as string to the tower canvas

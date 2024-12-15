@@ -140,11 +140,12 @@ public class BuildingManager : MonoBehaviour
             return;
         }
 
-        int towerCost = towerController.TowerData.Cost; // Assuming TowerDataSO is referenced in TowerController
+        int towerCost = towerController.TowerData.Cost; 
 
         // Check if the player has enough currency
         if (!CurrencyManager.Instance.HasEnoughCurrency(towerCost))
         {
+            AudioManager.Instance.PlaySoundEffect("Insufficient_SFX");
             Debug.Log("Not enough currency to place this tower.");
             return; // Exit if the player can't afford the tower
         }
@@ -162,7 +163,7 @@ public class BuildingManager : MonoBehaviour
 
         pendingObj.GetComponent<TowerController>().TowerPlaced = true; // Mark as placed
         pendingObj.GetComponent<TowerInteract>().isPlaced = true;     // Allow interaction
-
+        AudioManager.Instance.PlaySoundEffect("BuildTower_SFX");
         placedTowers.Add(pendingObj); // Add to placed towers list
         pendingObj = null;            // Clear the pending object
 
@@ -293,6 +294,7 @@ public class BuildingManager : MonoBehaviour
             go.GetComponent<Button>().onClick.AddListener(() =>
             {
                 SelectObject(sortedTowerData[count].towerPrefab);
+                AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
                 Debug.Log(sortedTowerData[count].towerPrefab.name);
             });
         }

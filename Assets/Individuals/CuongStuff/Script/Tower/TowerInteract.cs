@@ -51,6 +51,7 @@ public class TowerInteract : MonoBehaviour, I_Interactable
     {
         UpgradeTower.Invoke();
         _CanvasInfo.GetComponent<TowerCanvasHandler>().Upgrade();
+   
     }
 
     void LateUpdate()

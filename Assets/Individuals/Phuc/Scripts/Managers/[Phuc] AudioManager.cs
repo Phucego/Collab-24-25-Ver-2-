@@ -34,13 +34,13 @@ public class AudioManager : Singleton<AudioManager>
         sfxSource = gameObject.AddComponent<AudioSource>();
         
         //TODO: Sound effects volume adjustment
-        sfxSource.volume = 0.3f;
+        sfxSource.volume = 1f;
         
         // TODO: Background music settings
         bgMusicSource.loop = true;
         bgMusicSource.clip = backgroundMusic;
         bgMusicSource.playOnAwake = true;
-        bgMusicSource.volume = 0.26f; 
+        bgMusicSource.volume = 0.4f; 
     }
 
     private void Start()
