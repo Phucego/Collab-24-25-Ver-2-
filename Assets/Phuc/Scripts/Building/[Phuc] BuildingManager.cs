@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -45,10 +46,11 @@ public class BuildingManager : MonoBehaviour
         if (pendingObj != null)
         {
             HandlePlacement();
-    // Place the object on left mouse click if placement is valid
+
+            // Place the object on left mouse click if placement is valid
             if (Input.GetMouseButtonDown(0) && canPlace)
             {
-                    PlaceObject();
+                PlaceObject();
             }
 
             // Delete the pending object on pressing Escape
@@ -60,8 +62,8 @@ public class BuildingManager : MonoBehaviour
             MaterialUpdate();
         }
     }
+    
 
-    #region Building System Logics
     void HandlePlacement()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -69,21 +71,30 @@ public class BuildingManager : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, placeableLayer | unplaceableLayer))
         {
-            
-           
             GameObject hitObject = hit.collider.gameObject;
 
             PlacementCheck placementCheck = hitObject.GetComponent<PlacementCheck>();
             if (placementCheck != null)
             {
-                towerPos = hit.point + Vector3.up * snapHeight;
+                // Snapping logic for grid placement
+                float snapValue = 1.0f; // The snap grid size (you can adjust this to your needs)
+                float snappedX = Mathf.Round(hit.point.x / snapValue) * snapValue;
+                float snappedZ = Mathf.Round(hit.point.z / snapValue) * snapValue;
+                float snappedY = hit.point.y + snapHeight; // Keep the Y as is with an offset
+
+                towerPos = new Vector3(snappedX, snappedY, snappedZ);
                 pendingObj.transform.position = towerPos;
                 canPlace = placementCheck.CanPlace() && IsFarEnoughFromOthers(towerPos);
             }
             else if ((placeableLayer & (1 << hitObject.layer)) != 0)
             {
-                // Object is on the placeable layer, but check additional conditions
-                towerPos = hit.point + Vector3.up * snapHeight;
+                // Snapping to the grid on placeable layer
+                float snapValue = 1.0f; // The snap grid size (you can adjust this to your needs)
+                float snappedX = Mathf.Round(hit.point.x / snapValue) * snapValue;
+                float snappedZ = Mathf.Round(hit.point.z / snapValue) * snapValue;
+                float snappedY = hit.point.y + snapHeight; // Keep the Y as is with an offset
+
+                towerPos = new Vector3(snappedX, snappedY, snappedZ);
                 pendingObj.transform.position = towerPos;
 
                 // Verify no nearby towers and that placement is allowed
@@ -121,99 +132,119 @@ public class BuildingManager : MonoBehaviour
     {
         if (pendingObj == null || !canPlace) return;
 
-        pendingObj.GetComponent<MeshRenderer>().material = greenMaterial; // Set the material to green
+        // Get the cost of the tower from its TowerDataSO
+        TowerController towerController = pendingObj.GetComponent<TowerController>();
+        if (towerController == null)
+        {
+            Debug.LogWarning("TowerController is missing on the pending object.");
+            return;
+        }
+
+        int towerCost = towerController.TowerData.Cost; // Assuming TowerDataSO is referenced in TowerController
+
+        // Check if the player has enough currency
+        if (!CurrencyManager.Instance.HasEnoughCurrency(towerCost))
+        {
+            Debug.Log("Not enough currency to place this tower.");
+            return; // Exit if the player can't afford the tower
+        }
+
+        // Deduct the currency
+        CurrencyManager.Instance.DeductCurrency(towerCost);
+
+        // Place the tower at the snapped position
+        pendingObj.GetComponent<MeshRenderer>().material = greenMaterial;
 
         if (placementIndicator != null)
         {
             placementIndicator.SetActive(false); // Disable the placement indicator
         }
 
-        pendingObj.GetComponent<TowerController>().TowerPlaced = true;
-        pendingObj.GetComponent<TowerInteract>().isPlaced = true;
+        pendingObj.GetComponent<TowerController>().TowerPlaced = true; // Mark as placed
+        pendingObj.GetComponent<TowerInteract>().isPlaced = true;     // Allow interaction
 
-        placedTowers.Add(pendingObj); // Add the placed tower to the list
-        pendingObj = null;
+        placedTowers.Add(pendingObj); // Add to placed towers list
+        pendingObj = null;            // Clear the pending object
+
+        Debug.Log("Tower placed successfully and currency deducted.");
     }
 
-   public void SelectObject(GameObject prefab)
-{
-    // If the selected tower is the same as the pending one, don't change the pending object
-    if (pendingObj != null && prefab == pendingObj)
+    public void SelectObject(GameObject prefab)
     {
-        return; // Do nothing if the same tower is selected again
-    }
-
-    // If there is already a pending object, discard it
-    if (pendingObj != null)
-    {
-        Destroy(pendingObj); // Destroy the previous pending object
-        if (placementIndicator != null)
+        // If the selected tower is the same as the pending one, don't change the pending object
+        if (pendingObj != null && prefab == pendingObj)
         {
-            placementIndicator.SetActive(false); // Hide the previous indicator
+            return; // Do nothing if the same tower is selected again
         }
-    }
 
-    // Instantiate the new tower and set it as the pending object
-    pendingObj = Instantiate(prefab, Vector3.zero, Quaternion.identity);
-    placementIndicator = pendingObj.transform.Find("PlacementIndicator")?.gameObject;
-
-    if (placementIndicator == null)
-    {
-        Debug.LogWarning("PlacementIndicator not found in the prefab.");
-        return; // Exit early to avoid further errors
-    }
-
-    // Set the initial placement indicator material to red
-    MeshRenderer renderer = placementIndicator.GetComponent<MeshRenderer>();
-    if (renderer != null)
-    {
-        renderer.material = redMaterial;
-    }
-    else
-    {
-        Debug.LogWarning("MeshRenderer not found on PlacementIndicator.");
-    }
-
-    // Immediately update the position to clip to the surface
-    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-    
- 
-    RaycastHit hit;
-
-    if (Physics.Raycast(ray, out hit, Mathf.Infinity, placeableLayer | unplaceableLayer))
-    {
-        towerPos = hit.point + Vector3.up * snapHeight;
-        pendingObj.transform.position = towerPos;
-        
-        // Check placement validity
-        GameObject hitObject = hit.collider.gameObject;
-        PlacementCheck placementCheck = hitObject.GetComponent<PlacementCheck>();
-        if (placementCheck != null)
+        // If there is already a pending object, discard it
+        if (pendingObj != null)
         {
-            canPlace = placementCheck.CanPlace() && IsFarEnoughFromOthers(towerPos);
+            Destroy(pendingObj); // Destroy the previous pending object
+            if (placementIndicator != null)
+            {
+                placementIndicator.SetActive(false); // Hide the previous indicator
+            }
         }
-        else if ((placeableLayer & (1 << hitObject.layer)) != 0)
+
+        // Instantiate the new tower and set it as the pending object
+        pendingObj = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+        placementIndicator = pendingObj.transform.Find("PlacementIndicator")?.gameObject;
+
+        if (placementIndicator == null)
         {
-            canPlace = IsFarEnoughFromOthers(towerPos);
+            Debug.LogWarning("PlacementIndicator not found in the prefab.");
+            return; // Exit early to avoid further errors
+        }
+
+        // Set the initial placement indicator material to red
+        MeshRenderer renderer = placementIndicator.GetComponent<MeshRenderer>();
+        if (renderer != null)
+        {
+            renderer.material = redMaterial;
+        }
+        else
+        {
+            Debug.LogWarning("MeshRenderer not found on PlacementIndicator.");
+        }
+
+        // Immediately update the position to clip to the surface
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, placeableLayer | unplaceableLayer))
+        {
+            towerPos = hit.point + Vector3.up * snapHeight;
+            pendingObj.transform.position = towerPos;
+
+            // Check placement validity
+            GameObject hitObject = hit.collider.gameObject;
+            PlacementCheck placementCheck = hitObject.GetComponent<PlacementCheck>();
+            if (placementCheck != null)
+            {
+                canPlace = placementCheck.CanPlace() && IsFarEnoughFromOthers(towerPos);
+            }
+            else if ((placeableLayer & (1 << hitObject.layer)) != 0)
+            {
+                canPlace = IsFarEnoughFromOthers(towerPos);
+            }
+            else
+            {
+                canPlace = false;
+            }
         }
         else
         {
             canPlace = false;
         }
-    }
-    else
-    {
-        canPlace = false;
-    }
 
-    // Update material for the placement indicator
-    MaterialUpdate();
-}
-
+        // Update material for the placement indicator
+        MaterialUpdate();
+    }
 
     void DeletePendingObject()
     {
-        //TODO: Delete pending obj if the player does not want to choose 
         if (pendingObj != null)
         {
             Destroy(pendingObj); // Destroy the pending tower object
@@ -241,30 +272,29 @@ public class BuildingManager : MonoBehaviour
         color.a = 0.3f; // Set low opacity
         indicatorRenderer.material.color = color;
     }
-    #endregion
 
     void ButtonSpawner()
     {
-        for (int i = 0; i < LevelManager.instance.LevelDataSO.towerData.Length; i++)
+        var sortedTowerData = LevelManager.instance.LevelDataSO.towerData
+            .OrderBy(tower => tower.Cost)
+            .ToArray();
+
+        for (int i = 0; i < sortedTowerData.Length; i++)
         {
             int count = i;
-            // Instantiate the button prefab
             GameObject go = Instantiate(m_SpawnTowerButtonPrefab, m_SpawnTowerButtonParent);
 
-            // Set the button text to the tower's name
-            go.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = LevelManager.instance.LevelDataSO.towerData[count].towerPrefab.name;
+            go.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = sortedTowerData[count].towerPrefab.name;
+            go.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"Cost: {sortedTowerData[count].Cost}";
 
-            // Set the button image to the tower's sprite
-            Image buttonImage = go.transform.GetChild(1).GetComponent<Image>();
-            buttonImage.sprite = LevelManager.instance.LevelDataSO.towerData[count].towerSprite;
+            Image buttonImage = go.transform.GetChild(2).GetComponent<Image>();
+            buttonImage.sprite = sortedTowerData[count].towerSprite;
 
-            // Add a listener to the button for spawning the tower
             go.GetComponent<Button>().onClick.AddListener(() =>
             {
-                SelectObject(LevelManager.instance.LevelDataSO.towerData[count].towerPrefab);
-                Debug.Log(LevelManager.instance.LevelDataSO.towerData[count].towerPrefab.name);
+                SelectObject(sortedTowerData[count].towerPrefab);
+                Debug.Log(sortedTowerData[count].towerPrefab.name);
             });
         }
     }
-
 }

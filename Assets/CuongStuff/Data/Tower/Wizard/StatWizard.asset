@@ -24,7 +24,7 @@ MonoBehaviour:
   ProjectileInterval: 0
   CritChance: 0
   CritAmplifier: 1
-  Cost: 0
+  Cost: 60
   listUpgrades:
   - {fileID: 11400000, guid: c3be4f4b7f72e1646a08e87e2b3bbf99, type: 2}
   - {fileID: 11400000, guid: 587c19609f113774593ce911bb17df01, type: 2}

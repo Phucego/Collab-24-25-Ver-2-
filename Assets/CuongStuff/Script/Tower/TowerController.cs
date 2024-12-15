@@ -44,6 +44,7 @@ public class TowerController : MonoBehaviour
     [HideInInspector] public GameObject Target;
     [HideInInspector] public Vector3 TargetPos = new Vector3(0,0,0);
 
+    
     private void Awake()
     {   
         // Set up references
@@ -57,6 +58,8 @@ public class TowerController : MonoBehaviour
         layerMask = LayerMask.GetMask("Enemy"); 
         _HeadModel = new GameObject[TowerData.listUpgrades.Count + 1];
         _BodyModel = new GameObject[TowerData.listUpgrades.Count + 1];
+        
+        
     }
 
     private void OnEnable()

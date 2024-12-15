@@ -2,25 +2,34 @@ using UnityEngine;
 
 public class CameraCrosshair : MonoBehaviour
 {
-    public Camera cam; 
-    public LayerMask towerLayer; 
+    public Camera cam;
+    public LayerMask towerLayer;
 
-    [SerializeField] private TowerInteract selectedTower; 
+    [SerializeField] private TowerInteract selectedTower;
+    private BuildingManager buildingManager; // Reference to BuildingManager
 
-    // Initialize the camera reference
+    // Initialize the camera and building manager references
     private void Start()
     {
         cam = Camera.main;
+        buildingManager = FindObjectOfType<BuildingManager>(); // Automatically find the BuildingManager in the scene
     }
 
     // Handle player input for tower interaction
     private void Update()
     {
+        // Skip interaction if a tower is being placed
+        if (buildingManager != null && buildingManager.pendingObj != null)
+        {
+            Debug.Log("Tower placement in progress. Interaction disabled.");
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
             TowerInteraction();
     }
 
-   
+
     /// Handles interactions with towers when the player clicks.
     /// Ensures only placed towers can be interacted with.
     private void TowerInteraction()
@@ -59,16 +68,14 @@ public class CameraCrosshair : MonoBehaviour
         }
     }
 
-   
     /// Toggles the selection state of a tower.
     private void ToggleSelection(TowerInteract tower, bool state)
     {
-        tower.ToggleOutline(state); 
-        tower.TowerInfo(state);    
+        tower.ToggleOutline(state);
+        tower.TowerInfo(state);
     }
 
-  
-    //Clears the currently selected tower, if any.
+    /// Clears the currently selected tower, if any.
     private void ClearSelection()
     {
         if (selectedTower != null)
