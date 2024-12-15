@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -5,9 +6,10 @@ public class CurrencyManager : MonoBehaviour
 {
     public static CurrencyManager Instance;
 
+    private GameObject enemyCheck;
     [SerializeField]
     private int currentCurrency;
-
+    GameObject go;
     [SerializeField] private TextMeshProUGUI currencyText; // UI Text element to display currency
 
     private void Awake()
@@ -40,6 +42,7 @@ public class CurrencyManager : MonoBehaviour
         {
             Debug.LogWarning("Currency Text UI is not assigned.");
         }
+       
     }
 
     public int GetCurrency()
@@ -61,9 +64,14 @@ public class CurrencyManager : MonoBehaviour
         }
     }
 
-    public void AddCurrency(int amount)
+    public void UpdateEnemyDied()
     {
-        currentCurrency += amount;
-        UpdateCurrencyUI(); // Refresh UI after addition
+        go.GetComponent<EnemyDrops>().InitEnemy((coin) =>
+            {
+                currentCurrency += coin;
+                UpdateCurrencyUI();
+            }
+            );
     }
+    
 }

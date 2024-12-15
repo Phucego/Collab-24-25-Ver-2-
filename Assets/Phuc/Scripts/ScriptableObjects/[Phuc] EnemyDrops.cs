@@ -12,13 +12,13 @@ public class EnemyDrops : MonoBehaviour
     public void InitEnemy(OnDead deadCallback)
     {
         onDead = deadCallback;
-        StartCoroutine(DeadCountDown());
+        DeathBehaviour();
     }
     //TODO: Add score before destroy the enemy
-    IEnumerator DeadCountDown()
+    private void DeathBehaviour()
     {
-        yield return new WaitForSeconds(5);
         onDead?.Invoke(coin);
         Destroy(gameObject);
     }
+    
 }
