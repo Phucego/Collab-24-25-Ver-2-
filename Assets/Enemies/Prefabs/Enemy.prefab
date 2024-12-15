@@ -69,7 +69,6 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2674348345936906938}
-  - {fileID: 8670384485062889917}
   m_Father: {fileID: 6514783597239382848}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -191,6 +190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa3cf693b6193c74da8e4e07de4c9fcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pathway: 
   data: {fileID: 0}
   _heightAboveGround: 0.5
 --- !u!33 &4932414293563701507
@@ -420,17 +420,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7403964636365284326}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0.40000004, y: 0.40000004, z: 0.40000004}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 8421750340466925780}
+  m_Father: {fileID: 2674348345936906938}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.1, y: -0.5}
+  m_AnchoredPosition: {x: -2.1, y: -0.3999971}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1216255358494714771
@@ -617,6 +617,7 @@ GameObject:
   - component: {fileID: 2674348345936906938}
   - component: {fileID: 7846931274487237622}
   - component: {fileID: 409433773188622831}
+  - component: {fileID: 5056169792580487624}
   m_Layer: 6
   m_Name: HP
   m_TagString: Untagged
@@ -638,6 +639,7 @@ RectTransform:
   m_Children:
   - {fileID: 260584074766457874}
   - {fileID: 2913941388478153546}
+  - {fileID: 8670384485062889917}
   m_Father: {fileID: 8421750340466925780}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -714,3 +716,16 @@ MonoBehaviour:
   _cameraToTrack: {fileID: 0}
   _target: {fileID: 6514783597239382848}
   _offset: {x: 0, y: 1.35, z: 0}
+  _visibilityDistance: 15
+--- !u!225 &5056169792580487624
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8752289660662159192}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0

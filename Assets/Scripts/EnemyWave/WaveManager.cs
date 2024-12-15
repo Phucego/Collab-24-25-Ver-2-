@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
-    [Header("Spawnpoint:")]
-    [Tooltip("[OR] Get spawn location via Object")]
-    [SerializeField] Transform _spawnLocation;
-    [Tooltip("[OR] Get spawn location via direct coordinate")]
-    [SerializeField] Vector3 _spawnLocationViaCoord = new Vector3(0, 0, 0);
+    //[Header("Spawnpoint:")]
+    //[Tooltip("[OR] Get spawn location via Object")]
+    //[SerializeField] Transform _spawnLocation;
+    //[Tooltip("[OR] Get spawn location via direct coordinate")]
+    //[SerializeField] Vector3 _spawnLocationViaCoord = new Vector3(0, 0, 0);
 
     [Header("Enemy Data:")]
     [SerializeField] GameObject _enemyPrefab;
@@ -23,12 +23,12 @@ public class WaveManager : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
-        if (_spawnLocation == null)
-        {
-            GameObject tempSpawnPoint = new GameObject("TempSpawnPoint");
-            tempSpawnPoint.transform.position = _spawnLocationViaCoord;
-            _spawnLocation = tempSpawnPoint.transform;
-        }
+        //if (_spawnLocation == null)
+        //{
+        //    GameObject tempSpawnPoint = new GameObject("TempSpawnPoint");
+        //    tempSpawnPoint.transform.position = _spawnLocationViaCoord;
+        //    _spawnLocation = tempSpawnPoint.transform;
+        //}
 
         if (_mainCamera == null)
             _mainCamera = Camera.main;
@@ -38,7 +38,8 @@ public class WaveManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            GameObject anEnemy = Instantiate(_enemyPrefab, _spawnLocation.position, _spawnLocation.rotation);
+            //GameObject anEnemy = Instantiate(_enemyPrefab, _spawnLocation.position, _spawnLocation.rotation);
+            GameObject anEnemy = Instantiate(_enemyPrefab);
 
             EnemyBehavior enemyBehavior = anEnemy.GetComponent<EnemyBehavior>();
             if (enemyBehavior != null && _dataList.Length > 0)
@@ -47,13 +48,14 @@ public class WaveManager : MonoBehaviour
             _eList.Add(anEnemy);
 
             //Debug.Log("An Enemy has spawned at " + _spawnLocation.position + "!");
+
+            CheckENull();
         }
 
-        if (Input.GetMouseButtonDown(2))
-        {
-            CheckENull();
-            SetDestination();
-        }
+        //if (Input.GetMouseButtonDown(2))
+        //{
+        //    SetDestination();
+        //}
     }
 
     private void Capture(GameObject obj)
@@ -70,15 +72,15 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    private void SetDestination()
-    {
-        Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            Vector3 targetPosition = hit.point;
+    //private void SetDestination()
+    //{
+    //    Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+    //    if (Physics.Raycast(ray, out RaycastHit hit))
+    //    {
+    //        Vector3 targetPosition = hit.point;
 
-            foreach (var e in _eList)
-                e.GetComponent<EnemyBehavior>().SetDestination(targetPosition);
-        }
-    }
+    //        foreach (var e in _eList)
+    //            e.GetComponent<EnemyBehavior>().SetDestination(targetPosition);
+    //    }
+    //}
 }

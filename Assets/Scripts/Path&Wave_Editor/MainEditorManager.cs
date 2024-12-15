@@ -40,8 +40,8 @@ public class MainEditorManager : MonoBehaviour
         {
             _pathManager.SetActive(true);
 
-            _path.toggleEditor(!_path.getActive());
-            if (_path.getActive())
+            _path.ToggleEditor(!_path.GetActive());
+            if (!_path.GetActive())
             {
                 toggleEditors(0);
                 _pathManager.GetComponent<CanvasGroup>().DOFade(0f, 0.25f).SetEase(Ease.InOutCirc).OnComplete(()
