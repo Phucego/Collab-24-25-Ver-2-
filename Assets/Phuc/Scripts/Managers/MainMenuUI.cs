@@ -27,6 +27,7 @@ public class MainMenuUI : MonoBehaviour
     public Button backButton;
     public Button Quit_Yes;
     public Button Quit_No;
+    public Button tutLevel;
 
     public GameObject confirmMenuCanvas;
 
@@ -34,6 +35,9 @@ public class MainMenuUI : MonoBehaviour
     [Header("Scenes To Load")] 
     [SerializeField]
     private SceneField _tutorialScene;
+    
+    [SerializeField]
+    private SceneField _mainMenuScene;
 
     private List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
 
@@ -52,13 +56,9 @@ public class MainMenuUI : MonoBehaviour
         quitButton.onClick.AddListener(QuitGame);
         Quit_Yes.onClick.AddListener(OnConfirmQuit);
         Quit_No.onClick.AddListener(OnConfirmBack);
+        tutLevel.onClick.AddListener(OnStartLevel);
     }
-    public void LoadTutorialScene()
-    {
-        SceneManager.LoadSceneAsync(_tutorialScene);
-    }
-  
-
+    /*
     private IEnumerator LoadingBarProgress()
     {
         float loadProgress = 0f;
@@ -72,6 +72,7 @@ public class MainMenuUI : MonoBehaviour
             }
         }
     }
+    */
 
     public void MainMenuOut()
     {
@@ -90,6 +91,12 @@ public class MainMenuUI : MonoBehaviour
     
     }
 
+    void OnStartLevel()
+    {
+        levelSelectionCanvas.SetActive(false);
+        
+        StartCoroutine(StartLevelTransition());
+    }
     #region Confirmation Menu
     private void OnConfirmQuit()
     {
@@ -108,4 +115,13 @@ public class MainMenuUI : MonoBehaviour
     {
         anim.SetBool("isConfirmationMenu", true);
     }
+
+    IEnumerator StartLevelTransition()
+    {
+        anim.SetTrigger("isStart");
+        yield return new WaitForSeconds(.7f);
+        SceneManager.LoadScene(_tutorialScene);
+     
+    }
+    
 }

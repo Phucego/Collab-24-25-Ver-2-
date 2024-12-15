@@ -26,6 +26,7 @@ public class UIManager : MonoBehaviour
     public Button MainMenu_No;
     public Button MainMenu_Yes;
 
+    public Image circleImage;
     [SerializeField] private Button m_StartWaveButton;
 
     [Header("Other References")]
@@ -48,23 +49,20 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        Time.timeScale = 1f;
-        pauseMenu.SetActive(false);
-        mainUI.SetActive(true);
-        confirmationMenu.SetActive(false);
-        confirmationMenu_MainMenu.SetActive(false);
-
-        cam = Camera.main;
-        anim = GetComponent<Animator>();
-        anim.SetBool("isTowerSelectPanelOpened", false);
-
+        StartCoroutine(ShowUIAfterTransition());
+        pauseAndWaveParent.SetActive(false);
         // Initialize the coin counter
         UpdateCoinCounterUI();
-
+        
+       
+        
         // Subscribe to currency updates
         CurrencyManager.Instance.InitializeCurrency(25); // Example starting value
         UpdateCoinCounterUI();
 
+        cam = Camera.main;
+        anim = GetComponent<Animator>();
+        anim.SetBool("isTowerSelectPanelOpened", false);
         // BUTTON EVENTS
         pauseButton.onClick.AddListener(OnPauseButtonClicked);
         toggleTowerSelectButton.onClick.AddListener(ToggleTowerSelectPanel);
@@ -148,6 +146,8 @@ public class UIManager : MonoBehaviour
     {
         selectionPanelIsOpened = !selectionPanelIsOpened;
         anim.SetBool("isTowerSelectPanelOpened", selectionPanelIsOpened);
+        
+        Debug.Log(selectionPanelIsOpened);
     }
 
     private IEnumerator PauseGameAfterAnimation()
@@ -164,4 +164,18 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
         cam.GetComponent<FreeFlyCamera>()._enableRotation = true;
     }
+
+    IEnumerator ShowUIAfterTransition()
+    {
+        yield return new WaitForSeconds(2f);
+        Time.timeScale = 1f;
+        pauseMenu.SetActive(false);
+        mainUI.SetActive(true);
+        confirmationMenu.SetActive(false);
+        confirmationMenu_MainMenu.SetActive(false);
+        pauseAndWaveParent.SetActive(true);
+        
+    
+    }
+    
 }

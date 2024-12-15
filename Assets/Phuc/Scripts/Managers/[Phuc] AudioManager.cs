@@ -22,7 +22,7 @@ public class AudioManager : Singleton<AudioManager>
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+          
         }
         else
         {
