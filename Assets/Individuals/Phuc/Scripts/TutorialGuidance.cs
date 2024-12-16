@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using TreeEditor;
 using UnityEngine.UI;
 
 public class TowerDefenseTutorial : MonoBehaviour
@@ -11,7 +12,6 @@ public class TowerDefenseTutorial : MonoBehaviour
     public TextMeshProUGUI dialogueText; // UI for the dialogue text
     public Button nextButton; // Button to progress the dialogue
     public GameObject dialogueUI; // Reference to the dialogue UI container
-   // public GameObject mainUI; // Reference to the main game UI container
 
     [Header("Tutorial Data")]
     public List<Dialogue> tutorialSteps; // List of tutorial steps (Dialogue ScriptableObjects)
@@ -20,10 +20,14 @@ public class TowerDefenseTutorial : MonoBehaviour
     public Animator anim; // Animator for triggering animations
 
     private int currentStepIndex = 0; // Tracks the current tutorial step
+    private int currentLineIndex = 0; // Tracks the current line within the step
     private bool isTutorialActive = false; // Tracks if the tutorial is active
 
     private Coroutine typingCoroutine; // For word-by-word display
+    private bool isTyping = false; // Tracks if text is currently being typed
 
+    private FreeFlyCamera _freeFlyCamera;
+    
     void Start()
     {
         // Initialize UI
@@ -32,6 +36,8 @@ public class TowerDefenseTutorial : MonoBehaviour
 
         // Start the tutorial automatically
         StartTutorial();
+
+        _freeFlyCamera = FindObjectOfType<FreeFlyCamera>();
     }
 
     void StartTutorial()
@@ -43,9 +49,9 @@ public class TowerDefenseTutorial : MonoBehaviour
         }
 
         currentStepIndex = 0;
+        currentLineIndex = 0;
         isTutorialActive = true;
         dialogueUI.SetActive(true);
-        //if (mainUI != null) mainUI.SetActive(false); // Disable main UI
 
         ShowTutorialStep();
     }
@@ -55,7 +61,26 @@ public class TowerDefenseTutorial : MonoBehaviour
         if (currentStepIndex < tutorialSteps.Count)
         {
             Dialogue currentDialogue = tutorialSteps[currentStepIndex];
-            DisplayLine(currentDialogue.dialogueLines[0]);
+
+            if (currentLineIndex < currentDialogue.dialogueLines.Count)
+            {
+                // Display the current line first
+                DisplayLine(currentDialogue.dialogueLines[currentLineIndex]);
+
+                // Trigger the "isStart" animation after the sentence is fully shown
+                if (currentStepIndex == 1 && currentLineIndex == currentDialogue.dialogueLines.Count - 1)
+                {
+                    // Wait until the typing is done before triggering the animation
+                    StartCoroutine(WaitForTypingCompleteAndTriggerAnimation());
+                }
+            }
+            else
+            {
+                // Move to the next step if no more lines are left in the current step
+                currentStepIndex++;
+                currentLineIndex = 0;
+                ShowTutorialStep();
+            }
 
             // Add mechanic-specific highlights or actions here
             ExecuteStepActions(currentStepIndex);
@@ -66,6 +91,8 @@ public class TowerDefenseTutorial : MonoBehaviour
         }
     }
 
+
+
     void DisplayLine(Dialogue.DialogueLine line)
     {
         if (typingCoroutine != null)
@@ -73,6 +100,7 @@ public class TowerDefenseTutorial : MonoBehaviour
             StopCoroutine(typingCoroutine);
         }
 
+        isTyping = true;
         characterNameText.text = line.characterName; // Display the character's name
         typingCoroutine = StartCoroutine(TypeSentence(line.dialogueText));
     }
@@ -85,17 +113,41 @@ public class TowerDefenseTutorial : MonoBehaviour
             dialogueText.text += letter;
             yield return new WaitForSeconds(0.05f); // Adjust typing speed here
         }
+        isTyping = false;
     }
 
     public void OnNextButtonClicked()
     {
-        if (currentStepIndex == 0 && anim != null)
+        if (isTyping)
         {
-            anim.SetTrigger("isStart"); // Trigger animation on first dialogue
+            // If typing, skip to show the full sentence immediately
+            if (typingCoroutine != null)
+            {
+                StopCoroutine(typingCoroutine);
+            }
+            Dialogue currentDialogue = tutorialSteps[currentStepIndex];
+            dialogueText.text = currentDialogue.dialogueLines[currentLineIndex].dialogueText;
+            isTyping = false;
         }
+        else
+        {
+            Dialogue currentDialogue = tutorialSteps[currentStepIndex];
 
-        currentStepIndex++;
-        ShowTutorialStep();
+            if (currentLineIndex < currentDialogue.dialogueLines.Count - 1)
+            {
+                // Move to the next line within the same step
+                currentLineIndex++;
+                ShowTutorialStep();
+                //anim.SetTrigger("isStart"); // Trigger animation on first dialogue
+            }
+            else
+            {
+                // Move to the next step if all lines in the current step are shown
+                currentStepIndex++;
+                currentLineIndex = 0;
+                ShowTutorialStep();
+            }
+        }
     }
 
     void EndTutorial()
@@ -104,7 +156,6 @@ public class TowerDefenseTutorial : MonoBehaviour
         characterNameText.text = "";
         dialogueText.text = "";
         dialogueUI.SetActive(false);
-     //   if (mainUI != null) mainUI.SetActive(true); // Re-enable main UI
         isTutorialActive = false;
 
         // Resume game if paused
@@ -118,12 +169,12 @@ public class TowerDefenseTutorial : MonoBehaviour
         {
             case 0:
                 Debug.Log("Highlighting build menu.");
-                HighlightBuildMenu();
+                Intro();
                 break;
 
             case 1:
                 Debug.Log("Highlighting tiles.");
-                HighlightTiles();
+                BasicMovement();
                 break;
 
             case 2:
@@ -137,13 +188,14 @@ public class TowerDefenseTutorial : MonoBehaviour
         }
     }
 
-    void HighlightBuildMenu()
+    void Intro()
     {
         // Example of highlighting the build menu
         Debug.Log("Build menu highlighted (Add your specific logic here).");
+        
     }
 
-    void HighlightTiles()
+    void BasicMovement()
     {
         // Example of highlighting specific tiles
         Debug.Log("Tiles highlighted (Add your specific logic here).");
@@ -154,4 +206,15 @@ public class TowerDefenseTutorial : MonoBehaviour
         Time.timeScale = 0; // Pause the game
     }
     
+    private IEnumerator WaitForTypingCompleteAndTriggerAnimation()
+    {
+        // Wait until typing is done (i.e., when isTyping is false)
+        while (isTyping)
+        {
+            yield return null;
+        }
+
+        // Trigger the "isStart" animation after the final line is fully typed
+        anim.SetTrigger("isStart");
+    }
 }

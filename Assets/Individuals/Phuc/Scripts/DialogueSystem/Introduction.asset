@@ -25,6 +25,8 @@ MonoBehaviour:
     dialogueText: "This ancient city stands as the last bastion of our civilization.
       Enemy forces march to destroy what we have left. It\u2019s all up to you to
       lead the last stand and preserve our heritage.\r\n\r\n"
+  - characterName: 'Player:'
+    dialogueText: But how can I protect this huge castle?
   - characterName: 'General:'
     dialogueText: 'Come on! Follow me, I will show you!
 
