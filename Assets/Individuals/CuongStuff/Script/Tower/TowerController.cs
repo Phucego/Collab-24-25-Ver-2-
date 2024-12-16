@@ -225,8 +225,6 @@ public class TowerController : MonoBehaviour
                     TargetPos = Target.transform.position;
                 }
             }
-                
-
         }
     }
 
