@@ -5,13 +5,12 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
-using DG.Tweening.Plugins.Core.PathCore;
 using Unity.VisualScripting;
 using System.Linq;
 
-public class EnemyBehavior : MonoBehaviour
+public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
 {
-    [HideInInspector] public BaseEnemySO data;
+    public BaseEnemySO data;
 
     // [ ENEMY'S UI ] //
     private Enemy_HPBar _bar;
@@ -185,6 +184,21 @@ public class EnemyBehavior : MonoBehaviour
     public void Death()
     {
         Destroy(gameObject);
+    }
+
+    public void TakeDamage(float dmg)
+    {
+
+    }
+
+    public void ApplyDebuff(float smth)
+    {
+
+    }
+
+    public TargetTypeEnum[] GetTargetType()
+    {
+        return data.targets;
     }
 
     IEnumerator StartEnemyMovement()

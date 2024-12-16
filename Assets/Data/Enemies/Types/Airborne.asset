@@ -16,6 +16,7 @@ MonoBehaviour:
   name: Air
   description: Da baloon
   type: 01000000
+  targets: 01000000
   maxHealth: 100
   maxSpeed: 9
   acceleration: 5

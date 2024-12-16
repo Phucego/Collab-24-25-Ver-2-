@@ -24,6 +24,7 @@ public class BaseEnemySO : ScriptableObject
     public string description;
     [Tooltip("Enemy Type")]
     public eType[] type;
+    public TargetTypeEnum[] targets;
 
     [Tooltip("Health the enemy spawns with")]
     public int maxHealth;

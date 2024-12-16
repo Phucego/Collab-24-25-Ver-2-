@@ -208,8 +208,8 @@ public class TowerController : MonoBehaviour
                     continue;
                 }
 
-                float distance = Vector3.Distance(transform.position, enemy.transform.position);
-                float lastdistance = Vector3.Distance(transform.position, TargetPos);
+                /*float distance = Vector3.Distance(transform.position, enemy.transform.position);
+                float lastdistance = Vector3.Distance(transform.position, TargetPos);*/
                 if (Target == null)
                 {
                     Target = enemy;
@@ -219,7 +219,7 @@ public class TowerController : MonoBehaviour
                 float mainpointdistance = Vector3.Distance(MainPoint.transform.position, enemy.transform.position);
                 float mainpointlastdistance = Vector3.Distance(MainPoint.transform.position, TargetPos);
 
-                if (mainpointdistance < mainpointlastdistance)
+                if (mainpointdistance < mainpointlastdistance) //Change target if it is the closest one
                 {
                     Target = enemy;
                     TargetPos = Target.transform.position;

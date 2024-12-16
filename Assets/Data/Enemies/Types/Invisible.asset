@@ -16,6 +16,7 @@ MonoBehaviour:
   name: Invis
   description: An invisble enemy, that's it
   type: 0000000002000000
+  targets: 0000000002000000
   maxHealth: 75
   maxSpeed: 12
   acceleration: 6

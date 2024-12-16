@@ -16,6 +16,7 @@ MonoBehaviour:
   name: Normal
   description: Just your generic enemy, walk on ground
   type: 00000000
+  targets: 00000000
   maxHealth: 100
   maxSpeed: 10
   acceleration: 4
