@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 728ee75b15d23754abadb7b5b01dd571, type: 3}
-  m_Name: CameraMovement
+  m_Name: TowerMechanics
   m_EditorClassIdentifier: 
-  sectionName: Camera Movement
   dialogueLines:
   - characterName: 'General: '
-    dialogueText: "Now, to look around, hold down your RMB and move your mouse around
-      to pan the camera.\r"
+    dialogueText: "Let\u2019s build our first defense! Click on the Cannon icon to
+      select it!"
   - characterName: 'General: '
-    dialogueText: "Yes, that\u2019s correct. Now try to move and look around to get
-      used to the controls."
+    dialogueText: "The map is based upon a fixed grid, meaning that there are only
+      certain areas where you will be able to build defenses.\r\n\t"
   - characterName: 'General: '
-    dialogueText: Use your mouse to interact with UI elements to interact with the
-      World Space.
+    dialogueText: 'Now, pick any of those placeholder foundation bases and press
+      LMB to place the Cannon.
+
+'

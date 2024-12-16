@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ee75b15d23754abadb7b5b01dd571, type: 3}
   m_Name: Introduction
   m_EditorClassIdentifier: 
+  sectionName: Introduction
   dialogueLines:
   - characterName: 'General: '
     dialogueText: 'Welcome to The Last Bastion, new player!
@@ -31,3 +32,6 @@ MonoBehaviour:
     dialogueText: 'Come on! Follow me, I will show you!
 
 '
+  - characterName: 'General:'
+    dialogueText: First, hold RMB and use WASD to move around, press Control or Escape
+      to fly up and down.

@@ -12,5 +12,6 @@ public class Dialogue : ScriptableObject
         public string dialogueText; // The dialogue line
     }
 
-    public List<DialogueLine> dialogueLines = new List<DialogueLine>(); // A list of dialogue lines
+    public string sectionName; // Name of the tutorial section (e.g., "Introduction", "CameraMovement")
+    public List<DialogueLine> dialogueLines = new List<DialogueLine>(); // List of dialogue lines
 }

@@ -47,6 +47,14 @@ public class UIManager : MonoBehaviour
     public GameObject confirmationMenu;
     public GameObject confirmationMenu_MainMenu;
 
+    public static UIManager Instance;
+
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private void Start()
     {
         Time.timeScale = 0f;

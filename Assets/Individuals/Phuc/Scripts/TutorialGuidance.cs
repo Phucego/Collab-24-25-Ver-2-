@@ -1,220 +1,203 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
-using TreeEditor;
 using UnityEngine.UI;
 
-public class TowerDefenseTutorial : MonoBehaviour
+using TMPro;
+using UnityEngine.Events;
+
+public class TutorialGuidance : MonoBehaviour
 {
     [Header("UI Elements")]
-    public TextMeshProUGUI characterNameText; // UI for the character's name
-    public TextMeshProUGUI dialogueText; // UI for the dialogue text
-    public Button nextButton; // Button to progress the dialogue
-    public GameObject dialogueUI; // Reference to the dialogue UI container
+    public TextMeshProUGUI characterNameText;
+    public TextMeshProUGUI dialogueText;
+    public Button nextButton;
+    public GameObject dialogueUI;
 
     [Header("Tutorial Data")]
-    public List<Dialogue> tutorialSteps; // List of tutorial steps (Dialogue ScriptableObjects)
+    public List<Dialogue> allDialogues; // List of all dialogues across the tutorial
 
     [Header("Animation Controller")]
-    public Animator anim; // Animator for triggering animations
+    public Animator anim;
 
-    private int currentStepIndex = 0; // Tracks the current tutorial step
-    private int currentLineIndex = 0; // Tracks the current line within the step
-    private bool isTutorialActive = false; // Tracks if the tutorial is active
+    // Unity Event for calling actions
+    public UnityEvent OnIntroCompleted;
+    public UnityEvent OnResourceTutorialStarted;
+    public UnityEvent OnCameraMovementStarted;
 
-    private Coroutine typingCoroutine; // For word-by-word display
-    private bool isTyping = false; // Tracks if text is currently being typed
+    private List<Dialogue.DialogueLine> currentDialogueLines;
+    private int currentLineIndex = 0;
+    private bool isTutorialActive = false;
+    
+    [SerializeField]
+    private bool movementDetected = false; // Tracks if movement has been detected during the intro
+
+    private Coroutine typingCoroutine;
+    private bool isTyping = false;
 
     private FreeFlyCamera _freeFlyCamera;
-    
+
+    // Define the destination (e.g., a GameObject that represents the destination)
+    public GameObject targetDestination;
+
     void Start()
     {
-        // Initialize UI
         dialogueUI.SetActive(false);
         nextButton.onClick.AddListener(OnNextButtonClicked);
 
-        // Start the tutorial automatically
-        StartTutorial();
-
         _freeFlyCamera = FindObjectOfType<FreeFlyCamera>();
+
+        StartIntro(); // Start the tutorial with the introduction
     }
 
-    void StartTutorial()
+    private void Update()
     {
-        if (tutorialSteps == null || tutorialSteps.Count == 0)
+        if (isTutorialActive && currentDialogueLines != null && currentDialogueLines.Count > 0)
         {
-            Debug.LogWarning("No tutorial steps assigned.");
+            if (DetectMovementInput() && currentDialogueLines[currentLineIndex].characterName == "Introduction")
+            {
+                movementDetected = true;
+                CompleteMovementStep();
+            }
+        }
+    }
+
+    private void StartIntro()
+    {
+        SetDialogueSection("Introduction", OnIntroCompleted.Invoke);
+    }
+
+    public void EndIntro()
+    {
+        Debug.Log("Introduction completed.");
+        StartCameraMovementTutorial(); // Move to the next tutorial phase
+    }
+
+    public void StartCameraMovementTutorial()
+    {
+        SetDialogueSection("Camera Movement", OnCameraMovementStarted.Invoke);
+        anim.SetTrigger("hideUI");
+
+        CompleteMovementStep();
+    }
+
+    private void SetDialogueSection(string sectionName, UnityAction onComplete)
+    {
+        Dialogue dialogue = allDialogues.Find(d => d.sectionName == sectionName);
+        if (dialogue == null || dialogue.dialogueLines.Count == 0)
+        {
+            onComplete?.Invoke();
             return;
         }
 
-        currentStepIndex = 0;
+        currentDialogueLines = dialogue.dialogueLines;
         currentLineIndex = 0;
         isTutorialActive = true;
         dialogueUI.SetActive(true);
 
-        ShowTutorialStep();
+        ShowCurrentLine(onComplete);
     }
 
-    void ShowTutorialStep()
+    private void ShowCurrentLine(UnityAction onComplete)
     {
-        if (currentStepIndex < tutorialSteps.Count)
+        if (currentLineIndex < currentDialogueLines.Count)
         {
-            Dialogue currentDialogue = tutorialSteps[currentStepIndex];
-
-            if (currentLineIndex < currentDialogue.dialogueLines.Count)
-            {
-                // Display the current line first
-                DisplayLine(currentDialogue.dialogueLines[currentLineIndex]);
-
-                // Trigger the "isStart" animation after the sentence is fully shown
-                if (currentStepIndex == 1 && currentLineIndex == currentDialogue.dialogueLines.Count - 1)
-                {
-                    // Wait until the typing is done before triggering the animation
-                    StartCoroutine(WaitForTypingCompleteAndTriggerAnimation());
-                }
-            }
-            else
-            {
-                // Move to the next step if no more lines are left in the current step
-                currentStepIndex++;
-                currentLineIndex = 0;
-                ShowTutorialStep();
-            }
-
-            // Add mechanic-specific highlights or actions here
-            ExecuteStepActions(currentStepIndex);
+            DisplayLine(currentDialogueLines[currentLineIndex]);
         }
         else
         {
-            EndTutorial();
+            // Trigger the animation when the entire dialogue has finished
+            anim.SetTrigger("isStart"); // Trigger the "isStart" animation at the end of the dialogue
+            dialogueUI.SetActive(false);
+            isTutorialActive = false;
+            onComplete?.Invoke(); // Call the completion callback
+            _freeFlyCamera._enableRotation = true;
+            _freeFlyCamera._enableMovement = true;
         }
     }
 
-
-
-    void DisplayLine(Dialogue.DialogueLine line)
+    private void DisplayLine(Dialogue.DialogueLine line)
     {
         if (typingCoroutine != null)
         {
             StopCoroutine(typingCoroutine);
+            _freeFlyCamera._enableRotation = false;
+            _freeFlyCamera._enableMovement = false;
         }
-
+        
         isTyping = true;
-        characterNameText.text = line.characterName; // Display the character's name
+        characterNameText.text = line.characterName;
         typingCoroutine = StartCoroutine(TypeSentence(line.dialogueText));
     }
 
-    IEnumerator TypeSentence(string sentence)
+    private IEnumerator TypeSentence(string sentence)
     {
         dialogueText.text = "";
         foreach (char letter in sentence.ToCharArray())
         {
             dialogueText.text += letter;
-            yield return new WaitForSeconds(0.05f); // Adjust typing speed here
+            yield return new WaitForSeconds(0.02f);
         }
+
         isTyping = false;
     }
 
-    public void OnNextButtonClicked()
+    private void OnNextButtonClicked()
     {
         if (isTyping)
         {
-            // If typing, skip to show the full sentence immediately
             if (typingCoroutine != null)
             {
                 StopCoroutine(typingCoroutine);
             }
-            Dialogue currentDialogue = tutorialSteps[currentStepIndex];
-            dialogueText.text = currentDialogue.dialogueLines[currentLineIndex].dialogueText;
+
+            dialogueText.text = currentDialogueLines[currentLineIndex].dialogueText;
             isTyping = false;
         }
         else
         {
-            Dialogue currentDialogue = tutorialSteps[currentStepIndex];
-
-            if (currentLineIndex < currentDialogue.dialogueLines.Count - 1)
+            currentLineIndex++;
+            if (isTutorialActive)
             {
-                // Move to the next line within the same step
+                ShowCurrentLine(null); // Continue showing the dialogue
+                
+            }
+        }
+    }
+
+    private bool DetectMovementInput()
+    {
+        return Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || 
+               Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
+    }
+
+    private void CompleteMovementStep()
+    {
+        // Mark movement detected and proceed to the next dialogue line if not already detected
+        if (!movementDetected)
+        {
+            movementDetected = true;
+
+            if (currentLineIndex < currentDialogueLines.Count - 1)
+            {
                 currentLineIndex++;
-                ShowTutorialStep();
-                //anim.SetTrigger("isStart"); // Trigger animation on first dialogue
+                ShowCurrentLine(null);
             }
             else
             {
-                // Move to the next step if all lines in the current step are shown
-                currentStepIndex++;
-                currentLineIndex = 0;
-                ShowTutorialStep();
+                EndIntro();
             }
         }
     }
 
-    void EndTutorial()
+    // Check if the camera collides with the destination object
+    private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Tutorial completed.");
-        characterNameText.text = "";
-        dialogueText.text = "";
-        dialogueUI.SetActive(false);
-        isTutorialActive = false;
-
-        // Resume game if paused
-        Time.timeScale = 1;
-    }
-
-    void ExecuteStepActions(int stepIndex)
-    {
-        // Define specific actions for each step
-        switch (stepIndex)
+        if (other.gameObject == targetDestination)
         {
-            case 0:
-                Debug.Log("Highlighting build menu.");
-                Intro();
-                break;
-
-            case 1:
-                Debug.Log("Highlighting tiles.");
-                BasicMovement();
-                break;
-
-            case 2:
-                Debug.Log("Pausing game for resource explanation.");
-                PauseGame();
-                break;
-
-            default:
-                Debug.Log("No specific action for this step.");
-                break;
+            Debug.Log("a");
+            // The camera has collided with the destination object, move to the next tutorial phase
+            StartCameraMovementTutorial();
         }
-    }
-
-    void Intro()
-    {
-        // Example of highlighting the build menu
-        Debug.Log("Build menu highlighted (Add your specific logic here).");
-        
-    }
-
-    void BasicMovement()
-    {
-        // Example of highlighting specific tiles
-        Debug.Log("Tiles highlighted (Add your specific logic here).");
-    }
-
-    void PauseGame()
-    {
-        Time.timeScale = 0; // Pause the game
-    }
-    
-    private IEnumerator WaitForTypingCompleteAndTriggerAnimation()
-    {
-        // Wait until typing is done (i.e., when isTyping is false)
-        while (isTyping)
-        {
-            yield return null;
-        }
-
-        // Trigger the "isStart" animation after the final line is fully typed
-        anim.SetTrigger("isStart");
     }
 }

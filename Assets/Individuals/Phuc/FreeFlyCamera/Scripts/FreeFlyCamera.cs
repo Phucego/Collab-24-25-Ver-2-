@@ -3,6 +3,7 @@
 //                        (c) 2019 Sergey Stafeyev                           //
 //===========================================================================//
 
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
@@ -40,7 +41,7 @@ public class FreeFlyCamera : MonoBehaviour
 
     [SerializeField]
     [Tooltip("Camera movement by 'W','A','S','D','Q','E' keys is active")]
-    private bool _enableMovement = true;
+    public bool _enableMovement = true;
 
     [SerializeField]
     [Tooltip("Camera movement speed")]
@@ -88,6 +89,8 @@ public class FreeFlyCamera : MonoBehaviour
     private Vector3 _initPosition;
     private Vector3 _initRotation;
 
+    public static FreeFlyCamera instance; 
+
 #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -95,7 +98,10 @@ public class FreeFlyCamera : MonoBehaviour
             _boostedSpeed = _movementSpeed;
     }
 #endif
-
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {

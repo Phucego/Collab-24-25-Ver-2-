@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728ee75b15d23754abadb7b5b01dd571, type: 3}
+  m_Name: Practice
+  m_EditorClassIdentifier: 
+  dialogueLines:
+  - characterName: 'General:'
+    dialogueText: Now, feel free to explore so you can get a sense of the overall
+      map layout.
+  - characterName: 'Player:'
+    dialogueText: But what is that purple area?
+  - characterName: 'General:'
+    dialogueText: 'This is the Corrupted Zone, where our enemies spawn from and the
+      yellow paths are the only routes the enemies can follow to reach our Headquarter.
+
+'

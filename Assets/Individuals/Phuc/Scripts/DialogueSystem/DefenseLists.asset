@@ -10,9 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 728ee75b15d23754abadb7b5b01dd571, type: 3}
-  m_Name: BasicMovement
+  m_Name: DefenseLists
   m_EditorClassIdentifier: 
   dialogueLines:
   - characterName: 'General: '
-    dialogueText: First, use WASD to move around and press Control or Escape to fly
-      up and down, respectively.
+    dialogueText: 'And that small tab to the left of the screen, that is the Defense
+      HUD. Click it.
+
+'
+  - characterName: 'General: '
+    dialogueText: 'These are your available defenses and their prices accordingly
+
+'

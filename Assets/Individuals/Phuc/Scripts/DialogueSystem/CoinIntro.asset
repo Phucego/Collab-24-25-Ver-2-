@@ -10,20 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 728ee75b15d23754abadb7b5b01dd571, type: 3}
-  m_Name: Coin
+  m_Name: CoinIntro
   m_EditorClassIdentifier: 
   dialogueLines:
   - characterName: 'General:'
     dialogueText: 'The only currency we have here is Coin. Your coin pouch can be
       seen on the top-left of your screen.
 
-      Player: So what do we use coins
-      for?
-
-      General: Coins are extremely important as they are the only means
-      to build and upgrade defenses!'
+'
   - characterName: 'Player:'
     dialogueText: "\rSo what do we use coins for?\r"
   - characterName: 'General: '
-    dialogueText: "\rCoins are extremely important as they are the only means to
-      build and upgrade defenses!"
+    dialogueText: Coins are extremely important as they are the only means to build
+      and upgrade defenses!

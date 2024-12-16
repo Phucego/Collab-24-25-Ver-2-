@@ -7,8 +7,8 @@ public class CurrencyManager : MonoBehaviour
     public static CurrencyManager Instance;
 
     private GameObject enemyCheck;
-    [SerializeField]
-    private int currentCurrency;
+
+    public int currentCurrency;
     GameObject go;
     [SerializeField] private TextMeshProUGUI currencyText; // UI Text element to display currency
 
@@ -63,15 +63,4 @@ public class CurrencyManager : MonoBehaviour
             UpdateCurrencyUI(); // Refresh UI after deduction
         }
     }
-
-    public void UpdateEnemyDied()
-    {
-        go.GetComponent<EnemyDrops>().InitEnemy((coin) =>
-            {
-                currentCurrency += coin;
-                UpdateCurrencyUI();
-            }
-            );
-    }
-    
 }

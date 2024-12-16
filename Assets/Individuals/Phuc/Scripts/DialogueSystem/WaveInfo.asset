@@ -20,22 +20,8 @@ MonoBehaviour:
   - characterName: 'General: '
     dialogueText: "\rThat is the Wave Bar, which is an indication of your progress
       within the current level.\r\n"
-  - characterName: 'General: '
-    dialogueText: "\r\rThe red flags mark the time in the wave that have more enemies
-      spawning than normal.\r"
-  - characterName: 'General: '
-    dialogueText: "\r\rYou can also hover your mouse over this bar to see which enemies
-      are presented in this wave.\r"
   - characterName: 'Player: '
-    dialogueText: 'And ... there is a Start Wave button up the top-right? Does it
-      summon the enemy immediately?
-
-'
+    dialogueText: What about the Start Wave button up the top-right?
   - characterName: 'General: '
-    dialogueText: ' Yes but do not touch it for now! We don''t have any defenses
-      yet. Hitting that button will dispose of all of your preparation time and start
-      the wave immediately!
-
-      
-
-'
+    dialogueText: 'Hitting that button will end your preparation time and start the
+      wave immediately! Do not touch it for now! We don''t have any defenses yet. '

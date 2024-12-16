@@ -29,6 +29,8 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
     private Vector3 _startPosition, _targetPosition, _velocity;
     private float _moveTime = 0f, _curSpeed = 0f;
 
+    public int coinDrop = 10;
+    
     void Start()
     {
         _bar = GetComponentInChildren<Enemy_HPBar>();
@@ -183,12 +185,15 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
 
     public void Death()
     {
+        CurrencyManager.Instance.currentCurrency += coinDrop;
         Destroy(gameObject);
     }
 
     public void TakeDamage(float dmg)
     {
-
+        _health -= dmg;
+        
+        
     }
 
     public void ApplyDebuff(float smth)
