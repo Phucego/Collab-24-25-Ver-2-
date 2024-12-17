@@ -51,9 +51,12 @@ public class BuildingManager : MonoBehaviour
             if (Input.GetMouseButtonDown(0) && canPlace)
             {
                 PlaceObject();
+            } 
+            else if (Input.GetMouseButtonDown(0) && !canPlace)
+            {
+                AudioManager.Instance.PlaySoundEffect("Insufficient_SFX");
             }
-
-            // Delete the pending object on pressing Escape
+          
             if (Input.GetKeyDown(KeyCode.Escape)) 
             {
                 DeletePendingObject();
@@ -106,6 +109,8 @@ public class BuildingManager : MonoBehaviour
                 towerPos = hit.point + Vector3.up * snapHeight;
                 pendingObj.transform.position = towerPos;
                 canPlace = false;
+                
+                
             }
         }
         else
@@ -122,16 +127,16 @@ public class BuildingManager : MonoBehaviour
         {
             if (Vector3.Distance(position, tower.transform.position) < minimumPlacementDistance)
             {
-                return false; // Too close to another tower
+                return false; 
             }
         }
-        return true; // Far enough from other towers
+        return true; 
     }
 
     public void PlaceObject()
     {
         if (pendingObj == null || !canPlace) return;
-
+        
         // Get the cost of the tower from its TowerDataSO
         TowerController towerController = pendingObj.GetComponent<TowerController>();
         if (towerController == null)
@@ -158,14 +163,14 @@ public class BuildingManager : MonoBehaviour
 
         if (placementIndicator != null)
         {
-            placementIndicator.SetActive(false); // Disable the placement indicator
+            placementIndicator.SetActive(false); 
         }
 
-        pendingObj.GetComponent<TowerController>().TowerPlaced = true; // Mark as placed
-        pendingObj.GetComponent<TowerInteract>().isPlaced = true;     // Allow interaction
+        pendingObj.GetComponent<TowerController>().TowerPlaced = true; 
+        pendingObj.GetComponent<TowerInteract>().isPlaced = true;     
         AudioManager.Instance.PlaySoundEffect("BuildTower_SFX");
-        placedTowers.Add(pendingObj); // Add to placed towers list
-        pendingObj = null;            // Clear the pending object
+        placedTowers.Add(pendingObj);
+        pendingObj = null;           
 
         Debug.Log("Tower placed successfully and currency deducted.");
     }
@@ -175,16 +180,16 @@ public class BuildingManager : MonoBehaviour
         // If the selected tower is the same as the pending one, don't change the pending object
         if (pendingObj != null && prefab == pendingObj)
         {
-            return; // Do nothing if the same tower is selected again
+            return; 
         }
 
         // If there is already a pending object, discard it
         if (pendingObj != null)
         {
-            Destroy(pendingObj); // Destroy the previous pending object
+            Destroy(pendingObj); 
             if (placementIndicator != null)
             {
-                placementIndicator.SetActive(false); // Hide the previous indicator
+                placementIndicator.SetActive(false); 
             }
         }
 

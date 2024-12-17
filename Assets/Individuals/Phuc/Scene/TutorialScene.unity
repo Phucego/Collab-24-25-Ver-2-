@@ -406,7 +406,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &68117147
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1708,7 +1708,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: -310}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1920, y: 306.6838}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &325949346
@@ -2099,7 +2099,6 @@ GameObject:
   - component: {fileID: 597401152}
   - component: {fileID: 597401155}
   - component: {fileID: 597401156}
-  - component: {fileID: 597401157}
   - component: {fileID: 597401158}
   - component: {fileID: 597401159}
   - component: {fileID: 597401160}
@@ -2254,23 +2253,6 @@ MonoBehaviour:
   _enableSpeedAcceleration: 1
   _speedAccelerationFactor: 1.5
   _initPositonButton: 114
---- !u!114 &597401157
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 597401151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 090e7a5e0332e344c990ec68db05efe3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 597401153}
-  towerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  selectedTower: {fileID: 0}
 --- !u!114 &597401158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3068,6 +3050,13 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1f2813b3c1a72c74fa212445c2911d72, type: 3}
   - {fileID: 8300000, guid: ca4534ff779b797408cce983981cc065, type: 3}
   - {fileID: 8300000, guid: 7f47c6d75ead3114ca22cc77a8ee370f, type: 3}
+  - {fileID: 8300000, guid: 11aa2670074182d408d4d2455962f470, type: 3}
+  - {fileID: 8300000, guid: 22791cde8e90f4b4ab64dffe0c1a7a44, type: 3}
+  - {fileID: 8300000, guid: 0bc21704ca8a4134681ca8125db6ff1e, type: 3}
+  - {fileID: 8300000, guid: 1b4e578554371084d993a4828b4b331a, type: 3}
+  - {fileID: 8300000, guid: 03af3dac3062f4c4abff4232d5c48803, type: 3}
+  - {fileID: 8300000, guid: c5a06ce8712d10046acef070fcd6dea7, type: 3}
+  - {fileID: 8300000, guid: 8364faaee506c3d488c0668683687f08, type: 3}
 --- !u!4 &839336857 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4124756964709625006, guid: efe321c9805cdf54d98cc08ab25a7eb7, type: 3}
@@ -4970,7 +4959,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4591aabd90e69054f91a7cad55099eb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentCurrency: 25
+  currentCurrency: 1000
   currencyText: {fileID: 1130766934}
 --- !u!1 &1488137306
 GameObject:
@@ -5122,7 +5111,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LevelDataSO: {fileID: 11400000, guid: a49807f0194518643a6a32c8d2a9ffca, type: 2}
-  m_TestEnemy: {fileID: 0}
+  minTime: 2
+  maxTime: 5
+  minPauseTime: 5
+  maxPauseTime: 10
 --- !u!1 &1551579151
 GameObject:
   m_ObjectHideFlags: 0
@@ -5557,6 +5549,7 @@ MonoBehaviour:
   towerSelectMenu: {fileID: 1583933394}
   confirmationMenu: {fileID: 1688421069}
   confirmationMenu_MainMenu: {fileID: 1132735161}
+  startingCoinAmount: 99999
 --- !u!95 &1676139304
 Animator:
   serializedVersion: 5
@@ -7470,7 +7463,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4271732178285937491, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -73
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4815916144430051614, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
       propertyPath: m_Name

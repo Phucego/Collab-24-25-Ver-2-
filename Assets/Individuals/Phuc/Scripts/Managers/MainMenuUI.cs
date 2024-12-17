@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+
 public class MainMenuUI : MonoBehaviour
 {
     [Header("Main Menu")]
@@ -14,10 +15,10 @@ public class MainMenuUI : MonoBehaviour
 
      public Image _loadingBar;*/
     Animator anim;
-  
+
     public GameObject levelSelectionCanvas;
     public GameObject mainMenuCanvas;
-   
+
     public TextMeshProUGUI gameName;
 
 
@@ -32,12 +33,10 @@ public class MainMenuUI : MonoBehaviour
     public GameObject confirmMenuCanvas;
 
 
-    [Header("Scenes To Load")] 
-    [SerializeField]
+    [Header("Scenes To Load")] [SerializeField]
     private SceneField _tutorialScene;
-    
-    [SerializeField]
-    private SceneField _mainMenuScene;
+
+    [SerializeField] private SceneField _mainMenuScene;
 
     private List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
 
@@ -46,7 +45,7 @@ public class MainMenuUI : MonoBehaviour
         Time.timeScale = 1f;
         anim = GetComponent<Animator>();
 
-        confirmMenuCanvas.SetActive(false); 
+        confirmMenuCanvas.SetActive(false);
 
         //loadingBarOBJ.SetActive(false);
         levelSelectionCanvas.SetActive(false);
@@ -76,6 +75,7 @@ public class MainMenuUI : MonoBehaviour
 
     public void MainMenuOut()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         anim.SetBool("fromMenu", true);
         levelSelectionCanvas.SetActive(true);
         //mainMenuCanvas.SetActive(false);
@@ -84,28 +84,33 @@ public class MainMenuUI : MonoBehaviour
     public void MainMenuIn()
     {
         anim.SetBool("fromMenu", false);
-      
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         mainMenuCanvas.SetActive(true);
-      
+
         levelSelectionCanvas.SetActive(false);
-    
+
     }
 
     void OnStartLevel()
     {
         levelSelectionCanvas.SetActive(false);
-        
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         StartCoroutine(StartLevelTransition());
     }
+
     #region Confirmation Menu
+
     private void OnConfirmQuit()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         Debug.Log("Quit");
         Application.Quit();
 
     }
+
     private void OnConfirmBack()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         anim.SetBool("isConfirmationMenu", false);
     }
 
@@ -113,6 +118,7 @@ public class MainMenuUI : MonoBehaviour
 
     public void QuitGame()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         anim.SetBool("isConfirmationMenu", true);
     }
 
@@ -122,7 +128,5 @@ public class MainMenuUI : MonoBehaviour
         AudioManager.Instance.PlaySoundEffect("Swoosh_SFX");
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene(_tutorialScene);
-     
     }
-    
 }

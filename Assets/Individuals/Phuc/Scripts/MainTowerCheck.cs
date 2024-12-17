@@ -17,6 +17,8 @@ public class MainTowerCheck : MonoBehaviour
         {
             // Notify the main tower to apply damage
             mainTower.ApplyDamage(other.gameObject, damageAmount);
+            
+            AudioManager.Instance.PlaySoundEffect("GroundEnemy_SFX");
         }
     }
 }

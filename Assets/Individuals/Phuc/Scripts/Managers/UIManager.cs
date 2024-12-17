@@ -49,7 +49,7 @@ public class UIManager : MonoBehaviour
 
     public static UIManager Instance;
 
-
+    public int startingCoinAmount;
     private void Awake()
     {
         Instance = this;
@@ -67,7 +67,7 @@ public class UIManager : MonoBehaviour
        
         
         // Subscribe to currency updates
-        CurrencyManager.Instance.InitializeCurrency(25); // Example starting value
+        CurrencyManager.Instance.InitializeCurrency(startingCoinAmount); // Example starting value
         UpdateCoinCounterUI();
 
         cam = Camera.main;

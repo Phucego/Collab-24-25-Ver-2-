@@ -18,12 +18,15 @@ public class BalistaController : TowerController
             Vector3 dir = Head.transform.position - TargetPos;
             Quaternion desireddir = Quaternion.LookRotation(-dir);
             Head.transform.rotation = Quaternion.Slerp(Head.transform.rotation, desireddir, Time.deltaTime * 20f);
+            
         }
     }
 
     protected override IEnumerator FireProjectile(Vector3 direction)
     {
         yield return new WaitForSeconds(0.5f);
+        
+        AudioManager.Instance.PlaySoundEffect("Ballista_SFX");
         lockedIn = false;
         GameObject Projectile = GetPooledObject();
         Projectile.transform.position = AimPoint.transform.position;

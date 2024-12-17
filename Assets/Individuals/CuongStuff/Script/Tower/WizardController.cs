@@ -59,7 +59,8 @@ public class WizardController : TowerController
         Projectile.GetComponent<HitscanController>().SetTarget(Target);
 
         Projectile.SetActive(true);  
-
+        
+        AudioManager.Instance.PlaySoundEffect("Zap_SFX");
         yield return new WaitForSeconds(0f);
     }
 

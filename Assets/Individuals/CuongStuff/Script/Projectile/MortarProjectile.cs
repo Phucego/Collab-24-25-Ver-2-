@@ -75,6 +75,8 @@ public class MortarProjectile : ProjectileController
     private void SetExplosion()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, blastradius);
+        
+        AudioManager.Instance.PlaySoundEffect("Explosion_SFX");
         foreach (var collider in colliders)
         {
             if (collider.gameObject.CompareTag("Enemy"))

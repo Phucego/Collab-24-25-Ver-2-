@@ -149,6 +149,8 @@ public class TowerController : MonoBehaviour
         Projectile.transform.position = AimPoint.transform.position;
         Projectile.transform.rotation = AimPoint.transform.rotation;
         Projectile.SetActive(true);
+        
+        AudioManager.Instance.PlaySoundEffect("Cannon_SFX");
         //Projectile.GetComponent<ProjectileController>().SetDirection(direction.normalized);
 
         yield return null;

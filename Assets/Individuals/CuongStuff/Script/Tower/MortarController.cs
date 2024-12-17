@@ -10,8 +10,10 @@ public class MortarController : TowerController
         Projectile.transform.position = AimPoint.transform.position;
         Projectile.transform.rotation = AimPoint.transform.rotation;
         Projectile.GetComponent<MortarProjectile>().SetPositionLerp(AimPoint.transform.position, TargetPos);
+        
+        AudioManager.Instance.PlaySoundEffect("Mortar_SFX");
         Projectile.SetActive(true);
-
+        
         yield return null;
     }
 
