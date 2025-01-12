@@ -20,8 +20,7 @@ public class TutorialGuidance : MonoBehaviour
     public Animator anim;
 
     public UnityEvent OnIntroCompleted;
-    public UnityEvent OnResourceTutorialStarted;
-    public UnityEvent OnCameraMovementStarted;
+    public UnityEvent OnCameraMovementCompleted;
 
     private List<Dialogue.DialogueLine> currentDialogueLines;
     private int currentLineIndex = 0;
@@ -60,7 +59,7 @@ public class TutorialGuidance : MonoBehaviour
         }
     }
 
-    private void StartIntro()
+    public void StartIntro()
     {
         DisableMovements();
         SetDialogueSection("Introduction", OnIntroCompleted.Invoke);
@@ -168,7 +167,7 @@ public class TutorialGuidance : MonoBehaviour
 
     public void StartCameraMovementTutorial()
     {
-        SetDialogueSection("Camera Movement", OnCameraMovementStarted.Invoke);
+        SetDialogueSection("Camera Movement", OnCameraMovementCompleted.Invoke);
         anim.SetTrigger("hideUI");
     }
 

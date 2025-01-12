@@ -486,11 +486,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68117146}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -64.77345, y: 6.401497, z: 5.7068176}
+  m_LocalPosition: {x: -43.267914, y: -3.5503807, z: -52.717186}
   m_LocalScale: {x: 4.1531343, y: 4.1531343, z: 4.1531343}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 761086471}
+  m_Father: {fileID: 1774655449}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &69459883
@@ -2396,36 +2396,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  OnResourceTutorialStarted:
+  OnCameraMovementCompleted:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnCameraMovementStarted:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 597401162}
-        m_TargetAssemblyTypeName: TutorialGuidance, Assembly-CSharp
-        m_MethodName: StartCameraMovementTutorial
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   movementDetected: 0
   targetDestination: {fileID: 68117146}
 --- !u!1 &614608893
@@ -2999,7 +2972,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 68117150}
   - {fileID: 1369998153}
   - {fileID: 550120989}
   - {fileID: 1901693246}
@@ -4381,37 +4353,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1142863765}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1185251537
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1185251538}
-  m_Layer: 0
-  m_Name: TutorialManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1185251538
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1185251537}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1192606830}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1192606829
 GameObject:
   m_ObjectHideFlags: 0
@@ -4448,7 +4389,6 @@ Transform:
   - {fileID: 1448870352}
   - {fileID: 816595650}
   - {fileID: 119620656}
-  - {fileID: 1185251538}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5019,7 +4959,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4591aabd90e69054f91a7cad55099eb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentCurrency: 1000
+  currentCurrency: 25
   currencyText: {fileID: 1130766934}
 --- !u!1 &1488137306
 GameObject:
@@ -5609,7 +5549,7 @@ MonoBehaviour:
   towerSelectMenu: {fileID: 1583933394}
   confirmationMenu: {fileID: 1688421069}
   confirmationMenu_MainMenu: {fileID: 1132735161}
-  startingCoinAmount: 99999
+  startingCoinAmount: 25
   dialogueManager: {fileID: 0}
 --- !u!95 &1676139304
 Animator:
@@ -6060,6 +6000,38 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &1774655448
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1774655449}
+  m_Layer: 0
+  m_Name: ==== TUTORIALS RELATED ====
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1774655449
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774655448}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -20.832085, y: 5.450381, z: 67.11719}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 68117150}
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1794062742
 GameObject:
   m_ObjectHideFlags: 0
