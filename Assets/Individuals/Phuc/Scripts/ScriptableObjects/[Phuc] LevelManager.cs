@@ -39,9 +39,9 @@ public class LevelManager : MonoBehaviour
 
             // Generate a random pause duration
             float randomPause = Random.Range(minPauseTime, maxPauseTime);
-            Debug.Log($"Pausing sound playback for {randomPause} seconds...");
+            /*Debug.Log($"Pausing sound playback for {randomPause} seconds...");*/
             yield return new WaitForSeconds(randomPause); 
-            Debug.Log("Resuming sound playback...");
+            /*Debug.Log("Resuming sound playback...");*/
         }
     }
 }

@@ -50,6 +50,10 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
 
     public int startingCoinAmount;
+
+    [Header("Dialogue Manager Reference")]
+    public TutorialGuidance dialogueManager; // Add a reference to the dialogue manager
+
     private void Awake()
     {
         Instance = this;
@@ -58,14 +62,13 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         Time.timeScale = 0f;
-        
+
         StartCoroutine(ShowUIAfterTransition());
         pauseAndWaveParent.SetActive(false);
+
         // Initialize the coin counter
         UpdateCoinCounterUI();
-        
-       
-        
+
         // Subscribe to currency updates
         CurrencyManager.Instance.InitializeCurrency(startingCoinAmount); // Example starting value
         UpdateCoinCounterUI();
@@ -73,6 +76,7 @@ public class UIManager : MonoBehaviour
         cam = Camera.main;
         anim = GetComponent<Animator>();
         anim.SetBool("isTowerSelectPanelOpened", false);
+
         // BUTTON EVENTS
         pauseButton.onClick.AddListener(OnPauseButtonClicked);
         toggleTowerSelectButton.onClick.AddListener(ToggleTowerSelectPanel);
@@ -84,6 +88,13 @@ public class UIManager : MonoBehaviour
         Quit_No.onClick.AddListener(OnConfirmBack);
         MainMenu_No.onClick.AddListener(OnConfirmBackMainMenu);
         MainMenu_Yes.onClick.AddListener(OnConfirmMainMenu);
+
+        // Subscribe to dialogue events
+        if (dialogueManager != null)
+        {
+            dialogueManager.OnIntroCompleted.AddListener(EnablePauseAndWaveMenus);
+            dialogueManager.OnCameraMovementStarted.AddListener(DisablePauseAndWaveMenus);
+        }
     }
 
     private void Update()
@@ -95,6 +106,21 @@ public class UIManager : MonoBehaviour
     {
         if (CurrencyManager.Instance == null || CurrencyManager.Instance.GetCurrency() < 0) return;
         coinCounterText.text = $"{CurrencyManager.Instance.GetCurrency()}"; // Fetch currency from CurrencyManager
+    }
+
+    private void TogglePauseAndWaveMenus(bool isActive)
+    {
+        pauseAndWaveParent.SetActive(isActive);
+    }
+
+    private void EnablePauseAndWaveMenus()
+    {
+        TogglePauseAndWaveMenus(true);
+    }
+
+    private void DisablePauseAndWaveMenus()
+    {
+        TogglePauseAndWaveMenus(false);
     }
 
     public void OnPauseButtonClicked()
@@ -165,7 +191,7 @@ public class UIManager : MonoBehaviour
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         selectionPanelIsOpened = !selectionPanelIsOpened;
         anim.SetBool("isTowerSelectPanelOpened", selectionPanelIsOpened);
-        
+
         Debug.Log(selectionPanelIsOpened);
     }
 
@@ -188,7 +214,7 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         yield return new WaitForSeconds(2f);
-        
+
         pauseMenu.SetActive(false);
         mainUI.SetActive(true);
         confirmationMenu.SetActive(false);

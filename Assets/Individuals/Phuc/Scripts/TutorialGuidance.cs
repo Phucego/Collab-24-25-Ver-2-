@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 using TMPro;
 using UnityEngine.Events;
 
@@ -15,12 +14,11 @@ public class TutorialGuidance : MonoBehaviour
     public GameObject dialogueUI;
 
     [Header("Tutorial Data")]
-    public List<Dialogue> allDialogues; // List of all dialogues across the tutorial
+    public List<Dialogue> allDialogues;
 
     [Header("Animation Controller")]
     public Animator anim;
 
-    // Unity Event for calling actions
     public UnityEvent OnIntroCompleted;
     public UnityEvent OnResourceTutorialStarted;
     public UnityEvent OnCameraMovementStarted;
@@ -28,17 +26,18 @@ public class TutorialGuidance : MonoBehaviour
     private List<Dialogue.DialogueLine> currentDialogueLines;
     private int currentLineIndex = 0;
     private bool isTutorialActive = false;
-    
+
     [SerializeField]
-    private bool movementDetected = false; // Tracks if movement has been detected during the intro
+    private bool movementDetected = false;
 
     private Coroutine typingCoroutine;
     private bool isTyping = false;
 
     private FreeFlyCamera _freeFlyCamera;
 
-    // Define the destination (e.g., a GameObject that represents the destination)
     public GameObject targetDestination;
+
+    private bool hasReachedDestination = false;
 
     void Start()
     {
@@ -47,7 +46,7 @@ public class TutorialGuidance : MonoBehaviour
 
         _freeFlyCamera = FindObjectOfType<FreeFlyCamera>();
 
-        StartIntro(); // Start the tutorial with the introduction
+        StartIntro();
     }
 
     private void Update()
@@ -57,28 +56,14 @@ public class TutorialGuidance : MonoBehaviour
             if (DetectMovementInput() && currentDialogueLines[currentLineIndex].characterName == "Introduction")
             {
                 movementDetected = true;
-                CompleteMovementStep();
             }
         }
     }
 
     private void StartIntro()
     {
+        DisableMovements();
         SetDialogueSection("Introduction", OnIntroCompleted.Invoke);
-    }
-
-    public void EndIntro()
-    {
-        Debug.Log("Introduction completed.");
-        StartCameraMovementTutorial(); // Move to the next tutorial phase
-    }
-
-    public void StartCameraMovementTutorial()
-    {
-        SetDialogueSection("Camera Movement", OnCameraMovementStarted.Invoke);
-        anim.SetTrigger("hideUI");
-
-        CompleteMovementStep();
     }
 
     private void SetDialogueSection(string sectionName, UnityAction onComplete)
@@ -106,13 +91,11 @@ public class TutorialGuidance : MonoBehaviour
         }
         else
         {
-            // Trigger the animation when the entire dialogue has finished
-            anim.SetTrigger("isStart"); // Trigger the "isStart" animation at the end of the dialogue
+            anim.SetTrigger("isStart");
             dialogueUI.SetActive(false);
             isTutorialActive = false;
-            onComplete?.Invoke(); // Call the completion callback
-            _freeFlyCamera._enableRotation = true;
-            _freeFlyCamera._enableMovement = true;
+            onComplete?.Invoke();
+            EnableMovements(); // Enable movements after dialogue finishes
         }
     }
 
@@ -121,10 +104,8 @@ public class TutorialGuidance : MonoBehaviour
         if (typingCoroutine != null)
         {
             StopCoroutine(typingCoroutine);
-            _freeFlyCamera._enableRotation = false;
-            _freeFlyCamera._enableMovement = false;
         }
-        
+
         isTyping = true;
         characterNameText.text = line.characterName;
         typingCoroutine = StartCoroutine(TypeSentence(line.dialogueText));
@@ -159,45 +140,47 @@ public class TutorialGuidance : MonoBehaviour
             currentLineIndex++;
             if (isTutorialActive)
             {
-                ShowCurrentLine(null); // Continue showing the dialogue
-                
+                ShowCurrentLine(null);
             }
         }
     }
 
     private bool DetectMovementInput()
     {
-        return Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || 
+        return Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
                Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
     }
 
-    private void CompleteMovementStep()
+    private void OnTriggerEnter(Collider other)
     {
-        // Mark movement detected and proceed to the next dialogue line if not already detected
-        if (!movementDetected)
+        if (other.gameObject == targetDestination && !hasReachedDestination)
         {
-            movementDetected = true;
+            hasReachedDestination = true;
+            Debug.Log("Camera reached destination.");
 
-            if (currentLineIndex < currentDialogueLines.Count - 1)
-            {
-                currentLineIndex++;
-                ShowCurrentLine(null);
-            }
-            else
-            {
-                EndIntro();
-            }
+            DisableMovements(); // Disable movements during dialogue
+            StartCameraMovementTutorial();
+
+            // Delete the destination point after collision
+            Destroy(targetDestination);
         }
     }
 
-    // Check if the camera collides with the destination object
-    private void OnTriggerEnter(Collider other)
+    public void StartCameraMovementTutorial()
     {
-        if (other.gameObject == targetDestination)
-        {
-            Debug.Log("a");
-            // The camera has collided with the destination object, move to the next tutorial phase
-            StartCameraMovementTutorial();
-        }
+        SetDialogueSection("Camera Movement", OnCameraMovementStarted.Invoke);
+        anim.SetTrigger("hideUI");
+    }
+
+    private void EnableMovements()
+    {
+        _freeFlyCamera._enableRotation = true;
+        _freeFlyCamera._enableMovement = true;
+    }
+
+    private void DisableMovements()
+    {
+        _freeFlyCamera._enableRotation = false;
+        _freeFlyCamera._enableMovement = false;
     }
 }

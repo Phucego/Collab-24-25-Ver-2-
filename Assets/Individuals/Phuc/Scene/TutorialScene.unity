@@ -406,7 +406,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &68117147
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -691,6 +691,38 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+--- !u!1 &202234243
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 202234244}
+  m_Layer: 0
+  m_Name: CameraContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &202234244
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 202234243}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -72.411354, y: -9.83588, z: 43.032764}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 597401154}
+  m_Father: {fileID: 1192606830}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &215877738
 GameObject:
   m_ObjectHideFlags: 0
@@ -2102,6 +2134,8 @@ GameObject:
   - component: {fileID: 597401158}
   - component: {fileID: 597401159}
   - component: {fileID: 597401160}
+  - component: {fileID: 597401161}
+  - component: {fileID: 597401162}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2176,11 +2210,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 597401151}
   m_LocalRotation: {x: 0.39555368, y: -0, z: -0, w: 0.9184429}
-  m_LocalPosition: {x: -40.8, y: 59.1, z: -38}
+  m_LocalPosition: {x: 31.611355, y: 68.93588, z: -81.03276}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1192606830}
+  m_Father: {fileID: 202234244}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 46.601, y: 0, z: 0}
 --- !u!114 &597401155
@@ -2300,6 +2334,100 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 14.445358, y: 2.7055998, z: 7.1770267}
   m_Center: {x: 2.1151009, y: -0.852811, z: 1.452727}
+--- !u!54 &597401161
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 597401151}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &597401162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 597401151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b6a95105a0cd2f4db7fe98ee5400db4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterNameText: {fileID: 293480196}
+  dialogueText: {fileID: 1827791699}
+  nextButton: {fileID: 863012676}
+  dialogueUI: {fileID: 1763728615}
+  allDialogues:
+  - {fileID: 11400000, guid: fe4191ab5d223f844941a434d7354fbb, type: 2}
+  - {fileID: 11400000, guid: f7561143fe4fd9f40ad3ed6a4d04e6a6, type: 2}
+  anim: {fileID: 1676139304}
+  OnIntroCompleted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 597401162}
+        m_TargetAssemblyTypeName: TutorialGuidance, Assembly-CSharp
+        m_MethodName: StartCameraMovementTutorial
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnResourceTutorialStarted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnCameraMovementStarted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 597401162}
+        m_TargetAssemblyTypeName: TutorialGuidance, Assembly-CSharp
+        m_MethodName: StartCameraMovementTutorial
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  movementDetected: 0
+  targetDestination: {fileID: 68117146}
 --- !u!1 &614608893
 GameObject:
   m_ObjectHideFlags: 0
@@ -4262,7 +4390,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1185251538}
-  - component: {fileID: 1185251539}
   m_Layer: 0
   m_Name: TutorialManager
   m_TagString: Untagged
@@ -4285,73 +4412,6 @@ Transform:
   m_Father: {fileID: 1192606830}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1185251539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1185251537}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b6a95105a0cd2f4db7fe98ee5400db4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterNameText: {fileID: 293480196}
-  dialogueText: {fileID: 1827791699}
-  nextButton: {fileID: 863012676}
-  dialogueUI: {fileID: 1763728615}
-  allDialogues:
-  - {fileID: 11400000, guid: fe4191ab5d223f844941a434d7354fbb, type: 2}
-  - {fileID: 11400000, guid: f7561143fe4fd9f40ad3ed6a4d04e6a6, type: 2}
-  anim: {fileID: 1676139304}
-  OnIntroCompleted:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1185251539}
-        m_TargetAssemblyTypeName: TutorialGuidance, Assembly-CSharp
-        m_MethodName: StartCameraMovementTutorial
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnResourceTutorialStarted:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1185251539}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnCameraMovementStarted:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1185251539}
-        m_TargetAssemblyTypeName: TutorialGuidance, Assembly-CSharp
-        m_MethodName: StartCameraMovementTutorial
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  movementDetected: 0
-  targetDestination: {fileID: 68117146}
 --- !u!1 &1192606829
 GameObject:
   m_ObjectHideFlags: 0
@@ -4381,7 +4441,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 227340081}
-  - {fileID: 597401154}
+  - {fileID: 202234244}
   - {fileID: 2104908186}
   - {fileID: 1549417072}
   - {fileID: 2108838502}
@@ -5550,6 +5610,7 @@ MonoBehaviour:
   confirmationMenu: {fileID: 1688421069}
   confirmationMenu_MainMenu: {fileID: 1132735161}
   startingCoinAmount: 99999
+  dialogueManager: {fileID: 0}
 --- !u!95 &1676139304
 Animator:
   serializedVersion: 5
