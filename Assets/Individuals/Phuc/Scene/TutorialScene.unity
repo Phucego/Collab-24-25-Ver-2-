@@ -2377,7 +2377,7 @@ MonoBehaviour:
   dialogueText: {fileID: 1827791699}
   nextButton: {fileID: 863012676}
   dialogueUI: {fileID: 1763728615}
-  allDialogues:
+  dialogueScriptables:
   - {fileID: 11400000, guid: fe4191ab5d223f844941a434d7354fbb, type: 2}
   - {fileID: 11400000, guid: f7561143fe4fd9f40ad3ed6a4d04e6a6, type: 2}
   anim: {fileID: 1676139304}
@@ -2386,7 +2386,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 597401162}
         m_TargetAssemblyTypeName: TutorialGuidance, Assembly-CSharp
-        m_MethodName: StartCameraMovementTutorial
+        m_MethodName: StartBuildingTutorial
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2396,11 +2396,24 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  OnCameraMovementCompleted:
+  OnBuildingCompleted:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 597401162}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   movementDetected: 0
   targetDestination: {fileID: 68117146}
+  buildingManager: {fileID: 0}
 --- !u!1 &614608893
 GameObject:
   m_ObjectHideFlags: 0
@@ -6897,6 +6910,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 984dbb5bbef7df9439c63eb8a59ca5ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnFirstTowerPlaced:
+    m_PersistentCalls:
+      m_Calls: []
   pendingObj: {fileID: 0}
   m_SpawnTowerButtonPrefab: {fileID: 6632295204436862685, guid: 8b9c33699615b7a4fbbf6f2f565190cc, type: 3}
   m_SpawnTowerButtonParent: {fileID: 929175305}

@@ -10,16 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 728ee75b15d23754abadb7b5b01dd571, type: 3}
-  m_Name: CameraMovement
+  m_Name: Building
   m_EditorClassIdentifier: 
-  sectionName: Camera Movement
+  sectionName: Building
   dialogueLines:
   - characterName: 'General: '
-    dialogueText: "Now, to look around, hold down your RMB and move your mouse around
-      to pan the camera.\r"
+    dialogueText: Good job, now try to build your defenses.
   - characterName: 'General: '
-    dialogueText: "Yes, that\u2019s correct. Now try to move and look around to get
-      used to the controls."
+    dialogueText: Use your mouse to interact with UI elements and to interact with
+      the World Space.
   - characterName: 'General: '
-    dialogueText: Use your mouse to interact with UI elements to interact with the
-      World Space.
+    dialogueText: Now, build a "Cannon".

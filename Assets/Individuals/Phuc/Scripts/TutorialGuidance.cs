@@ -14,13 +14,13 @@ public class TutorialGuidance : MonoBehaviour
     public GameObject dialogueUI;
 
     [Header("Tutorial Data")]
-    public List<Dialogue> allDialogues;
+    public List<Dialogue> dialogueScriptables;
 
     [Header("Animation Controller")]
     public Animator anim;
 
     public UnityEvent OnIntroCompleted;
-    public UnityEvent OnCameraMovementCompleted;
+    public UnityEvent OnBuildingCompleted;
 
     private List<Dialogue.DialogueLine> currentDialogueLines;
     private int currentLineIndex = 0;
@@ -38,12 +38,16 @@ public class TutorialGuidance : MonoBehaviour
 
     private bool hasReachedDestination = false;
 
+    
+    [SerializeField] private BuildingManager buildingManager;
+    private bool isTowerPlacementChecked = false;
     void Start()
     {
         dialogueUI.SetActive(false);
         nextButton.onClick.AddListener(OnNextButtonClicked);
 
         _freeFlyCamera = FindObjectOfType<FreeFlyCamera>();
+        buildingManager = FindObjectOfType<BuildingManager>();
 
         StartIntro();
     }
@@ -52,7 +56,20 @@ public class TutorialGuidance : MonoBehaviour
     {
         if (isTutorialActive && currentDialogueLines != null && currentDialogueLines.Count > 0)
         {
-            if (DetectMovementInput() && currentDialogueLines[currentLineIndex].characterName == "Introduction")
+            // Check if we're in the tower placement section and haven't placed a tower yet
+            if (currentDialogueLines[currentLineIndex].characterName == "Introduction" && !isTowerPlacementChecked)
+            {
+                if (buildingManager != null && buildingManager.HasPlacedFirstTower())
+                {
+                    isTowerPlacementChecked = true;
+                    currentLineIndex++;
+                    if (isTutorialActive)
+                    {
+                        ShowCurrentLine(null);
+                    }
+                }
+            }
+            if (currentDialogueLines[currentLineIndex].characterName == "Introduction")
             {
                 movementDetected = true;
             }
@@ -61,15 +78,17 @@ public class TutorialGuidance : MonoBehaviour
 
     public void StartIntro()
     {
+        isTowerPlacementChecked = false;
         DisableMovements();
         SetDialogueSection("Introduction", OnIntroCompleted.Invoke);
     }
 
     private void SetDialogueSection(string sectionName, UnityAction onComplete)
     {
-        Dialogue dialogue = allDialogues.Find(d => d.sectionName == sectionName);
+        Dialogue dialogue = dialogueScriptables.Find(d => d.sectionName == sectionName);
         if (dialogue == null || dialogue.dialogueLines.Count == 0)
         {
+            Debug.LogWarning($"No dialogue found for section: {sectionName}");
             onComplete?.Invoke();
             return;
         }
@@ -94,7 +113,7 @@ public class TutorialGuidance : MonoBehaviour
             dialogueUI.SetActive(false);
             isTutorialActive = false;
             onComplete?.Invoke();
-            EnableMovements(); // Enable movements after dialogue finishes
+            EnableMovements();
         }
     }
 
@@ -143,12 +162,7 @@ public class TutorialGuidance : MonoBehaviour
             }
         }
     }
-
-    private bool DetectMovementInput()
-    {
-        return Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
-               Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
-    }
+    
 
     private void OnTriggerEnter(Collider other)
     {
@@ -157,17 +171,16 @@ public class TutorialGuidance : MonoBehaviour
             hasReachedDestination = true;
             Debug.Log("Camera reached destination.");
 
-            DisableMovements(); // Disable movements during dialogue
-            StartCameraMovementTutorial();
+            DisableMovements();
+            StartBuildingTutorial();
 
-            // Delete the destination point after collision
             Destroy(targetDestination);
         }
     }
 
-    public void StartCameraMovementTutorial()
+    public void StartBuildingTutorial()
     {
-        SetDialogueSection("Camera Movement", OnCameraMovementCompleted.Invoke);
+        SetDialogueSection("Building", OnBuildingCompleted.Invoke);
         anim.SetTrigger("hideUI");
     }
 

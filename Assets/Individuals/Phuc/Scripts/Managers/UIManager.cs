@@ -93,7 +93,7 @@ public class UIManager : MonoBehaviour
         if (dialogueManager != null)
         {
             dialogueManager.OnIntroCompleted.AddListener(EnablePauseAndWaveMenus);
-            dialogueManager.OnCameraMovementCompleted.AddListener(DisablePauseAndWaveMenus);
+            dialogueManager.OnBuildingCompleted.AddListener(DisablePauseAndWaveMenus);
         }
     }
 

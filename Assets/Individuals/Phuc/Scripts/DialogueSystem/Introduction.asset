@@ -35,3 +35,11 @@ MonoBehaviour:
   - characterName: 'General:'
     dialogueText: First, hold RMB and use WASD to move around, press Control or Escape
       to fly up and down.
+  - characterName: 'General:'
+    dialogueText: And rotate your mouse to look around.
+  - characterName: 'General:'
+    dialogueText: See that red indicator over there?
+  - characterName: 'Player:'
+    dialogueText: Yes..
+  - characterName: 'General:'
+    dialogueText: Try to move over there.
