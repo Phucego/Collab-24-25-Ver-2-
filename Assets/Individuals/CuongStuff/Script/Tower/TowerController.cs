@@ -219,6 +219,8 @@ public class TowerController : MonoBehaviour
 
                 /*float distance = Vector3.Distance(transform.position, enemy.transform.position);
                 float lastdistance = Vector3.Distance(transform.position, TargetPos);*/
+
+                // If target goes null during the check of enemies, immediately pick this one instead as the target
                 if (Target == null)
                 {
                     Target = enemy;

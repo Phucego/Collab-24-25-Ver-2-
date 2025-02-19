@@ -7,12 +7,13 @@ public class MortarController : TowerController
     protected override IEnumerator FireProjectile(Vector3 direction)
     {
         GameObject Projectile = GetPooledObject();
+        Projectile.SetActive(true);
         Projectile.transform.position = AimPoint.transform.position;
-        Projectile.transform.rotation = AimPoint.transform.rotation;
+        Projectile.transform.rotation = new Quaternion(0, 0, 0, 0);
         Projectile.GetComponent<MortarProjectile>().SetPositionLerp(AimPoint.transform.position, TargetPos);
         
         AudioManager.Instance.PlaySoundEffect("Mortar_SFX");
-        Projectile.SetActive(true);
+        
         
         yield return null;
     }
@@ -21,7 +22,7 @@ public class MortarController : TowerController
     {
         float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
         Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
-        TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 1f);
+        TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.75f);
         Head.transform.LookAt(TargetPos);
 
         StartCoroutine(FireProjectile(new Vector3(0,0,0)));
