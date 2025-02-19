@@ -8,11 +8,18 @@ public class MortarProjectile : ProjectileController
     private Vector3 endPos;
     private Vector3 centerPos;
 
+    private LayerMask layerMask;
+
     private float momentum = 1f;
     private float dist, fracCurrent;
     private float blastradius = 5f;
 
     private bool Flying = false;
+
+    private void Start()
+    {
+        layerMask = LayerMask.GetMask("Unplaceable");
+    }
 
     // Flying along the trajectory
     private void FixedUpdate()
@@ -59,6 +66,10 @@ public class MortarProjectile : ProjectileController
     {
         originalPos = original;
         endPos = destination;
+        RaycastHit hit;
+        if (Physics.Raycast(endPos, Vector3.down, out hit, Mathf.Infinity, layerMask)) // Ground below the point
+            endPos = hit.point;
+
         centerPos = (original + destination) * 0.5f;
         
         dist = Vector3.Distance(original, destination);
@@ -98,7 +109,6 @@ public class MortarProjectile : ProjectileController
             SetExplosion();
             transform.gameObject.SetActive(false);
             Flying = false;
-            // Some other AOE shit here    
         }
     }
 

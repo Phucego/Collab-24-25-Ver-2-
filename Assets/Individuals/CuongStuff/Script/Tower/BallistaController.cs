@@ -42,7 +42,10 @@ public class BalistaController : TowerController
 
     protected override IEnumerator LOSCheck()
     {
-        TargetPos = Target.transform.position;
+        float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
+        Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
+        TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.1f);
+        Head.transform.LookAt(TargetPos);
         lockedIn = true;
         bool targetFaced = false;
         RaycastHit hit;
