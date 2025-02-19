@@ -173,17 +173,21 @@ public class TutorialGuidance : MonoBehaviour
 
             DisableMovements();
             StartBuildingTutorial();
-
+        
             Destroy(targetDestination);
         }
     }
 
+    #region Start Tutorial Sections
     public void StartBuildingTutorial()
     {
         SetDialogueSection("Building", OnBuildingCompleted.Invoke);
         anim.SetTrigger("hideUI");
         CurrencyManager.Instance.currentCurrency = 25;
+
     }
+
+    #endregion
 
     private void EnableMovements()
     {
