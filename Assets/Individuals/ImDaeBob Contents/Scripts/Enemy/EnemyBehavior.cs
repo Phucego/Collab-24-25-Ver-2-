@@ -206,6 +206,16 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         return data.targets;
     }
 
+    public float GetSpeed()
+    {
+        return _speed;
+    }
+
+    public Vector3 GetVelocity()
+    {
+        return _velocity;
+    }
+
     IEnumerator StartEnemyMovement()
     {
         yield return new WaitForSeconds(0.1f);
