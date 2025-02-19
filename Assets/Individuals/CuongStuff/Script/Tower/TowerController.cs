@@ -130,7 +130,9 @@ public class TowerController : MonoBehaviour
     // Check if enemy is within the sight of the aimpoint
     protected virtual IEnumerator LOSCheck()
     {
-        TargetPos = Target.transform.position;
+        float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
+        Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
+        TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.25f);
         Head.transform.LookAt(TargetPos);
         RaycastHit hit;
         // Does the ray intersect any objects excluding the player layer
@@ -139,6 +141,11 @@ public class TowerController : MonoBehaviour
             Debug.DrawRay(AimPoint.transform.position, AimPoint.transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             StartCoroutine(FireProjectile(hit.transform.position - AimPoint.transform.position));
         }
+        else
+        {
+            StartCoroutine(FireProjectile(TargetPos - AimPoint.transform.position));
+        }
+        
         yield return null;
     }
 
