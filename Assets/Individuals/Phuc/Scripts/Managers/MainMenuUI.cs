@@ -1,26 +1,19 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Timeline;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class MainMenuUI : MonoBehaviour
 {
     [Header("Main Menu")]
-    /* public GameObject loadingBarOBJ;
-
-     public Image _loadingBar;*/
     Animator anim;
 
     public GameObject levelSelectionCanvas;
     public GameObject mainMenuCanvas;
 
     public TextMeshProUGUI gameName;
-
 
     public Button startButton;
     public Button settingsButton;
@@ -32,10 +25,11 @@ public class MainMenuUI : MonoBehaviour
 
     public GameObject confirmMenuCanvas;
 
+    public Camera cam;
+    public Transform camTarget; // Assign this in the inspector to the desired position and rotation
 
-    [Header("Scenes To Load")] [SerializeField]
-    private SceneField _tutorialScene;
-
+    [Header("Scenes To Load")]
+    [SerializeField] private SceneField _tutorialScene;
     [SerializeField] private SceneField _mainMenuScene;
 
     private List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
@@ -46,8 +40,6 @@ public class MainMenuUI : MonoBehaviour
         anim = GetComponent<Animator>();
 
         confirmMenuCanvas.SetActive(false);
-
-        //loadingBarOBJ.SetActive(false);
         levelSelectionCanvas.SetActive(false);
 
         startButton.onClick.AddListener(MainMenuOut);
@@ -57,28 +49,15 @@ public class MainMenuUI : MonoBehaviour
         Quit_No.onClick.AddListener(OnConfirmBack);
         tutLevel.onClick.AddListener(OnStartLevel);
     }
-    /*
-    private IEnumerator LoadingBarProgress()
-    {
-        float loadProgress = 0f;
-        for (int i = 0; i < _scenesToLoad.Count;  i++)
-        {
-            while (!_scenesToLoad[i].isDone)
-            {
-                loadProgress = _scenesToLoad[i].progress;
-                //_loadingBar.fillAmount = loadProgress / _scenesToLoad.Count;
-                yield return null;
-            }
-        }
-    }
-    */
 
     public void MainMenuOut()
     {
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         anim.SetBool("fromMenu", true);
         levelSelectionCanvas.SetActive(true);
-        //mainMenuCanvas.SetActive(false);
+
+        // Move the camera to the target position
+        StartCoroutine(MoveCamera());
     }
 
     public void MainMenuIn()
@@ -86,9 +65,31 @@ public class MainMenuUI : MonoBehaviour
         anim.SetBool("fromMenu", false);
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         mainMenuCanvas.SetActive(true);
-
         levelSelectionCanvas.SetActive(false);
+    }
 
+    IEnumerator MoveCamera()
+    {
+        float duration = 1.5f; // Adjust time to match animation
+        float elapsed = 0f;
+
+        Vector3 startPos = cam.transform.position;
+        Quaternion startRot = cam.transform.rotation;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+
+            cam.transform.position = Vector3.Lerp(startPos, camTarget.position, t);
+            cam.transform.rotation = Quaternion.Slerp(startRot, camTarget.rotation, t);
+
+            yield return null;
+        }
+
+
+        cam.transform.position = camTarget.position;
+        cam.transform.rotation = camTarget.rotation;
     }
 
     void OnStartLevel()
@@ -99,13 +100,11 @@ public class MainMenuUI : MonoBehaviour
     }
 
     #region Confirmation Menu
-
     private void OnConfirmQuit()
     {
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         Debug.Log("Quit");
         Application.Quit();
-
     }
 
     private void OnConfirmBack()
@@ -113,7 +112,6 @@ public class MainMenuUI : MonoBehaviour
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         anim.SetBool("isConfirmationMenu", false);
     }
-
     #endregion
 
     public void QuitGame()

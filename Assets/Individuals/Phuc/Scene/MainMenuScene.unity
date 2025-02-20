@@ -393,6 +393,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 173553707}
   m_CullTransparentMesh: 1
+--- !u!1 &187039525
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 187039526}
+  m_Layer: 0
+  m_Name: Target
+  m_TagString: Untagged
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &187039526
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 187039525}
+  m_LocalRotation: {x: -0, y: 0.7350324, z: -0, w: -0.6780321}
+  m_LocalPosition: {x: 878.98, y: 494.94, z: 40.36}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 265.38, z: 0}
 --- !u!1 &221886843
 GameObject:
   m_ObjectHideFlags: 0
@@ -870,7 +901,7 @@ GameObject:
   - component: {fileID: 334774746}
   - component: {fileID: 334774749}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -904,7 +935,7 @@ Camera:
   m_FocusDistance: 10
   m_FocalLength: 9.23
   m_BladeCount: 5
-  m_Curvature: {x: 2, y: 11}
+  m_Curvature: {x: 0.7, y: 9.700006}
   m_BarrelClipping: 0.25
   m_Anamorphism: 0
   m_SensorSize: {x: 36, y: 24}
@@ -2492,6 +2523,8 @@ MonoBehaviour:
   Quit_No: {fileID: 2139897677}
   tutLevel: {fileID: 1902228351}
   confirmMenuCanvas: {fileID: 2139897676}
+  cam: {fileID: 334774747}
+  camTarget: {fileID: 187039526}
   _tutorialScene:
     m_SceneAsset: {fileID: 102900000, guid: 186f304aae5338f4c9e7450d34cd2b39, type: 3}
     m_SceneName: TutorialScene
