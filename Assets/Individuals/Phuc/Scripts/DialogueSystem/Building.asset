@@ -20,4 +20,6 @@ MonoBehaviour:
     dialogueText: Use your mouse to interact with UI elements and to interact with
       the World Space.
   - characterName: 'General: '
+    dialogueText: Here is 25 coins.
+  - characterName: 'General: '
     dialogueText: Now, build a "Cannon".
