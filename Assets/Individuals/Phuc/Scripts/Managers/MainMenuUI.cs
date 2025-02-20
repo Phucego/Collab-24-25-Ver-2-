@@ -70,7 +70,7 @@ public class MainMenuUI : MonoBehaviour
 
     IEnumerator MoveCamera()
     {
-        float duration = 1.5f; // Adjust time to match animation
+        float duration = 1f; // Adjust time to match animation
         float elapsed = 0f;
 
         Vector3 startPos = cam.transform.position;

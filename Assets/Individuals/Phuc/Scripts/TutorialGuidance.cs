@@ -183,7 +183,7 @@ public class TutorialGuidance : MonoBehaviour
     {
         SetDialogueSection("Building", OnBuildingCompleted.Invoke);
         anim.SetTrigger("hideUI");
-        CurrencyManager.Instance.currentCurrency = 25;
+        CurrencyManager.Instance.currentCurrency = 50;
 
     }
 
