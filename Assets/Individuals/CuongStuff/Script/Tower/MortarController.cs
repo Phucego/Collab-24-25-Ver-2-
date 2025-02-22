@@ -22,7 +22,7 @@ public class MortarController : TowerController
     {
         float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
         Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
-        TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.75f);
+        TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 1f);
         Head.transform.LookAt(TargetPos);
 
         StartCoroutine(FireProjectile(new Vector3(0,0,0)));

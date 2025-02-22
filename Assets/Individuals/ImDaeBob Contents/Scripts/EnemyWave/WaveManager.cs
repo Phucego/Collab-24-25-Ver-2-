@@ -10,7 +10,7 @@ public class WaveManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Keypad1))
+        if (Input.GetKeyDown(KeyCode.Keypad1) || Input.GetKeyDown(KeyCode.O))
             SpawnEnemy("Tut_Path1", 0);
         else if (Input.GetKeyDown(KeyCode.Keypad2))
             SpawnEnemy("Tut_Path1", 1);

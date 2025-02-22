@@ -11,18 +11,17 @@ public class MortarProjectile : ProjectileController
 
     private LayerMask layerMask;
 
-    private float momentum = 1f;
-    private float dist, fracCurrent;
+    private float distt;
     private float blastradius = 5f;
 
     private bool Flying = false;
 
     //TEST
-    private float maxCalculateDistance = 60f;
-    private float minCalculateDistance = 5f;
+    private float maxCalculateDistance = 24f;
+    private float minCalculateDistance = 2f;
 
-    private float angleMin = -90f;
-    private float angleMax = 90f;
+    private float angleMin = -270f;
+    private float angleMax = 270;
     private float projectileMaxTime = 1.5f;
     private float projectileMinTime = 0.5f;
 
@@ -36,43 +35,9 @@ public class MortarProjectile : ProjectileController
     // Flying along the trajectory
     private void FixedUpdate()
     {
-        if (!test) return;
-        Debug.Log(rb.velocity);
         if (!Flying) { return; }
 
-        /*if (Vector3.Distance(transform.position, endPos) >= 5f)
-        {
-            Vector3 center = centerPos;
-            float curve = 6 - (Mathf.Clamp(dist / 10f, 1f, 5f));
-            center -= new Vector3(0, curve, 0);
-
-            Vector3 riseRelCenter = originalPos - center;
-            Vector3 setRelCenter = endPos - center;
-
-            fracCurrent += (Speed + momentum) * Time.deltaTime;
-            float fracComplete = fracCurrent / dist;
-            
-            // Clamp to avoid overshooting
-            fracComplete = Mathf.Clamp01(fracComplete);
-
-            Vector3 newPos = Vector3.Slerp(riseRelCenter, setRelCenter, fracComplete);
-            Vector3 direction = (newPos + center) - endPos;
-
-            if (fracComplete >= 0.4f)
-                momentum += Speed * Time.deltaTime;
-
-            if (direction != Vector3.zero)
-            {
-                Vector3 angle = direction.normalized;
-                transform.rotation = Quaternion.LookRotation(-angle);
-            }
-
-            transform.position = newPos + center;
-        }
-        else
-        {
-            rb.velocity = transform.forward * (momentum + Speed);
-        }*/
+        rb.AddForce(Vector3.down * gravity * rb.mass, ForceMode.Force);
 
     }
 
@@ -124,14 +89,9 @@ public class MortarProjectile : ProjectileController
 
     // Set start and end point of the lerp
     public void SetPositionLerp(Vector3 original, Vector3 destination)
-    {
+    {        
         originalPos = original;
         endPos = destination;
-        /*RaycastHit hit;
-        if (Physics.Raycast(endPos, Vector3.down, out hit, Mathf.Infinity, layerMask))
-            endPos = hit.point;
-            
-        centerPos = (original + destination) * 0.5f;*/
 
         float distance = Vector3.Distance(originalPos, endPos);
 
@@ -144,13 +104,10 @@ public class MortarProjectile : ProjectileController
 
         // Apply velocity to the Rigidbody
         rb.velocity = velocity;
-        Debug.Log(rb.velocity);
     }
 
-    private void OnDisable()
+    private void OnEnable()
     {
-        momentum = 1f;
-        fracCurrent = 0f;
         rb.velocity = Vector3.zero;
         Flying = true;
     }
@@ -187,7 +144,7 @@ public class MortarProjectile : ProjectileController
     // DEBUG 
     private void OnDrawGizmos()
     {
-        foreach (var point in EvaluateSlerpPoints(originalPos, endPos, centerPos, 20))
+        foreach (var point in EvaluateSlerpPoints(originalPos, endPos, 20))
         {
             Gizmos.DrawSphere(point, 0.1f);
         }
@@ -197,22 +154,22 @@ public class MortarProjectile : ProjectileController
         Gizmos.DrawWireSphere(endPos, blastradius);
     }
 
-    IEnumerable<Vector3> EvaluateSlerpPoints(Vector3 start, Vector3 end, Vector3 center, int count = 10)
+    IEnumerable<Vector3> EvaluateSlerpPoints(Vector3 start, Vector3 end, int count = 10)
     {
-        float curve = 6 - (Mathf.Clamp(dist / 10f, 1f, 5f));
-        center -= new Vector3(0, curve, 0);
+        float distance = Vector3.Distance(start, end);
 
-        Vector3 riseRelCenter = originalPos - center;
-        Vector3 setRelCenter = endPos - center;
+        // Calculate angle and time based on distance
+        float angle = CalculateAngle(distance);
+        float time = CalculateTime(distance);
 
-        /*float fracComplete = Speed*Time.deltaTime;
-        Vector3 newPos = Vector3.Slerp(riseRelCenter, setRelCenter, fracComplete);*/
+        // Compute velocity
+        Vector3 velocity = CalculateVelocity(start, end, angle, time);
 
         var f = 1f / count;
 
         for (var i = 0f; i < 1 + f; i += f)
         {
-            yield return Vector3.Slerp(riseRelCenter, setRelCenter, i) + center;
+            yield return velocity;
         }
     }
 }
