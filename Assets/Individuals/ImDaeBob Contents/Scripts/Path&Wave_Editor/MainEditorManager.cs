@@ -11,8 +11,8 @@ public class MainEditorManager : MonoBehaviour
     [Header("Editors")]
     [SerializeField] GameObject _pathManager;
     private EnemyPath_Editor _path;
-    [SerializeField] GameObject _waveManager;
-    private EnemyWave_Editor _wave;
+    [SerializeField] GameObject _levelManager;
+    private EnemyLevel_Editor _level;
 
     [Header("UI")]
     [SerializeField] CanvasGroup _toggles;
@@ -31,7 +31,7 @@ public class MainEditorManager : MonoBehaviour
     void Start()
     {
         _path = _pathManager.GetComponent<EnemyPath_Editor>();
-        _wave = _waveManager.GetComponent<EnemyWave_Editor>();
+        _level = _levelManager.GetComponent<EnemyLevel_Editor>();
     }
 
     void Update()
@@ -54,10 +54,23 @@ public class MainEditorManager : MonoBehaviour
             }
         }
 
-        //if (Input.GetKeyDown(KeyCode.F2))
-        //{
-        //    _wave.toggleEditor(!_wave.getActive());
-        //}
+        if (Input.GetKeyDown(KeyCode.F2) && _inSection != 1)
+        {
+            _levelManager.SetActive(true);
+
+            _level.ToggleEditor(!_level.GetActive());
+            if (!_level.GetActive())
+            {
+                toggleEditors(0);
+                _level.GetComponent<CanvasGroup>().DOFade(0f, 0.25f).SetEase(Ease.InOutCirc).OnComplete(()
+                    => _levelManager.SetActive(false));
+            }
+            else
+            {
+                toggleEditors(2);
+                _levelManager.GetComponent<CanvasGroup>().DOFade(1f, 0.25f).SetEase(Ease.InOutCirc);
+            }
+        }
     }
 
     private Tween _curTween;
