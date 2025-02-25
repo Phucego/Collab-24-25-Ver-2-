@@ -34,6 +34,9 @@ public class MainMenuUI : MonoBehaviour
 
     private List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
 
+    private Vector3 originalCamPos;
+    private Quaternion originalCamRot;
+
     private void Awake()
     {
         Time.timeScale = 1f;
@@ -41,6 +44,10 @@ public class MainMenuUI : MonoBehaviour
 
         confirmMenuCanvas.SetActive(false);
         levelSelectionCanvas.SetActive(false);
+
+        // Store the original camera position and rotation
+        originalCamPos = cam.transform.position;
+        originalCamRot = cam.transform.rotation;
 
         startButton.onClick.AddListener(MainMenuOut);
         backButton.onClick.AddListener(MainMenuIn);
@@ -57,7 +64,7 @@ public class MainMenuUI : MonoBehaviour
         levelSelectionCanvas.SetActive(true);
 
         // Move the camera to the target position
-        StartCoroutine(MoveCamera());
+        StartCoroutine(MoveCamera(camTarget.position, camTarget.rotation));
     }
 
     public void MainMenuIn()
@@ -66,9 +73,12 @@ public class MainMenuUI : MonoBehaviour
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         mainMenuCanvas.SetActive(true);
         levelSelectionCanvas.SetActive(false);
+
+        // Move the camera back to the original position
+        StartCoroutine(MoveCamera(originalCamPos, originalCamRot));
     }
 
-    IEnumerator MoveCamera()
+    IEnumerator MoveCamera(Vector3 targetPos, Quaternion targetRot)
     {
         float duration = 1f; // Adjust time to match animation
         float elapsed = 0f;
@@ -81,15 +91,14 @@ public class MainMenuUI : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = elapsed / duration;
 
-            cam.transform.position = Vector3.Lerp(startPos, camTarget.position, t);
-            cam.transform.rotation = Quaternion.Slerp(startRot, camTarget.rotation, t);
+            cam.transform.position = Vector3.Lerp(startPos, targetPos, t);
+            cam.transform.rotation = Quaternion.Slerp(startRot, targetRot, t);
 
             yield return null;
         }
 
-
-        cam.transform.position = camTarget.position;
-        cam.transform.rotation = camTarget.rotation;
+        cam.transform.position = targetPos;
+        cam.transform.rotation = targetRot;
     }
 
     void OnStartLevel()
