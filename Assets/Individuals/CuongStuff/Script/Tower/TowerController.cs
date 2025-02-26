@@ -131,18 +131,9 @@ public class TowerController : MonoBehaviour
         Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
         TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.25f);
         Head.transform.LookAt(TargetPos);
-        RaycastHit hit;
-        // Does the ray intersect any objects excluding the player layer
-        if (Physics.Raycast(AimPoint.transform.position, AimPoint.gameObject.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
-        {
-            Debug.DrawRay(AimPoint.transform.position, AimPoint.transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-            StartCoroutine(FireProjectile(hit.transform.position - AimPoint.transform.position));
-        }
-        else
-        {
-            StartCoroutine(FireProjectile(TargetPos - AimPoint.transform.position));
-        }
-        
+
+        StartCoroutine(FireProjectile(TargetPos - AimPoint.transform.position));
+
         yield return null;
     }
 

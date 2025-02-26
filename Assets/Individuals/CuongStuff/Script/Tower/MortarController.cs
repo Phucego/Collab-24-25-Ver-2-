@@ -20,6 +20,7 @@ public class MortarController : TowerController
 
     protected override IEnumerator LOSCheck()
     {
+        if (_EnemyList.Count <= 0) { yield return null; }
         float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
         Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
         TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 1f);
