@@ -26,7 +26,7 @@ public class MainMenuUI : MonoBehaviour
     public GameObject confirmMenuCanvas;
 
     public Camera cam;
-    public Transform camTarget; // Assign this in the inspector to the desired position and rotation
+    public Transform camTarget;
 
     [Header("Scenes To Load")]
     [SerializeField] private SceneField _tutorialScene;
@@ -37,6 +37,10 @@ public class MainMenuUI : MonoBehaviour
     private Vector3 originalCamPos;
     private Quaternion originalCamRot;
 
+    [SerializeField] private GameObject gate;
+    public GameObject targetGate;
+    private Vector3 closedPosition;
+
     private void Awake()
     {
         Time.timeScale = 1f;
@@ -45,9 +49,10 @@ public class MainMenuUI : MonoBehaviour
         confirmMenuCanvas.SetActive(false);
         levelSelectionCanvas.SetActive(false);
 
-        // Store the original camera position and rotation
         originalCamPos = cam.transform.position;
         originalCamRot = cam.transform.rotation;
+
+        closedPosition = gate.transform.position;
 
         startButton.onClick.AddListener(MainMenuOut);
         backButton.onClick.AddListener(MainMenuIn);
@@ -56,15 +61,14 @@ public class MainMenuUI : MonoBehaviour
         Quit_No.onClick.AddListener(OnConfirmBack);
         tutLevel.onClick.AddListener(OnStartLevel);
     }
-
     public void MainMenuOut()
     {
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         anim.SetBool("fromMenu", true);
         levelSelectionCanvas.SetActive(true);
 
-        // Move the camera to the target position
         StartCoroutine(MoveCamera(camTarget.position, camTarget.rotation));
+        StartCoroutine(OpenGate(true));
     }
 
     public void MainMenuIn()
@@ -74,13 +78,13 @@ public class MainMenuUI : MonoBehaviour
         mainMenuCanvas.SetActive(true);
         levelSelectionCanvas.SetActive(false);
 
-        // Move the camera back to the original position
         StartCoroutine(MoveCamera(originalCamPos, originalCamRot));
+        StartCoroutine(OpenGate(false));
     }
 
     IEnumerator MoveCamera(Vector3 targetPos, Quaternion targetRot)
     {
-        float duration = 1f; // Adjust time to match animation
+        float duration = 1f;
         float elapsed = 0f;
 
         Vector3 startPos = cam.transform.position;
@@ -135,5 +139,26 @@ public class MainMenuUI : MonoBehaviour
         AudioManager.Instance.PlaySoundEffect("Swoosh_SFX");
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene(_tutorialScene);
+    }
+
+    IEnumerator OpenGate(bool openGate)
+    {
+        Debug.Log(openGate);
+        float duration = 2.5f;
+        Vector3 targetPos = openGate ? targetGate.transform.position : closedPosition;
+        Vector3 startPos = gate.transform.position;
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+
+            gate.transform.position = Vector3.Lerp(startPos, targetPos, t);
+
+            yield return null;
+        }
+
+        gate.transform.position = targetPos;
     }
 }
