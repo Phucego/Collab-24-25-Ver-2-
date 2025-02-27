@@ -143,7 +143,8 @@ public class TutorialGuidance : MonoBehaviour
 
     private void OnNextButtonClicked()
     {
-        if (isTyping)
+        //Make sure that the player cannot presses next while the game is pausing
+        if (isTyping && !UIManager.Instance.isPausing)
         {
             if (typingCoroutine != null)
             {

@@ -51,12 +51,16 @@ public class UIManager : MonoBehaviour
 
     public int startingCoinAmount;
 
+    public bool isPausing = false;
     [Header("Dialogue Manager Reference")]
     public TutorialGuidance dialogueManager; // Add a reference to the dialogue manager
 
     private void Awake()
     {
         Instance = this;
+
+       
+
     }
 
     private void Start()
@@ -92,6 +96,7 @@ public class UIManager : MonoBehaviour
         // Subscribe to dialogue events
         if (dialogueManager != null)
         {
+          
             dialogueManager.OnIntroCompleted.AddListener(EnablePauseAndWaveMenus);
             dialogueManager.OnBuildingCompleted.AddListener(DisablePauseAndWaveMenus);
         }
@@ -100,6 +105,13 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
         UpdateCoinCounterUI(); // Ensure the UI is in sync with the currency manager
+
+        //Detect input
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
+        {
+            OnPauseButtonClicked();
+        }
+
     }
 
     private void UpdateCoinCounterUI()
