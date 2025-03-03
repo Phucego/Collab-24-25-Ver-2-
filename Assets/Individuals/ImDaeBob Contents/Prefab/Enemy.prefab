@@ -191,6 +191,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 0}
+  coinDrop: 10
 --- !u!33 &4932414293563701507
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -714,7 +715,7 @@ MonoBehaviour:
   _cameraToTrack: {fileID: 0}
   _target: {fileID: 6514783597239382848}
   _offset: {x: 0, y: 1.35, z: 0}
-  _visibilityDistance: 15
+  _visibilityDistance: 100
 --- !u!225 &5056169792580487624
 CanvasGroup:
   m_ObjectHideFlags: 0

@@ -4,24 +4,37 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-public class Editor_Handler : MonoBehaviour
+public class EditorMode_Queue : MonoBehaviour
 {
-    [Header("UI")]
-    [SerializeField] CanvasGroup _queueUI;
+    [HideInInspector] public static EditorMode_Queue editorQueue;
 
     [Header("Time")]
     [SerializeField] TMP_Text _timerUI;
-    private float _timer = 6f;
+    public float _timer = 6f;
     private bool _eHeld = false;
     private float _lastUpdateTime = 0f;
 
     [Header("Transition")]
     [SerializeField] GameObject _transition;
-    [SerializeField] Animator _animator;
 
-    private void Start()
+    [Header("Editors")]
+    [SerializeField] GameObject _editor;
+
+    void Awake()
     {
-        _queueUI.GetComponent<CanvasGroup>().alpha = 0;
+        if (editorQueue == null)
+            editorQueue = this;
+    }
+
+    void OnEnable()
+    {
+        _editor.SetActive(false);
+    }
+
+    void Start()
+    {
+        this.gameObject.GetComponent<CanvasGroup>().alpha = 0;
+        _editor.gameObject.SetActive(false);
     }
 
     void Update()
@@ -52,9 +65,9 @@ public class Editor_Handler : MonoBehaviour
         {
             _eHeld = false;
             _transition.SetActive(true);
-            //_animator.SetTrigger("In");
+            //_transition.GetComponent<Animator>().SetTrigger("In");
 
-            StartCoroutine("ExitQueue");
+            StartCoroutine(ExitQueue());
         }
     }
 
@@ -65,19 +78,20 @@ public class Editor_Handler : MonoBehaviour
             _curTween.Kill();
 
         if (mode)
-            _curTween = _queueUI.GetComponent<CanvasGroup>().DOFade(1f, 0.25f).SetEase(Ease.InOutCirc); 
+            _curTween = this.gameObject.GetComponent<CanvasGroup>().DOFade(1f, 0.25f).SetEase(Ease.InOutCirc); 
         else
-            _curTween = _queueUI.GetComponent<CanvasGroup>().DOFade(0f, 0.5f).SetEase(Ease.InOutCirc);
+            _curTween = this.gameObject.GetComponent<CanvasGroup>().DOFade(0f, 0.5f).SetEase(Ease.InOutCirc);
     }
 
     IEnumerator ExitQueue()
     {
         yield return new WaitForSeconds(0.5f);
+        this.gameObject.GetComponent<CanvasGroup>().alpha = 0;
+        _transition.GetComponent<Animator>().SetTrigger("Out");
+        _editor.gameObject.SetActive(true);
 
-        _queueUI.GetComponent<CanvasGroup>().alpha = 0;
-        _animator.SetTrigger("Out");
-        yield return new WaitForSeconds(1f);
-
+        yield return new WaitForSeconds(0.5f);
         _transition.SetActive(false);
+        this.gameObject.SetActive(false);
     }
 }
