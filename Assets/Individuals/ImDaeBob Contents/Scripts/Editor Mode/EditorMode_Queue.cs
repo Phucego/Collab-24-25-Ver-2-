@@ -10,7 +10,8 @@ public class EditorMode_Queue : MonoBehaviour
 
     [Header("Time")]
     [SerializeField] TMP_Text _timerUI;
-    public float _timer = 6f;
+    public float _timer = 1f;
+    private float _timeElapsed = 0f;
     private bool _eHeld = false;
     private float _lastUpdateTime = 0f;
 
@@ -44,8 +45,8 @@ public class EditorMode_Queue : MonoBehaviour
         {
             Queuing(true);
             _eHeld = true;
-            _timer = 6f;
-            _timerUI.text = _timer.ToString();
+            _timeElapsed = _timer;
+            _timerUI.text = _timeElapsed.ToString();
         }
         if (Input.GetKeyUp(KeyCode.E) && _eHeld)
         {
@@ -55,13 +56,13 @@ public class EditorMode_Queue : MonoBehaviour
         }
 
         //---------------------------- Handle timer ----------------------------//
-        if (_eHeld && _timer > 0 && Time.time - _lastUpdateTime >= 1f)
+        if (_eHeld && _timeElapsed > 0 && Time.time - _lastUpdateTime >= 1f)
         {
-            _timer--;
-            _timerUI.text = _timer.ToString();
+            _timeElapsed--;
+            _timerUI.text = _timeElapsed.ToString();
             _lastUpdateTime = Time.time;
         }
-        else if (_eHeld && _timer <= 0)
+        else if (_eHeld && _timeElapsed <= 0)
         {
             _eHeld = false;
             _transition.SetActive(true);

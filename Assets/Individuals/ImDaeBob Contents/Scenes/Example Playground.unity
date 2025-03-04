@@ -771,7 +771,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 55313881}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2048769639}
+        m_TargetAssemblyTypeName: PathEditor_Handler, Assembly-CSharp
+        m_MethodName: ReturnToSelection
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
 --- !u!114 &55313881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5116,7 +5128,7 @@ MonoBehaviour:
   m_fontSize: 14
   m_fontSizeBase: 14
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -15984,7 +15996,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _timerUI: {fileID: 1901027855}
-  _timer: 6
+  _timer: 1
   _transition: {fileID: 1049739109}
   _editor: {fileID: 1906044311}
 --- !u!1 &2023070853
@@ -16303,6 +16315,7 @@ GameObject:
   - component: {fileID: 2048769637}
   - component: {fileID: 2048769638}
   - component: {fileID: 2048769639}
+  - component: {fileID: 2048769640}
   m_Layer: 5
   m_Name: '- Path Editor -'
   m_TagString: Untagged
@@ -16365,6 +16378,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caeb1cd4244af26478ea3b5b9214c2e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _jsonReadInEditor: 1
+  _selectionPanel: {fileID: 1094595048}
+  _return: {fileID: 55313880}
+  _path: {fileID: 271731204}
+  _saveAs: {fileID: 1316744335}
+  _saveButton: {fileID: 1981307896}
+  _pointObject: {fileID: 7089405546818486430, guid: aa9fdc23d01de4c4291734b7d186262f, type: 3}
+  _unselectPointObject: {fileID: 7089405546818486430, guid: 5156f6fda7e34df4985f453fed972a93, type: 3}
+  _allGizmo: {fileID: 2111501111}
+  _transition: {fileID: 1049739109}
+--- !u!225 &2048769640
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2048769636}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &2075622514
 PrefabInstance:
   m_ObjectHideFlags: 0

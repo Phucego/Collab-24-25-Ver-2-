@@ -86,5 +86,7 @@ public class EditorSelection_Handler : MonoBehaviour
             if (EditorMode_Queue.editorQueue != null)
                 EditorMode_Queue.editorQueue.gameObject.SetActive(true);
         }
+        else
+            this.gameObject.SetActive(false);
     }
 }
