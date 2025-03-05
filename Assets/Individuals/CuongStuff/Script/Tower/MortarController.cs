@@ -25,6 +25,8 @@ public class MortarController : TowerController
         Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
         TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 1f);
         Head.transform.LookAt(TargetPos);
+        Head.transform.eulerAngles = new Vector3(0f, Head.transform.eulerAngles.y, 0f);
+
 
         StartCoroutine(FireProjectile(new Vector3(0,0,0)));
         yield return null;
