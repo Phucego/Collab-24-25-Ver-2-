@@ -661,7 +661,7 @@ GameObject:
   - component: {fileID: 271462522}
   - component: {fileID: 271462521}
   m_Layer: 5
-  m_Name: QuitButton
+  m_Name: QUIT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -800,7 +800,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &332069285
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1025,6 +1025,82 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!1 &372314536
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 372314537}
+  - component: {fileID: 372314539}
+  - component: {fileID: 372314538}
+  m_Layer: 0
+  m_Name: Triangle Indicator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &372314537
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 372314536}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 182.03085, y: 94.78234, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 883614287}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -558, y: 291}
+  m_SizeDelta: {x: 6.5173, y: 3.4752}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &372314538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 372314536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 534c86839fcf69c4ca62f259a64d5a13, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &372314539
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 372314536}
+  m_CullTransparentMesh: 1
 --- !u!1 &498195878
 GameObject:
   m_ObjectHideFlags: 0
@@ -1038,7 +1114,7 @@ GameObject:
   - component: {fileID: 498195881}
   - component: {fileID: 498195880}
   m_Layer: 5
-  m_Name: BackButton
+  m_Name: BACK
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1111,7 +1187,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1952854939}
         m_TargetAssemblyTypeName: MainMenuUI, Assembly-CSharp
-        m_MethodName: GetBackToMainMenu
+        m_MethodName: OnReturnToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1205,7 +1281,7 @@ GameObject:
   - component: {fileID: 638768226}
   - component: {fileID: 638768225}
   m_Layer: 5
-  m_Name: Background
+  m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1448,7 +1524,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 372314537}
   m_Father: {fileID: 1952854938}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0.079, y: 0.236, z: -0.133}
@@ -1486,12 +1563,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -1533,7 +1610,7 @@ GameObject:
   - component: {fileID: 925602365}
   - component: {fileID: 925602364}
   m_Layer: 5
-  m_Name: SettingsButton
+  m_Name: SETTINGS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1820,7 +1897,7 @@ GameObject:
   - component: {fileID: 1302844918}
   - component: {fileID: 1302844917}
   m_Layer: 5
-  m_Name: GameName
+  m_Name: TITLE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2348,7 +2425,7 @@ GameObject:
   - component: {fileID: 1796480162}
   - component: {fileID: 1796480161}
   m_Layer: 5
-  m_Name: StartButton
+  m_Name: START
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2421,7 +2498,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1952854939}
         m_TargetAssemblyTypeName: MainMenuUI, Assembly-CSharp
-        m_MethodName: ShowLevelSelection
+        m_MethodName: OnLevelSelectionMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2619,6 +2696,8 @@ MonoBehaviour:
   Quit_Yes: {fileID: 2139897678}
   Quit_No: {fileID: 2139897677}
   tutLevel: {fileID: 1902228351}
+  indicator: {fileID: 372314537}
+  indicatorOffset: -3.4
   confirmMenuCanvas: {fileID: 2139897676}
   cam: {fileID: 334774747}
   camTarget: {fileID: 187039526}
@@ -2630,6 +2709,7 @@ MonoBehaviour:
     m_SceneName: MainMenuScene
   gate: {fileID: 717729415}
   targetGate: {fileID: 1275607272}
+  menuButtons: []
 --- !u!95 &1952854940
 Animator:
   serializedVersion: 5
@@ -2711,7 +2791,7 @@ GameObject:
   - component: {fileID: 2048082610}
   - component: {fileID: 2048082609}
   m_Layer: 5
-  m_Name: Background
+  m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

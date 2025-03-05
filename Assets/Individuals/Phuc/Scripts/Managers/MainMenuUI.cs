@@ -1,9 +1,11 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
+using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class MainMenuUI : MonoBehaviour
 {
@@ -15,6 +17,7 @@ public class MainMenuUI : MonoBehaviour
 
     public TextMeshProUGUI gameName;
 
+    [Header("Buttons")]
     public Button startButton;
     public Button settingsButton;
     public Button quitButton;
@@ -22,6 +25,12 @@ public class MainMenuUI : MonoBehaviour
     public Button Quit_Yes;
     public Button Quit_No;
     public Button tutLevel;
+
+    [Header("Navigation Indicator")]
+    public RectTransform indicator;
+    public float indicatorOffset = -3.4f;
+
+    private int selectedIndex = 0;
 
     public GameObject confirmMenuCanvas;
 
@@ -34,13 +43,17 @@ public class MainMenuUI : MonoBehaviour
 
     private List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
 
+    [Header("Camera Original Position")]
     private Vector3 originalCamPos;
     private Quaternion originalCamRot;
 
+    [Header("Gate Related")]
     [SerializeField] private GameObject gate;
     public GameObject targetGate;
     private Vector3 closedPosition;
 
+
+    public List<Button> menuButtons = new List<Button>();
     private void Awake()
     {
         Time.timeScale = 1f;
@@ -54,14 +67,32 @@ public class MainMenuUI : MonoBehaviour
 
         closedPosition = gate.transform.position;
 
-        startButton.onClick.AddListener(MainMenuOut);
-        backButton.onClick.AddListener(MainMenuIn);
-        quitButton.onClick.AddListener(QuitGame);
-        Quit_Yes.onClick.AddListener(OnConfirmQuit);
-        Quit_No.onClick.AddListener(OnConfirmBack);
-        tutLevel.onClick.AddListener(OnStartLevel);
+  
+
+        menuButtons.Add(startButton);
+        menuButtons.Add(settingsButton);
+        menuButtons.Add(quitButton);
+        menuButtons.Add(backButton);
+
+
+        AssignButtonListeners();
+        AssignHoverListeners();
+
+        MoveIndicator(menuButtons[selectedIndex]);
     }
-    public void MainMenuOut()
+
+    private void Update()
+    {
+        HandleMenuNavigation();
+
+        if (indicator != null && menuButtons.Count > 0)
+        {
+            Vector3 targetPosition = new Vector3(indicator.position.x, menuButtons[selectedIndex].transform.position.y - indicatorOffset, indicator.position.z);
+            indicator.position = Vector3.Lerp(indicator.position, targetPosition, Time.deltaTime * 10f);
+        }
+    }
+
+    public void OnLevelSelectionMenu()
     {
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         anim.SetBool("fromMenu", true);
@@ -71,7 +102,7 @@ public class MainMenuUI : MonoBehaviour
         StartCoroutine(OpenGate(true));
     }
 
-    public void MainMenuIn()
+    public void OnReturnToMainMenu()
     {
         anim.SetBool("fromMenu", false);
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
@@ -105,7 +136,7 @@ public class MainMenuUI : MonoBehaviour
         cam.transform.rotation = targetRot;
     }
 
-    void OnStartLevel()
+    public void OnStartLevel()
     {
         levelSelectionCanvas.SetActive(false);
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
@@ -127,7 +158,7 @@ public class MainMenuUI : MonoBehaviour
     }
     #endregion
 
-    public void QuitGame()
+    public void OnQuitGame()
     {
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         anim.SetBool("isConfirmationMenu", true);
@@ -161,4 +192,60 @@ public class MainMenuUI : MonoBehaviour
 
         gate.transform.position = targetPos;
     }
+
+    #region Button Indicator
+    private void AssignButtonListeners()
+    {
+        startButton.onClick.AddListener(() => { MoveIndicator(startButton); OnLevelSelectionMenu(); });
+        settingsButton.onClick.AddListener(() => MoveIndicator(settingsButton));
+        quitButton.onClick.AddListener(() => { MoveIndicator(quitButton); OnQuitGame(); });
+    }
+
+    private void AssignHoverListeners()
+    {
+        foreach (var button in menuButtons)
+        {
+            if (button == null) continue;
+
+            EventTrigger trigger = button.GetComponent<EventTrigger>() ?? button.gameObject.AddComponent<EventTrigger>();
+            trigger.triggers.Clear();
+
+            EventTrigger.Entry entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+            entry.callback.AddListener((data) => { OnButtonHover(button); });
+
+            trigger.triggers.Add(entry);
+        }
+    }
+
+    private void MoveIndicator(Button selectedButton)
+    {
+        if (indicator != null)
+        {
+            indicator.position = new Vector3(indicator.position.x, selectedButton.transform.position.y - indicatorOffset, indicator.position.z);
+        }
+    }
+
+    private void OnButtonHover(Button hoveredButton)
+    {
+        selectedIndex = menuButtons.IndexOf(hoveredButton);
+    }
+
+    private void HandleMenuNavigation()
+    {
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            selectedIndex = (selectedIndex - 1 + menuButtons.Count) % menuButtons.Count;
+        }
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            selectedIndex = (selectedIndex + 1) % menuButtons.Count;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+        {
+            menuButtons[selectedIndex].onClick.Invoke();
+        }
+    }
+    #endregion
+
 }
