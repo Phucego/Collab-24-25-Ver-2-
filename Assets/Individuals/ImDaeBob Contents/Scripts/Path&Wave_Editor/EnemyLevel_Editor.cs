@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor;
 
-public class EnemyWave_Editor : MonoBehaviour
+public class EnemyLevel_Editor : MonoBehaviour
 {
-    private bool _active = true;
+    private bool _active = false;
 
     // Start is called before the first frame update
     void Start()
@@ -20,12 +21,12 @@ public class EnemyWave_Editor : MonoBehaviour
         
     }
 
-    public void toggleEditor(bool mode)
+    public void ToggleEditor(bool mode)
     {
         _active = mode;
     }
 
-    public bool getActive()
+    public bool GetActive()
     {
         return _active;
     }

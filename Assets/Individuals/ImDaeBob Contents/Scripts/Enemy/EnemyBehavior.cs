@@ -236,10 +236,10 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         [JsonProperty("Data")]
         public float[] data { get; set; }
 
-        public PathData(string _name = "Point ?", Vector3 _position = new Vector3(), float _scaleMultiplier = 1f)
+        public PathData(string _name = "Point ?", Vector3 _position = new Vector3(), float _size = 1f)
         {
             name = _name;
-            data = new float[] { _position.x, _position.y, _position.z, _scaleMultiplier };
+            data = new float[] { _position.x, _position.y, _position.z, _size };
         }
     }
 
@@ -248,10 +248,10 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         public string Name { get; set; }
         public float[] Data { get; set; }
 
-        public dataStruct(string _name, float _x, float _y, float _z, float _scaleMultiplier)
+        public dataStruct(string _name, float _x, float _y, float _z, float _size)
         {
             Name = _name;
-            Data = new float[] { _x, _y, _z, _scaleMultiplier };
+            Data = new float[] { _x, _y, _z, _size };
         }
     }
 }
