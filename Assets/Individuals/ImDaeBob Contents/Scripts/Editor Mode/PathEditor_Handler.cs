@@ -20,6 +20,7 @@ public class PathEditor_Handler : MonoBehaviour
 
     // [ Data Process ] //
     private List<string> _jsonFiles = new List<string>();
+    private PathDataList _jsonData = new PathDataList();
     private List<dataStruct> _dataList = new List<dataStruct>();
 
     // [ References ] //
@@ -96,7 +97,27 @@ public class PathEditor_Handler : MonoBehaviour
 
     public void SavePath(string value)
     {
+        if (_jsonFiles.Contains(value))
+        {
 
+        }
+        else
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                //Debug.Log($"Created {value}.json");
+                List<PathData> newData = new List<PathData>
+            {
+                new PathData("Point 0"),
+                new PathData("Point 1")
+            };
+
+                File.WriteAllText(value + ".json", JsonConvert.SerializeObject(newData, Formatting.Indented));
+                _jsonData.list = JsonConvert.DeserializeObject<List<PathData>>(File.ReadAllText($"{value}.json"));
+
+
+            }
+        }
     }
 
     // [ ACCESSIBILITIES ] //
