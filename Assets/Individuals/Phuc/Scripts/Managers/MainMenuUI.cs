@@ -68,11 +68,11 @@ public class MainMenuUI : MonoBehaviour
         closedPosition = gate.transform.position;
 
   
-
+        //TODO: Add buttons from the main menu
         menuButtons.Add(startButton);
         menuButtons.Add(settingsButton);
         menuButtons.Add(quitButton);
-        menuButtons.Add(backButton);
+        
 
 
         AssignButtonListeners();
@@ -94,16 +94,23 @@ public class MainMenuUI : MonoBehaviour
 
     public void OnLevelSelectionMenu()
     {
+        menuButtons.Clear();        //clear the previous list
+
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         anim.SetBool("fromMenu", true);
         levelSelectionCanvas.SetActive(true);
 
         StartCoroutine(MoveCamera(camTarget.position, camTarget.rotation));
         StartCoroutine(OpenGate(true));
+
+        menuButtons.Add(backButton);
+        menuButtons.Add(tutLevel);
     }
 
     public void OnReturnToMainMenu()
     {
+        menuButtons.Clear();
+
         anim.SetBool("fromMenu", false);
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         mainMenuCanvas.SetActive(true);
@@ -111,6 +118,11 @@ public class MainMenuUI : MonoBehaviour
 
         StartCoroutine(MoveCamera(originalCamPos, originalCamRot));
         StartCoroutine(OpenGate(false));
+
+        //TODO: Add buttons from the main menu
+        menuButtons.Add(startButton);
+        menuButtons.Add(settingsButton);
+        menuButtons.Add(quitButton);
     }
 
     IEnumerator MoveCamera(Vector3 targetPos, Quaternion targetRot)
@@ -196,9 +208,14 @@ public class MainMenuUI : MonoBehaviour
     #region Button Indicator
     private void AssignButtonListeners()
     {
+        //MAIN MENU
         startButton.onClick.AddListener(() => { MoveIndicator(startButton); OnLevelSelectionMenu(); });
         settingsButton.onClick.AddListener(() => MoveIndicator(settingsButton));
         quitButton.onClick.AddListener(() => { MoveIndicator(quitButton); OnQuitGame(); });
+
+        //LEVEL SELECTION
+        backButton.onClick.AddListener(() => { MoveIndicator(backButton); OnReturnToMainMenu(); }); 
+        tutLevel.onClick.AddListener(() => { MoveIndicator(tutLevel); OnStartLevel(); }); 
     }
 
     private void AssignHoverListeners()
