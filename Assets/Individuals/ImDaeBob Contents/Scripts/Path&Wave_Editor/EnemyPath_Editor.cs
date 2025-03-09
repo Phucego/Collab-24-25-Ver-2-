@@ -373,7 +373,6 @@ public class EnemyPath_Editor : MonoBehaviour
         {
             GameObject _point = Instantiate(_pointObject);
 
-            dataStruct data = _dataList[_totalPoint];
             _pointObjectList.Add(_point);
 
             _totalPoint++;
