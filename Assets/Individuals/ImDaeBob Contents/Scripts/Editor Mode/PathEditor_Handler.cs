@@ -83,8 +83,6 @@ public class PathEditor_Handler : MonoBehaviour
         _inputFieldList.Add(_yEnd);
         _inputFieldList.Add(_zEnd);
         _inputFieldList.Add(_sEnd);
-
-        this.gameObject.SetActive(false);
     }
 
     void OnEnable()
@@ -153,8 +151,6 @@ public class PathEditor_Handler : MonoBehaviour
                         _pointObjectList[_dropdownEnd.value + 1].transform.position = new Vector3(_xF, _yF, _zF);
                         break;
                 }
-
-                _drawGizmo = true;
             }
         }
 
@@ -200,7 +196,6 @@ public class PathEditor_Handler : MonoBehaviour
             _zEnd.text = _dataList[v + 1].Data[2].ToString();
             _sEnd.text = _dataList[v + 1].Data[3].ToString();
 
-            _drawGizmo = true;
             VisualizeSelectedPoints();
 
             _isFollowed = false;
@@ -226,7 +221,6 @@ public class PathEditor_Handler : MonoBehaviour
             _zEnd.text = _dataList[v].Data[2].ToString();
             _sEnd.text = _dataList[v].Data[3].ToString();
 
-            _drawGizmo = true;
             VisualizeSelectedPoints();
 
             _isFollowed = false;
@@ -274,22 +268,7 @@ public class PathEditor_Handler : MonoBehaviour
         _pointObjectList[_dataList.Count - 1].transform.localScale = new Vector3(3f, 3f, 3f) * data.Data[3];
         _pointObjectList[_dataList.Count - 1].name = data.Name;
 
-        int v = _dataList.Count - 1;
-        _dropdownBegin.value = v - 1;
-        _dropdownBegin.RefreshShownValue();
-        _xBegin.text = _dataList[v - 1].Data[0].ToString();
-        _yBegin.text = _dataList[v - 1].Data[1].ToString();
-        _zBegin.text = _dataList[v - 1].Data[2].ToString();
-        _sBegin.text = _dataList[v - 1].Data[3].ToString();
-
-        _dropdownEnd.value = v - 1;
-        _dropdownEnd.RefreshShownValue();
-        _xEnd.text = _dataList[v].Data[0].ToString();
-        _yEnd.text = _dataList[v].Data[1].ToString();
-        _zEnd.text = _dataList[v].Data[2].ToString();
-        _sEnd.text = _dataList[v].Data[3].ToString();
-
-        _drawGizmo = true;
+        MatchData();
         VisualizeSelectedPoints();
     }
 
@@ -299,30 +278,20 @@ public class PathEditor_Handler : MonoBehaviour
         {
             DebugLog("Removed the last Waypoint!");
 
-            if (_dropdownEnd.value == _dropdownEnd.options.Count - 1 || _dropdownBegin.value == _dropdownBegin.options.Count - 1)
-            {
-                int v = _dataList.Count - 2;
-                _dropdownBegin.value = v - 1;
-                _dropdownBegin.RefreshShownValue();
-                _xBegin.text = _dataList[v - 1].Data[0].ToString();
-                _yBegin.text = _dataList[v - 1].Data[1].ToString();
-                _zBegin.text = _dataList[v - 1].Data[2].ToString();
-                _sBegin.text = _dataList[v - 1].Data[3].ToString();
-
-                _dropdownEnd.value = v - 1;
-                _dropdownEnd.RefreshShownValue();
-                _xEnd.text = _dataList[v].Data[0].ToString();
-                _yEnd.text = _dataList[v].Data[1].ToString();
-                _zEnd.text = _dataList[v].Data[2].ToString();
-                _sEnd.text = _dataList[v].Data[3].ToString();
-            }
-
             _pointObjectList[_dataList.Count - 1].transform.position = new Vector3(0, 0, 0);
             _pointObjectList[_dataList.Count - 1].transform.localScale = new Vector3(3f, 3f, 3f);
+            _pointObjectList[_dataList.Count - 1].SetActive(false);
 
             _dataList.RemoveAt(_dataList.Count - 1);
             _dropdownBegin.options.RemoveAt(_dropdownBegin.options.Count - 1);
-            _dropdownEnd.options.RemoveAt(_dropdownBegin.options.Count - 1);
+            _dropdownEnd.options.RemoveAt(_dropdownEnd.options.Count - 1);
+
+            if (_dropdownEnd.value >= _dropdownEnd.options.Count - 1)
+            {
+                _dropdownBegin.value = _dropdownBegin.options.Count - 1;
+                _dropdownEnd.value = _dropdownEnd.options.Count - 1;
+                MatchData();
+            }
         }
         else
             DebugLog("There is not enough waypoin to initiate removal.");
@@ -425,7 +394,7 @@ public class PathEditor_Handler : MonoBehaviour
         {
             _saveAs.text = _saveAs.text.ToUpper();
             string _getPath = $"{_jsonDirectory}/{_saveAs.text}.JSON";
-            if (_jsonFiles.Contains($"{_saveAs.text}.JSON")) // Have input but the file already existed
+            if (_jsonFiles.Contains($"{_saveAs.text}")) // Have input but the file already existed
             {
                 File.WriteAllText(_getPath, JsonConvert.SerializeObject(_dataList, Formatting.Indented));
 
@@ -454,28 +423,69 @@ public class PathEditor_Handler : MonoBehaviour
                 this.gameObject.GetComponent<Animator>().SetTrigger("New");
             }
         }
+        _saveAs.text = null;
     }
 
     public void CreateNewPath()
     {
-        _saveAs.text = _saveAs.text.ToUpper();
-        string _getPath = $"{_jsonDirectory}/{_saveAs.text}.JSON";
-        if (!_jsonFiles.Contains($"{_saveAs.text}.JSON"))
+        if (!string.IsNullOrEmpty(_saveAs.text))
         {
-            List<PathData> newData = new List<PathData>
+            _saveAs.text = _saveAs.text.ToUpper();
+            string _getPath = $"{_jsonDirectory}/{_saveAs.text}.JSON";
+            if (!_jsonFiles.Contains($"{_saveAs.text}"))
             {
-                new PathData("Point 0"),
-                new PathData("Point 1")
-            };
-            File.WriteAllText(_getPath, JsonConvert.SerializeObject(newData, Formatting.Indented));
+                List<PathData> newData = new List<PathData>
+                {
+                    new PathData("Point 0"),
+                    new PathData("Point 1")
+                };
+                File.WriteAllText(_getPath, JsonConvert.SerializeObject(newData, Formatting.Indented));
 
-            DebugLog($"Created a brand new path: {_saveAs.text}");
+                DebugLog($"Created a brand new path: {_saveAs.text}");
 
-            SearchFiles();
-            this.gameObject.GetComponent<Animator>().SetTrigger("New");
+                SearchFiles();
+                this.gameObject.GetComponent<Animator>().SetTrigger("New");
+                _saveAs.text = null;
+            }
+            else
+                DebugLog("A path with the same name has already existed");
         }
         else
-            DebugLog("A path with the same name has already existed");
+            DebugLog("There is no name for the new path file!!");
+    }
+
+    public void DeleteCurPath()
+    {
+        if (_jsonFiles.Count == 0)
+        {
+            DebugLog("No paths available to delete.");
+            return;
+        }
+
+        string _recyleBin = $"{_jsonDirectory}/RecycleBin/";
+        if (!Directory.Exists(_recyleBin))        
+            Directory.CreateDirectory(_recyleBin);
+
+        string _curPath = $"{_jsonDirectory}/{_jsonFiles[_path.value]}.JSON";
+        if (File.Exists(_curPath))
+        {
+            string _deletedPath = $"{_recyleBin}/{_jsonFiles[_path.value]}.JSON";
+            if (File.Exists(_deletedPath))
+                File.Delete(_deletedPath);
+            File.Move(_curPath, _deletedPath); // Move the file to the "Recycle Bin" instead of permanently deleting it
+
+            _jsonFiles.RemoveAt(_path.value);
+            _path.options.RemoveAt(_path.value);
+            _path.RefreshShownValue();
+
+            if (_jsonFiles.Count > 0)
+            {
+                _path.value = 0;
+                LoadPath();
+            }
+        }
+        else
+            DebugLog("Selected path file does not exist.");
     }
 
     // [ ACCESSIBILITIES ] //
@@ -565,6 +575,24 @@ public class PathEditor_Handler : MonoBehaviour
     }
 
     // [ PROCCESSORS ] //
+    private void MatchData()
+    {
+        int v = _dataList.Count - 1;
+        _dropdownBegin.value = v - 1;
+        _dropdownBegin.RefreshShownValue();
+        _xBegin.text = _dataList[v - 1].Data[0].ToString();
+        _yBegin.text = _dataList[v - 1].Data[1].ToString();
+        _zBegin.text = _dataList[v - 1].Data[2].ToString();
+        _sBegin.text = _dataList[v - 1].Data[3].ToString();
+
+        _dropdownEnd.value = v - 1;
+        _dropdownEnd.RefreshShownValue();
+        _xEnd.text = _dataList[v].Data[0].ToString();
+        _yEnd.text = _dataList[v].Data[1].ToString();
+        _zEnd.text = _dataList[v].Data[2].ToString();
+        _sEnd.text = _dataList[v].Data[3].ToString();
+    }
+
     private void OnDrawGizmos()
     {
         if (_allGizmo.isOn)
@@ -612,7 +640,11 @@ public class PathEditor_Handler : MonoBehaviour
     // [ IENUMERATOR HANDLERS ] //
     IEnumerator EndTransition()
     {
+        _drawGizmo = false;
+
         yield return new WaitForSeconds(0.5f);
+        foreach (GameObject point in _pointObjectList)
+            point.SetActive(false);
         this.gameObject.GetComponent<CanvasGroup>().alpha = 0;
         _selectionPanel.SetActive(true);
         _transition.GetComponent<Animator>().SetTrigger("Out");
