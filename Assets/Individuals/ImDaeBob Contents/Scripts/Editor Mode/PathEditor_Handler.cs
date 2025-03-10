@@ -293,6 +293,41 @@ public class PathEditor_Handler : MonoBehaviour
         VisualizeSelectedPoints();
     }
 
+    public void RemoveLastWaypoint()
+    {
+        if (_dataList.Count > 2)
+        {
+            DebugLog("Removed the last Waypoint!");
+
+            if (_dropdownEnd.value == _dropdownEnd.options.Count - 1 || _dropdownBegin.value == _dropdownBegin.options.Count - 1)
+            {
+                int v = _dataList.Count - 2;
+                _dropdownBegin.value = v - 1;
+                _dropdownBegin.RefreshShownValue();
+                _xBegin.text = _dataList[v - 1].Data[0].ToString();
+                _yBegin.text = _dataList[v - 1].Data[1].ToString();
+                _zBegin.text = _dataList[v - 1].Data[2].ToString();
+                _sBegin.text = _dataList[v - 1].Data[3].ToString();
+
+                _dropdownEnd.value = v - 1;
+                _dropdownEnd.RefreshShownValue();
+                _xEnd.text = _dataList[v].Data[0].ToString();
+                _yEnd.text = _dataList[v].Data[1].ToString();
+                _zEnd.text = _dataList[v].Data[2].ToString();
+                _sEnd.text = _dataList[v].Data[3].ToString();
+            }
+
+            _pointObjectList[_dataList.Count - 1].transform.position = new Vector3(0, 0, 0);
+            _pointObjectList[_dataList.Count - 1].transform.localScale = new Vector3(3f, 3f, 3f);
+
+            _dataList.RemoveAt(_dataList.Count - 1);
+            _dropdownBegin.options.RemoveAt(_dropdownBegin.options.Count - 1);
+            _dropdownEnd.options.RemoveAt(_dropdownBegin.options.Count - 1);
+        }
+        else
+            DebugLog("There is not enough waypoin to initiate removal.");
+    }
+
     // [ JSON HANDLERS ] //
     private void SearchFiles()
     {
@@ -421,6 +456,28 @@ public class PathEditor_Handler : MonoBehaviour
         }
     }
 
+    public void CreateNewPath()
+    {
+        _saveAs.text = _saveAs.text.ToUpper();
+        string _getPath = $"{_jsonDirectory}/{_saveAs.text}.JSON";
+        if (!_jsonFiles.Contains($"{_saveAs.text}.JSON"))
+        {
+            List<PathData> newData = new List<PathData>
+            {
+                new PathData("Point 0"),
+                new PathData("Point 1")
+            };
+            File.WriteAllText(_getPath, JsonConvert.SerializeObject(newData, Formatting.Indented));
+
+            DebugLog($"Created a brand new path: {_saveAs.text}");
+
+            SearchFiles();
+            this.gameObject.GetComponent<Animator>().SetTrigger("New");
+        }
+        else
+            DebugLog("A path with the same name has already existed");
+    }
+
     // [ ACCESSIBILITIES ] //
     private string _cachedValue = "";
     public void CacheCurValue(string value)
@@ -528,8 +585,16 @@ public class PathEditor_Handler : MonoBehaviour
 
     private void VisualizeSelectedPoints()
     {
-        foreach (GameObject _point in _pointObjectList)
-            _point.GetComponent<Renderer>().material.color = new Color(1, 0.25f, 0.25f);
+        for (int i=0; i<_totalPoint; i++)
+        {   
+            if (i < _dataList.Count)
+            {
+                _pointObjectList[i].SetActive(true);
+                _pointObjectList[i].GetComponent<Renderer>().material.color = new Color(1, 0.25f, 0.25f);
+            }
+            else
+                _pointObjectList[i].SetActive(false);
+        }
 
         _pointObjectList[_dropdownBegin.value].GetComponent<Renderer>().material.color = Color.green;
         _pointObjectList[_dropdownBegin.value + 1].GetComponent<Renderer>().material.color = Color.cyan;
