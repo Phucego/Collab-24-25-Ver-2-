@@ -58,9 +58,6 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-
-       
-
     }
 
     private void Start()
@@ -142,6 +139,10 @@ public class UIManager : MonoBehaviour
         mainUI.SetActive(false);
         pauseMenu.SetActive(true);
         StartCoroutine(PauseGameAfterAnimation());
+        
+        //SET GAME STATE TO PAUSE, RETURN TO THE STATE THAT THE GAME PREVIOUSLY AT
+        //FOR EXAMPLE, SETUP, ACTIVE OR COMPLETED
+        GameStatesManager.Instance.ChangeState(GameStates.Pause);
     }
 
     public void OnMainMenu()
