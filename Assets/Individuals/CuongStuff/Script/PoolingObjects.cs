@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PoolingObjects : MonoBehaviour
 {
-    public static class Pooling
+    public class Pooling
     {
         public Dictionary<string, PoolingData> poolingDictionary = new Dictionary<string, PoolingData>();
 
@@ -31,7 +31,7 @@ public class PoolingObjects : MonoBehaviour
             deactiveList.Add(go);
         }
     }
-    public struct PoolingData
+    public class PoolingData
     {
         public List<GameObject> activeList = new List<GameObject>();
         public List<GameObject> deactiveList = new List<GameObject>();
