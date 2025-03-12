@@ -2,6 +2,10 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
+//LEVEL MANAGER IS FOR MANAGING A SINGLE LEVEL, DIFFERS FROM THE GAME MANAGER
+//WHICH MANAGES THE GAME STATES.
+
+
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;

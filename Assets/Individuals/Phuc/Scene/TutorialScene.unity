@@ -4463,6 +4463,7 @@ Transform:
   - {fileID: 1448870352}
   - {fileID: 816595650}
   - {fileID: 119620656}
+  - {fileID: 1651844243}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5137,7 +5138,7 @@ GameObject:
   - component: {fileID: 1549417073}
   - component: {fileID: 1549417074}
   m_Layer: 12
-  m_Name: LevelManager
+  m_Name: Effects/Audio Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5552,6 +5553,50 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &1651844242
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1651844243}
+  - component: {fileID: 1651844244}
+  m_Layer: 0
+  m_Name: GameStatesManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1651844243
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651844242}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1192606830}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1651844244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651844242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 006b65b0d432b984b976b5597544bc15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1676139301
 GameObject:
   m_ObjectHideFlags: 0
@@ -5630,6 +5675,7 @@ MonoBehaviour:
   confirmationMenu: {fileID: 1688421069}
   confirmationMenu_MainMenu: {fileID: 1132735161}
   startingCoinAmount: 0
+  isPausing: 0
   dialogueManager: {fileID: 0}
 --- !u!95 &1676139304
 Animator:
@@ -6987,7 +7033,6 @@ MonoBehaviour:
   placementIndicator: {fileID: 0}
   snapHeight: 10
   canPlace: 0
-  Instance: {fileID: 0}
   placeableLayer:
     serializedVersion: 2
     m_Bits: 8

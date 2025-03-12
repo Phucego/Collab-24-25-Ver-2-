@@ -110,6 +110,7 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
         {
             OnPauseButtonClicked();
+            GameStatesManager.Instance.ChangeState(GameStates.Pause);
         }
 
     }

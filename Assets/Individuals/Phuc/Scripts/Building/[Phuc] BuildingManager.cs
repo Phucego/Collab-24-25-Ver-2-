@@ -27,12 +27,13 @@ public class BuildingManager : MonoBehaviour
     public float snapHeight = 1.5f;
     public bool canPlace;
 
-    public BuildingManager Instance;
+    public static BuildingManager Instance;
 
     [SerializeField] private LayerMask placeableLayer;
     [SerializeField] private LayerMask unplaceableLayer;
 
     private Vector3 towerPos;
+
 
     private void Awake()
     {
