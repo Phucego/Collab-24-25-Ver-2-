@@ -144,7 +144,8 @@ public class TowerController : MonoBehaviour
         Projectile.transform.position = AimPoint.transform.position;
         Projectile.transform.rotation = AimPoint.transform.rotation;
         Projectile.SetActive(true);
-        
+
+        ParticlesManager.Instance.SpawnParticles(AimPoint.transform.position, 45, 0);
         AudioManager.Instance.PlaySoundEffect("Cannon_SFX");
         //Projectile.GetComponent<ProjectileController>().SetDirection(direction.normalized);
 
