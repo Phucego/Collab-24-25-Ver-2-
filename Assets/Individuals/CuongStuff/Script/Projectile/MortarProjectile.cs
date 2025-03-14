@@ -32,7 +32,7 @@ public class MortarProjectile : ProjectileController
         layerMask = LayerMask.GetMask("Unplaceable");
     }
 
-    // Flying along the trajectory
+    // Drop down physics
     private void FixedUpdate()
     {
         if (!Flying) { return; }
