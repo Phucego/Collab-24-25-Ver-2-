@@ -140,7 +140,7 @@ public class TowerController : MonoBehaviour
     // Fire projectiles
     protected virtual IEnumerator FireProjectile(Vector3 direction)
     {
-        GameObject Projectile = GetPooledObject();
+        GameObject Projectile = Pooling.Spawn("CannonBall", PrefabProjectile[0]);
         Projectile.transform.position = AimPoint.transform.position;
         Projectile.transform.rotation = AimPoint.transform.rotation;
         Projectile.SetActive(true);

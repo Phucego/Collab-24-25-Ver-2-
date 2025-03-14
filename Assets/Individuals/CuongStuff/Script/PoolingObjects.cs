@@ -1,39 +1,56 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static PoolingObjects;
 
 
 public class PoolingObjects : MonoBehaviour
 {
-    public class Pooling
+    
+    
+}
+
+public class Pooling
+{
+    public static Dictionary<string, PoolingData> poolingDictionary = new Dictionary<string, PoolingData>();
+
+    public static GameObject Spawn(string category, GameObject go)
     {
-        public Dictionary<string, PoolingData> poolingDictionary = new Dictionary<string, PoolingData>();
+        PoolingData poolData;
 
-        public static List<GameObject> activeList = new List<GameObject>();
-        public static List<GameObject> deactiveList = new List<GameObject>();
+        // Create new pool data if it has not existed
+        if (!poolingDictionary.ContainsKey(category)) 
+            poolingDictionary[category] = new PoolingData();
 
-        public static void Spawn(string category, GameObject go)
+        poolData = poolingDictionary[category];
+        
+        // Find if game object already existed
+        for (int i = 0; i < poolData.deactiveList.Count; i++)
         {
-            // check logic de spawn them object hoac active object
-
-            // active
-            activeList.Add(go);
-            deactiveList.Remove(go);
-
-            // instantiate
-            GameObject spawnGO = GameObject.Instantiate(go);
-            activeList.Add(spawnGO);
+            if (!poolData.deactiveList[i].activeInHierarchy)
+            {
+                return poolData.deactiveList[i];
+            }
         }
 
-        public static void Despawn(GameObject go)
-        {
-            activeList.Remove(go);
-            deactiveList.Add(go);
-        }
+        GameObject newObject = GameObject.Instantiate(go, go.transform.position, Quaternion.identity, GameObject.Find("_Projectiles").transform);
+        poolData.activeList.Add(newObject);
+        return newObject;
+        
     }
-    public class PoolingData
+
+    public static void Despawn(string category, GameObject go)
     {
-        public List<GameObject> activeList = new List<GameObject>();
-        public List<GameObject> deactiveList = new List<GameObject>();
+        PoolingData poolData;
+
+        poolData = poolingDictionary[category];
+        poolData.activeList.Remove(go);
+        poolData.deactiveList.Add(go);
     }
+}
+
+public class PoolingData
+{
+    public List<GameObject> activeList = new List<GameObject>();
+    public List<GameObject> deactiveList = new List<GameObject>();
 }
