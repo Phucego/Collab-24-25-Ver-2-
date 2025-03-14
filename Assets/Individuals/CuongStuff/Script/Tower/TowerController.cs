@@ -1,10 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.Events;
-using static UnityEditor.Progress;
 
 public class TowerController : MonoBehaviour
 {
@@ -134,29 +131,21 @@ public class TowerController : MonoBehaviour
         Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
         TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.25f);
         Head.transform.LookAt(TargetPos);
-        RaycastHit hit;
-        // Does the ray intersect any objects excluding the player layer
-        if (Physics.Raycast(AimPoint.transform.position, AimPoint.gameObject.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
-        {
-            Debug.DrawRay(AimPoint.transform.position, AimPoint.transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-            StartCoroutine(FireProjectile(hit.transform.position - AimPoint.transform.position));
-        }
-        else
-        {
-            StartCoroutine(FireProjectile(TargetPos - AimPoint.transform.position));
-        }
-        
+
+        StartCoroutine(FireProjectile(TargetPos - AimPoint.transform.position));
+
         yield return null;
     }
 
     // Fire projectiles
     protected virtual IEnumerator FireProjectile(Vector3 direction)
     {
-        GameObject Projectile = GetPooledObject();
+        GameObject Projectile = Pooling.Spawn("CannonBall", PrefabProjectile[0]);
         Projectile.transform.position = AimPoint.transform.position;
         Projectile.transform.rotation = AimPoint.transform.rotation;
         Projectile.SetActive(true);
-        
+
+        ParticlesManager.Instance.SpawnParticles(AimPoint.transform.position, 45, 0);
         AudioManager.Instance.PlaySoundEffect("Cannon_SFX");
         //Projectile.GetComponent<ProjectileController>().SetDirection(direction.normalized);
 
@@ -219,6 +208,8 @@ public class TowerController : MonoBehaviour
 
                 /*float distance = Vector3.Distance(transform.position, enemy.transform.position);
                 float lastdistance = Vector3.Distance(transform.position, TargetPos);*/
+
+                // If target goes null during the check of enemies, immediately pick this one instead as the target
                 if (Target == null)
                 {
                     Target = enemy;

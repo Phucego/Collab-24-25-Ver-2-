@@ -14,7 +14,9 @@ public class BalistaController : TowerController
         // Slowly rotate torward enemies, only fire once the tower has full LOS of them
         if (lockedIn && Target != null)
         {
-            TargetPos = Target.transform.position;
+            float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
+            Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
+            TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.1f);
             Vector3 dir = Head.transform.position - TargetPos;
             Quaternion desireddir = Quaternion.LookRotation(-dir);
             Head.transform.rotation = Quaternion.Slerp(Head.transform.rotation, desireddir, Time.deltaTime * 20f);
@@ -42,19 +44,15 @@ public class BalistaController : TowerController
 
     protected override IEnumerator LOSCheck()
     {
-        TargetPos = Target.transform.position;
+        if (_EnemyList.Count <= 0) { yield return null; }
         lockedIn = true;
         bool targetFaced = false;
         RaycastHit hit;
         // Does the ray intersect any objects excluding the player layer
         while (!targetFaced)
         {
-            if (Physics.Raycast(AimPoint.transform.position, AimPoint.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
-            {
-                //Debug.DrawRay(AimPoint.transform.position, AimPoint.transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-                StartCoroutine(FireProjectile(hit.transform.position - AimPoint.transform.position));
-                targetFaced = true;
-            }
+            StartCoroutine(FireProjectile(new Vector3(0,0,0)));
+            targetFaced = true;
             yield return new WaitForSeconds(0.05f);
         }
         
