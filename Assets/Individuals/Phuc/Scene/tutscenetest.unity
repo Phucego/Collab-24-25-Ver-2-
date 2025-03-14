@@ -5104,6 +5104,7 @@ MonoBehaviour:
   confirmationMenu: {fileID: 1688421069}
   confirmationMenu_MainMenu: {fileID: 1132735161}
   startingCoinAmount: 0
+  isPausing: 0
   dialogueManager: {fileID: 0}
 --- !u!95 &1676139304
 Animator:
@@ -6223,7 +6224,6 @@ MonoBehaviour:
   placementIndicator: {fileID: 0}
   snapHeight: 10
   canPlace: 0
-  Instance: {fileID: 0}
   placeableLayer:
     serializedVersion: 2
     m_Bits: 8
