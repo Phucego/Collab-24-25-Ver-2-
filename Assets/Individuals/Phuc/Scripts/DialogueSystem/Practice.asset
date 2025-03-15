@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ee75b15d23754abadb7b5b01dd571, type: 3}
   m_Name: Practice
   m_EditorClassIdentifier: 
+  sectionName: 
   dialogueLines:
-  - characterName: 'General:'
+  - characterName: General
     dialogueText: Now, feel free to explore so you can get a sense of the overall
       map layout.
-  - characterName: 'Player:'
+  - characterName: Player
     dialogueText: But what is that purple area?
-  - characterName: 'General:'
+  - characterName: General
     dialogueText: 'This is the Corrupted Zone, where our enemies spawn from and the
       yellow paths are the only routes the enemies can follow to reach our Headquarter.
 

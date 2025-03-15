@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ee75b15d23754abadb7b5b01dd571, type: 3}
   m_Name: DefenseLists
   m_EditorClassIdentifier: 
+  sectionName: 
   dialogueLines:
-  - characterName: 'General: '
+  - characterName: General
     dialogueText: 'And that small tab to the left of the screen, that is the Defense
       HUD. Click it.
 
 '
-  - characterName: 'General: '
+  - characterName: General
     dialogueText: 'These are your available defenses and their prices accordingly
 
 '

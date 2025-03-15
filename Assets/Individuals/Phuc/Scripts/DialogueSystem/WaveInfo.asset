@@ -12,16 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ee75b15d23754abadb7b5b01dd571, type: 3}
   m_Name: WaveInfo
   m_EditorClassIdentifier: 
+  sectionName: 
   dialogueLines:
-  - characterName: 'Player: '
+  - characterName: Player
     dialogueText: 'What is that red bar down the bottom-right?
 
 '
-  - characterName: 'General: '
+  - characterName: General
     dialogueText: "\rThat is the Wave Bar, which is an indication of your progress
       within the current level.\r\n"
-  - characterName: 'Player: '
+  - characterName: Player
     dialogueText: What about the Start Wave button up the top-right?
-  - characterName: 'General: '
+  - characterName: General
     dialogueText: 'Hitting that button will end your preparation time and start the
       wave immediately! Do not touch it for now! We don''t have any defenses yet. '

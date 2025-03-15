@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ee75b15d23754abadb7b5b01dd571, type: 3}
   m_Name: EnemyWaves
   m_EditorClassIdentifier: 
+  sectionName: 
   dialogueLines:
-  - characterName: 'General:'
+  - characterName: General
     dialogueText: I think you are ready to face them now. Hit the Start Wave button!
-  - characterName: 'Player:'
+  - characterName: Player
     dialogueText: Oh my god. That's a lot of enemies for our Cannon to handle alone.
-  - characterName: 'General:'
+  - characterName: General
     dialogueText: Yes, so let's build an extra Ballista Tower.

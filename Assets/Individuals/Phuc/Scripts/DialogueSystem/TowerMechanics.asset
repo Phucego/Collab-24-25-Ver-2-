@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ee75b15d23754abadb7b5b01dd571, type: 3}
   m_Name: TowerMechanics
   m_EditorClassIdentifier: 
+  sectionName: 
   dialogueLines:
-  - characterName: 'General: '
+  - characterName: General
     dialogueText: "Let\u2019s build our first defense! Click on the Cannon icon to
       select it!"
-  - characterName: 'General: '
+  - characterName: General
     dialogueText: "The map is based upon a fixed grid, meaning that there are only
       certain areas where you will be able to build defenses.\r\n\t"
-  - characterName: 'General: '
+  - characterName: General
     dialogueText: 'Now, pick any of those placeholder foundation bases and press
       LMB to place the Cannon.
 

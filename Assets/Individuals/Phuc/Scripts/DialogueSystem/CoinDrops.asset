@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ee75b15d23754abadb7b5b01dd571, type: 3}
   m_Name: CoinDrops
   m_EditorClassIdentifier: 
+  sectionName: 
   dialogueLines:
-  - characterName: 'Player: '
+  - characterName: Player
     dialogueText: 'Where are the coins coming from?
 
 '
-  - characterName: 'General: '
+  - characterName: General
     dialogueText: Every enemy will drop coins upon death and different types vary
       in the amount dropped.
