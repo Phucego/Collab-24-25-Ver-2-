@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 441b803a1eb9e184f93db987c0073465
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - GMV DIN Pro
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: c0046bed96794e44e9fb2a633ae7deb7, type: 3}
+  - {fileID: 12800000, guid: 02b769d762c591c498ec65afd6a715cb, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
