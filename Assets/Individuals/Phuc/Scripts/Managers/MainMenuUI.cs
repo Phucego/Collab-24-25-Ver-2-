@@ -234,21 +234,29 @@ public class MainMenuUI : MonoBehaviour
         }
     }
 
-    private void MoveIndicator(Button selectedButton)
+    private void MoveIndicator(Button targetButton)
     {
-        if (indicator != null)
-        {
-            indicator.position = new Vector3(indicator.position.x, selectedButton.transform.position.y - indicatorOffset, indicator.position.z);
-        }
+        StopAllCoroutines(); // Stop any ongoing movement before starting a new one
+        StartCoroutine(SmoothMoveIndicator(targetButton));
     }
 
     private void OnButtonHover(Button hoveredButton)
     {
+        // Reset all button colors before applying new hover effect
+        foreach (var button in menuButtons)
+        {
+            ResetButtonColor(button);
+        }
+
+        // Apply hover effect to the hovered button
         selectedIndex = menuButtons.IndexOf(hoveredButton);
+        HighlightButton(hoveredButton);
     }
 
     private void HandleMenuNavigation()
     {
+        int previousIndex = selectedIndex;
+
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             selectedIndex = (selectedIndex - 1 + menuButtons.Count) % menuButtons.Count;
@@ -258,11 +266,81 @@ public class MainMenuUI : MonoBehaviour
             selectedIndex = (selectedIndex + 1) % menuButtons.Count;
         }
 
+        if (previousIndex != selectedIndex)
+        {
+            StartCoroutine(SmoothMoveIndicator(menuButtons[selectedIndex]));
+            AudioManager.Instance.PlaySoundEffect("Hover_SFX");
+
+            // Reset previous button color and hover effect
+            if (menuButtons[previousIndex] != null)
+            {
+                ResetButtonColor(menuButtons[previousIndex]);
+
+                HoverAnim previousHover = menuButtons[previousIndex].GetComponent<HoverAnim>();
+                if (previousHover != null)
+                {
+                    previousHover.RemoveKeyboardSelection();
+                }
+            }
+
+            // Apply new button highlight
+            if (menuButtons[selectedIndex] != null)
+            {
+                HighlightButton(menuButtons[selectedIndex]);
+
+                HoverAnim newHover = menuButtons[selectedIndex].GetComponent<HoverAnim>();
+                if (newHover != null)
+                {
+                    newHover.ApplyKeyboardSelection();
+                }
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
         {
             menuButtons[selectedIndex].onClick.Invoke();
         }
     }
+
+
+
+    // Smoothly moves the indicator to the selected button
+    private IEnumerator SmoothMoveIndicator(Button targetButton)
+    {
+        float duration = 0.2f;
+        float elapsed = 0f;
+
+        Vector3 startPos = indicator.position;
+        Vector3 targetPos = new Vector3(indicator.position.x, targetButton.transform.position.y - indicatorOffset, indicator.position.z);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            indicator.position = Vector3.Lerp(startPos, targetPos, t);
+            yield return null;
+        }
+
+        indicator.position = targetPos; // Ensure it reaches the final position
+    }
+
+    // Changes the button color to a highlighted state
+    private void HighlightButton(Button button)
+    {
+        ColorBlock colors = button.colors;
+        colors.normalColor = Color.white; 
+        button.colors = colors;
+    }
+
+    // Resets the button color to default
+    private void ResetButtonColor(Button button)
+    {
+        ColorBlock colors = button.colors;
+        colors.normalColor = Color.gray; // Default color
+        button.colors = colors;
+    }
+
+   
     #endregion
 
 }
