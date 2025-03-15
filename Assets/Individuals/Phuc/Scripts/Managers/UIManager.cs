@@ -10,12 +10,10 @@ public class UIManager : MonoBehaviour
     [Header("Game Objects")]
     public GameObject coinCounterParent;
     public GameObject waveProgressParent;
-    public GameObject pauseAndWaveParent;
     public GameObject mainUI;
 
-    [Header("Buttons")]
-    public Button startWaveButton;
-    public Button pauseButton;
+    [Header("Buttons")] 
+    public Button chooseOptions;
     public Button toggleTowerSelectButton;
     public Button resumeButton;
     public Button quitButton;
@@ -46,7 +44,7 @@ public class UIManager : MonoBehaviour
     public GameObject towerSelectMenu;
     public GameObject confirmationMenu;
     public GameObject confirmationMenu_MainMenu;
-
+    private bool isRotated = false; // Track rotation state
     public static UIManager Instance;
 
     public int startingCoinAmount;
@@ -65,7 +63,7 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 0f;
 
         StartCoroutine(ShowUIAfterTransition());
-        pauseAndWaveParent.SetActive(false);
+    
 
         // Initialize the coin counter
         UpdateCoinCounterUI();
@@ -79,7 +77,7 @@ public class UIManager : MonoBehaviour
         anim.SetBool("isTowerSelectPanelOpened", false);
 
         // BUTTON EVENTS
-        pauseButton.onClick.AddListener(OnPauseButtonClicked);
+        chooseOptions.onClick.AddListener(OnChooseOptions);
         toggleTowerSelectButton.onClick.AddListener(ToggleTowerSelectPanel);
         resumeButton.onClick.AddListener(OnResumeButton);
         quitButton.onClick.AddListener(OnQuitButton);
@@ -89,14 +87,6 @@ public class UIManager : MonoBehaviour
         Quit_No.onClick.AddListener(OnConfirmBack);
         MainMenu_No.onClick.AddListener(OnConfirmBackMainMenu);
         MainMenu_Yes.onClick.AddListener(OnConfirmMainMenu);
-
-        // Subscribe to dialogue events
-        if (dialogueManager != null)
-        {
-          
-            dialogueManager.OnIntroCompleted.AddListener(EnablePauseAndWaveMenus);
-            dialogueManager.OnBuildingCompleted.AddListener(DisablePauseAndWaveMenus);
-        }
     }
 
     private void Update()
@@ -112,27 +102,19 @@ public class UIManager : MonoBehaviour
 
     }
 
+    private void OnChooseOptions()
+    {
+        Debug.Log("pressed options");
+        StartCoroutine(RotateChooseOptions(isRotated ? 0 : -93)); // Toggle rotation
+        isRotated = !isRotated; // Flip the state
+    }
     private void UpdateCoinCounterUI()
     {
         if (CurrencyManager.Instance == null || CurrencyManager.Instance.GetCurrency() < 0) return;
         coinCounterText.text = $"{CurrencyManager.Instance.GetCurrency()}"; // Fetch currency from CurrencyManager
     }
 
-    private void TogglePauseAndWaveMenus(bool isActive)
-    {
-        pauseAndWaveParent.SetActive(isActive);
-    }
-
-    private void EnablePauseAndWaveMenus()
-    {
-        TogglePauseAndWaveMenus(true);
-    }
-
-    private void DisablePauseAndWaveMenus()
-    {
-        TogglePauseAndWaveMenus(false);
-    }
-
+    
     public void OnPauseButtonClicked()
     {
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
@@ -233,11 +215,29 @@ public class UIManager : MonoBehaviour
         mainUI.SetActive(true);
         confirmationMenu.SetActive(false);
         confirmationMenu_MainMenu.SetActive(false);
-        pauseAndWaveParent.SetActive(true);
+        //pauseAndWaveParent.SetActive(true);
     }
 
     public void PlaySoundEffect()
     {
         AudioManager.Instance.PlaySoundEffect("Swoosh_SFX");
+    }
+    
+    private IEnumerator RotateChooseOptions(float targetZRotation)
+    {
+        float duration = 0.5f; // Duration of the rotation
+        float elapsed = 0f;
+    
+        Quaternion startRotation = chooseOptions.transform.rotation;
+        Quaternion targetRotation = Quaternion.Euler(0, 0, targetZRotation);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            chooseOptions.transform.rotation = Quaternion.Lerp(startRotation, targetRotation, elapsed / duration);
+            yield return null;
+        }
+
+        chooseOptions.transform.rotation = targetRotation; // Ensure it reaches the exact target rotation
     }
 }
