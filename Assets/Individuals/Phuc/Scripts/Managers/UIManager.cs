@@ -45,6 +45,8 @@ public class UIManager : MonoBehaviour
     public GameObject confirmationMenu;
     public GameObject confirmationMenu_MainMenu;
     private bool isRotated = false; // Track rotation state
+    private bool isSpeedUp = false; // Track game speed up
+    
     public static UIManager Instance;
 
     public int startingCoinAmount;
