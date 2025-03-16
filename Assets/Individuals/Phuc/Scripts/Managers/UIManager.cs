@@ -24,13 +24,14 @@ public class UIManager : MonoBehaviour
     public Button MainMenu_No;
     public Button MainMenu_Yes;
 
+    public Button speedUpButton;
     public Image circleImage;
-    [SerializeField] private Button m_StartWaveButton;
+ //   [SerializeField] private Button m_StartWaveButton;
 
     [Header("Other References")]
     private Animator anim;
     private Camera cam;
-    [SerializeField] private GameObject m_TestEnemy;
+   // [SerializeField] private GameObject m_TestEnemy;
     public TextMeshProUGUI coinCounterText; // Reference to the TextMeshProUGUI component
 
     public bool selectionPanelIsOpened;
@@ -45,7 +46,7 @@ public class UIManager : MonoBehaviour
     public GameObject confirmationMenu;
     public GameObject confirmationMenu_MainMenu;
     private bool isRotated = false; // Track rotation state
-    private bool isSpeedUp = false; // Track game speed up
+    public bool isSpeedUp = false; // Track game speed up
     
     public static UIManager Instance;
 
@@ -89,6 +90,8 @@ public class UIManager : MonoBehaviour
         Quit_No.onClick.AddListener(OnConfirmBack);
         MainMenu_No.onClick.AddListener(OnConfirmBackMainMenu);
         MainMenu_Yes.onClick.AddListener(OnConfirmMainMenu);
+        
+        speedUpButton.onClick.AddListener(SpeedUpGame);
     }
 
     private void Update()
@@ -104,12 +107,7 @@ public class UIManager : MonoBehaviour
 
     }
 
-    private void OnChooseOptions()
-    {
-        Debug.Log("pressed options");
-        StartCoroutine(RotateChooseOptions(isRotated ? 0 : -93)); // Toggle rotation
-        isRotated = !isRotated; // Flip the state
-    }
+
     private void UpdateCoinCounterUI()
     {
         if (CurrencyManager.Instance == null || CurrencyManager.Instance.GetCurrency() < 0) return;
@@ -241,5 +239,31 @@ public class UIManager : MonoBehaviour
         }
 
         chooseOptions.transform.rotation = targetRotation; // Ensure it reaches the exact target rotation
+    }
+    
+    //CHOOSE OPTIONS
+    private void OnChooseOptions()
+    {
+        Debug.Log("pressed options");
+        StartCoroutine(RotateChooseOptions(isRotated ? 0 : -93)); // Toggle rotation
+        isRotated = !isRotated; // Flip the state
+    }
+
+    private void SpeedUpGame()
+    {
+        isSpeedUp = !isSpeedUp;
+        switch (isSpeedUp)
+        {
+            case true:
+                AudioManager.Instance.PlaySoundEffect("SpeedUp_SFX");   
+                anim.SetTrigger("isSpeedChange");
+                Time.timeScale = 4f;      
+                break;
+            case false:
+                AudioManager.Instance.PlaySoundEffect("SpeedUp_SFX");   
+                anim.SetTrigger("isSpeedChange");
+                Time.timeScale = 1f;
+                break;
+        }
     }
 }
