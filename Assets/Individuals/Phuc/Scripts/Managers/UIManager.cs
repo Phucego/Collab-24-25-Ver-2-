@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -12,19 +13,28 @@ public class UIManager : MonoBehaviour
     public GameObject waveProgressParent;
     public GameObject mainUI;
 
-    [Header("Buttons")] 
-    public Button chooseOptions;
+    [Header("Main UI Elements")] 
+   
     public Button toggleTowerSelectButton;
     public Button resumeButton;
     public Button quitButton;
     public Button mainMenuButton;
+    
+    [Header("Confirmation UI Elements")] 
 
     public Button Quit_Yes;
     public Button Quit_No;
     public Button MainMenu_No;
     public Button MainMenu_Yes;
 
+    [Header("Choose Options UI Elements")] 
+    public Button chooseOptions;
     public Button speedUpButton;
+    public Button pauseButton;
+    public Button muteButton;
+    
+    
+    
     public Image circleImage;
  //   [SerializeField] private Button m_StartWaveButton;
 
@@ -45,8 +55,11 @@ public class UIManager : MonoBehaviour
     public GameObject towerSelectMenu;
     public GameObject confirmationMenu;
     public GameObject confirmationMenu_MainMenu;
+    
+    
     private bool isRotated = false; // Track rotation state
     public bool isSpeedUp = false; // Track game speed up
+    public bool isMuteButtonPressed = false;    
     
     public static UIManager Instance;
 
@@ -80,18 +93,44 @@ public class UIManager : MonoBehaviour
         anim.SetBool("isTowerSelectPanelOpened", false);
 
         // BUTTON EVENTS
-        chooseOptions.onClick.AddListener(OnChooseOptions);
+        
+        //MAIN UI
         toggleTowerSelectButton.onClick.AddListener(ToggleTowerSelectPanel);
         resumeButton.onClick.AddListener(OnResumeButton);
         quitButton.onClick.AddListener(OnQuitButton);
         mainMenuButton.onClick.AddListener(OnMainMenu);
 
+        //CONFIRMATIONS
         Quit_Yes.onClick.AddListener(OnConfirmQuit);
         Quit_No.onClick.AddListener(OnConfirmBack);
         MainMenu_No.onClick.AddListener(OnConfirmBackMainMenu);
         MainMenu_Yes.onClick.AddListener(OnConfirmMainMenu);
         
+        //CHOOSE OPTIONS
+        chooseOptions.onClick.AddListener(OnChooseOptions);
+        
         speedUpButton.onClick.AddListener(SpeedUpGame);
+        pauseButton.onClick.AddListener(OnPauseButtonClicked);
+        muteButton.onClick.AddListener(OnMuteButton);
+        
+  
+        
+    }
+
+    private void OnMuteButton()
+    {
+        isMuteButtonPressed = !isMuteButtonPressed;
+
+        switch (isMuteButtonPressed)
+        {
+            case true:
+                AudioManager.Instance.SetAudioPaused(true); // Resume normal audio behavior
+                break;
+                case false: 
+                    AudioManager.Instance.SetAudioPaused(false);
+                    break;
+        }
+      
     }
 
     private void Update()
@@ -244,26 +283,35 @@ public class UIManager : MonoBehaviour
     //CHOOSE OPTIONS
     private void OnChooseOptions()
     {
-        Debug.Log("pressed options");
+        
         StartCoroutine(RotateChooseOptions(isRotated ? 0 : -93)); // Toggle rotation
         isRotated = !isRotated; // Flip the state
+
+        switch (isRotated)
+        {
+            case true:
+                anim.SetBool("isChooseOptionsOpened", true);    
+                break;
+            case false:
+                anim.SetBool("isChooseOptionsOpened", false);    
+                break;
+        }
     }
 
     private void SpeedUpGame()
     {
         isSpeedUp = !isSpeedUp;
-        switch (isSpeedUp)
+        AudioManager.Instance.PlaySoundEffect("SpeedUp_SFX");
+        anim.SetTrigger("isSpeedChange");
+
+        if (isSpeedUp)
         {
-            case true:
-                AudioManager.Instance.PlaySoundEffect("SpeedUp_SFX");   
-                anim.SetTrigger("isSpeedChange");
-                Time.timeScale = 4f;      
-                break;
-            case false:
-                AudioManager.Instance.PlaySoundEffect("SpeedUp_SFX");   
-                anim.SetTrigger("isSpeedChange");
-                Time.timeScale = 1f;
-                break;
+            Time.timeScale = 4f; // Speed up game, but keep audio normal
+        }
+        else
+        {
+            Time.timeScale = 1f; // Reset to normal speed
         }
     }
+
 }

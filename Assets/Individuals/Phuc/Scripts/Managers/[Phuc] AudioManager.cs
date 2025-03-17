@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioManager : Singleton<AudioManager>
 {
@@ -15,44 +16,48 @@ public class AudioManager : Singleton<AudioManager>
     private AudioSource bgMusicSource;
     private AudioSource sfxSource;
 
-    
     private void Awake()
     {
-        // Singleton pattern to ensure only one instance of AudioManager exists
+        // Singleton pattern
         if (Instance == null)
         {
             Instance = this;
-          
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
+            return;
         }
 
         // Create AudioSource components
         bgMusicSource = gameObject.AddComponent<AudioSource>();
         sfxSource = gameObject.AddComponent<AudioSource>();
-        
-        //TODO: Sound effects volume adjustment
+
+        // Sound effects volume adjustment
         sfxSource.volume = 1f;
-        
-        // TODO: Background music settings
+
+        // Background music settings
         bgMusicSource.loop = true;
         bgMusicSource.clip = backgroundMusic;
         bgMusicSource.playOnAwake = true;
-        bgMusicSource.volume = 0.4f; 
+        bgMusicSource.volume = 0.4f;
+
+        // Ensure audio plays normally even when time scale changes
+        bgMusicSource.ignoreListenerPause = true;
+        sfxSource.ignoreListenerPause = true;
     }
 
     private void Start()
     {
-        //TODO: Play background music
+        // Play background music
         bgMusicSource.Play();
     }
 
     public void PlaySoundEffect(string soundName)
     {
         AudioClip clip = GetSoundEffectByName(soundName);
-        
+
         if (clip != null)
         {
             sfxSource.PlayOneShot(clip);
@@ -74,5 +79,16 @@ public class AudioManager : Singleton<AudioManager>
         }
         return null;
     }
-    
+    public void SetAudioPaused(bool isMuted)
+    {
+        AudioListener.pause = isMuted;
+    }
+    // OPTIONAL: If using an AudioMixer
+    public void SetAudioMixerUnscaled(AudioMixer audioMixer)
+    {
+        if (audioMixer != null)
+        {
+            audioMixer.updateMode = AudioMixerUpdateMode.UnscaledTime;
+        }
+    }
 }
