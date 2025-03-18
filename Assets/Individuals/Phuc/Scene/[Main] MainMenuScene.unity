@@ -2760,10 +2760,10 @@ MonoBehaviour:
   camTarget: {fileID: 187039526}
   _tutorialScene:
     m_SceneAsset: {fileID: 102900000, guid: 186f304aae5338f4c9e7450d34cd2b39, type: 3}
-    m_SceneName: TutorialScene
+    m_SceneName: '[Main] TutorialScene'
   _mainMenuScene:
     m_SceneAsset: {fileID: 102900000, guid: 5ab70225f46419e44b0924c46a99e266, type: 3}
-    m_SceneName: MainMenuScene
+    m_SceneName: '[Main] MainMenuScene'
   gate: {fileID: 717729415}
   targetGate: {fileID: 1275607272}
   menuButtons: []

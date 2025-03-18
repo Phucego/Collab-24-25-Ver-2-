@@ -20,6 +20,7 @@ public class TutorialGuidance : MonoBehaviour
     public Animator anim;
 
     public UnityEvent OnIntroCompleted;
+    public UnityEvent OnMovementPracticeCompleted;  
     public UnityEvent OnBuildingCompleted;
 
     private List<Dialogue.DialogueLine> currentDialogueLines;
@@ -34,9 +35,12 @@ public class TutorialGuidance : MonoBehaviour
 
     private FreeFlyCamera _freeFlyCamera;
 
+    public GameObject buildingDestination;
     public GameObject targetDestination;
-
-    private bool hasReachedDestination = false;
+    
+    //CHECK CONDITIONS 
+    private bool hasReachedTargetDestination = false;
+    private bool hasReachedBuildingDestination = false;
 
     
     [SerializeField] private BuildingManager buildingManager;
@@ -44,6 +48,9 @@ public class TutorialGuidance : MonoBehaviour
     void Start()
     {
         dialogueUI.SetActive(false);
+        
+        buildingDestination.SetActive(false);   
+        
         nextButton.onClick.AddListener(OnNextButtonClicked);
 
         _freeFlyCamera = FindObjectOfType<FreeFlyCamera>();
@@ -76,7 +83,7 @@ public class TutorialGuidance : MonoBehaviour
         }
     }
 
-    public void StartIntro()
+    private void StartIntro()
     {
         isTowerPlacementChecked = false;
         DisableMovements();
@@ -143,8 +150,8 @@ public class TutorialGuidance : MonoBehaviour
 
     private void OnNextButtonClicked()
     {
-        //Make sure that the player cannot presses next while the game is pausing
-        if (isTyping && !UIManager.Instance.isPausing)
+        // Ensure the player cannot press "Next" while the game is paused
+        if (isTyping && !UIManager.Instance.pauseMenu.activeSelf) 
         {
             if (typingCoroutine != null)
             {
@@ -163,33 +170,52 @@ public class TutorialGuidance : MonoBehaviour
             }
         }
     }
-    
-
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == targetDestination && !hasReachedDestination)
+        //TRIGGER FREE MOVEMENT TUTORIAL
+        if (other.gameObject == targetDestination && !hasReachedTargetDestination)
         {
-            hasReachedDestination = true;
+            hasReachedTargetDestination = true;
             Debug.Log("Camera reached destination.");
 
             DisableMovements();
-            StartBuildingTutorial();
+            StartMovementPractice();
         
             Destroy(targetDestination);
+        }
+        
+        //TRIGGER TOWER PLACEMENT
+        else if (other.gameObject == buildingDestination && !hasReachedBuildingDestination)
+        {
+            hasReachedBuildingDestination = true;
+            
+            DisableMovements();
+            StartBuildingTutorial();
+            Destroy(buildingDestination);
         }
     }
 
     #region Start Tutorial Sections
+
+    public void StartMovementPractice()
+    {
+        SetDialogueSection("Camera Practice", OnIntroCompleted.Invoke);
+        anim.SetTrigger("hideUI");
+        
+        buildingDestination.SetActive(true); 
+
+    }
     public void StartBuildingTutorial()
     {
         SetDialogueSection("Building", OnBuildingCompleted.Invoke);
         anim.SetTrigger("hideUI");
-        CurrencyManager.Instance.currentCurrency = 50;
-
+        CurrencyManager.Instance.currentCurrency = 25;
     }
-
     #endregion
 
+    
+    
+    
     private void EnableMovements()
     {
         _freeFlyCamera._enableRotation = true;

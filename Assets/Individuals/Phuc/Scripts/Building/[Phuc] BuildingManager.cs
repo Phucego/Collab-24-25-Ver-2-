@@ -35,6 +35,7 @@ public class BuildingManager : MonoBehaviour
     private Vector3 towerPos;
 
 
+ 
     private void Awake()
     {
         Instance = this;
@@ -46,6 +47,7 @@ public class BuildingManager : MonoBehaviour
     private void Start()
     {
         ButtonSpawner();
+
     }
 
     void Update()
@@ -53,7 +55,8 @@ public class BuildingManager : MonoBehaviour
         if (pendingObj != null)
         {
             HandlePlacement();
-
+            
+           
             if (Input.GetMouseButtonDown(0) && canPlace)
             {
                 PlaceObject();
@@ -63,9 +66,10 @@ public class BuildingManager : MonoBehaviour
                 AudioManager.Instance.PlaySoundEffect("Insufficient_SFX");
             }
 
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Q))
             {
                 DeletePendingObject();
+            
             }
 
             MaterialUpdate();
@@ -178,9 +182,7 @@ public class BuildingManager : MonoBehaviour
         pendingObj = null;
         Debug.Log("Tower placed successfully and currency deducted.");
     }
-
-    // Rest of the existing methods remain the same
-    // SelectObject, DeletePendingObject, MaterialUpdate, ButtonSpawner...
+    
     
     // Method to check if player has placed their first tower
     public bool HasPlacedFirstTower()
