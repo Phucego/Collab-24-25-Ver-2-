@@ -151,6 +151,8 @@ public class UIManager : MonoBehaviour
     private void ToggleMute()
     {
         isMuteButtonPressed = !isMuteButtonPressed;
+
+
         AudioManager.Instance.SetAudioPaused(isMuteButtonPressed);
     }
 
@@ -159,6 +161,15 @@ public class UIManager : MonoBehaviour
         isRotated = !isRotated;
         anim.SetBool("isChooseOptionsOpened", isRotated);
         StartCoroutine(RotateChooseOptions(isRotated ? -93 : 0));
+
+        if (isRotated)
+        {
+            optionsContainer.SetActive(true);
+        }
+        else
+        {
+            optionsContainer.SetActive(false);   
+        }
     }
 
     private IEnumerator RotateChooseOptions(float targetZRotation)
