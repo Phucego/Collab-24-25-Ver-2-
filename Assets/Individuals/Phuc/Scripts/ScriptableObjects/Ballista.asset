@@ -20,7 +20,10 @@ MonoBehaviour:
   Radius: 6
   FireRate: 10
   ProjectileSpeed: 5
+  ProjectileRadius: 0
+  ProjectileInterval: 0
   CritChance: 0
   CritAmplifier: 1
   Cost: 0
   listUpgrades: []
+  towerSprite: {fileID: 0}
