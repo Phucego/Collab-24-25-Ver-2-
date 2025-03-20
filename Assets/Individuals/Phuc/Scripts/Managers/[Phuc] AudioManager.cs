@@ -7,13 +7,13 @@ public class AudioManager : Singleton<AudioManager>
 {
     public static AudioManager Instance;
 
-    [Header("Background Music")]
-    public AudioClip backgroundMusic;
+    [Header("Background Ambience")]
+    public AudioClip[] backgroundAmbienceTracks;
 
     [Header("Sound Effects")]
     public AudioClip[] soundEffects;
 
-    private AudioSource bgMusicSource;
+    private List<AudioSource> bgAmbienceSources = new List<AudioSource>();
     private AudioSource sfxSource;
 
     private void Awake()
@@ -30,28 +30,35 @@ public class AudioManager : Singleton<AudioManager>
             return;
         }
 
-        // Create AudioSource components
-        bgMusicSource = gameObject.AddComponent<AudioSource>();
+        // Create AudioSource components for ambience
+        foreach (AudioClip clip in backgroundAmbienceTracks)
+        {
+            AudioSource source = gameObject.AddComponent<AudioSource>();
+            source.clip = clip;
+            source.loop = true;
+            source.playOnAwake = false;
+            source.volume = 0.4f;
+            source.ignoreListenerPause = true;
+            bgAmbienceSources.Add(source);
+        }
+
+        // Create AudioSource for sound effects
         sfxSource = gameObject.AddComponent<AudioSource>();
-
-        // Sound effects volume adjustment
         sfxSource.volume = 1f;
-
-        // Background music settings
-        bgMusicSource.loop = true;
-        bgMusicSource.clip = backgroundMusic;
-        bgMusicSource.playOnAwake = true;
-        bgMusicSource.volume = 0.4f;
-
-        // Ensure audio plays normally even when time scale changes
-        bgMusicSource.ignoreListenerPause = true;
         sfxSource.ignoreListenerPause = true;
     }
 
     private void Start()
     {
-        // Play background music
-        bgMusicSource.Play();
+        PlayAllAmbience();
+    }
+
+    private void PlayAllAmbience()
+    {
+        foreach (AudioSource source in bgAmbienceSources)
+        {
+            source.Play();
+        }
     }
 
     public void PlaySoundEffect(string soundName)
@@ -79,10 +86,12 @@ public class AudioManager : Singleton<AudioManager>
         }
         return null;
     }
+    
     public void SetAudioPaused(bool isMuted)
     {
         AudioListener.pause = isMuted;
     }
+    
     // OPTIONAL: If using an AudioMixer
     public void SetAudioMixerUnscaled(AudioMixer audioMixer)
     {

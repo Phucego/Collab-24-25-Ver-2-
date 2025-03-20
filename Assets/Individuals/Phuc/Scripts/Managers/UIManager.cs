@@ -161,7 +161,7 @@ public class UIManager : MonoBehaviour
         isRotated = !isRotated;
         anim.SetBool("isChooseOptionsOpened", isRotated);
         StartCoroutine(RotateChooseOptions(isRotated ? -93 : 0));
-
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         if (isRotated)
         {
             optionsContainer.SetActive(true);
