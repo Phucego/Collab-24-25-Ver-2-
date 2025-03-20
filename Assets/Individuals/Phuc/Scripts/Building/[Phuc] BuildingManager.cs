@@ -175,7 +175,7 @@ public class BuildingManager : MonoBehaviour
             //NEED TO CHANGE THIS DIALOGUE AFTER REMEMBER PLS
             if (tutorialGuidance != null)
             {
-                tutorialGuidance.StartBuildingTutorial();
+                tutorialGuidance.corruptedIntroDestination.SetActive(true);
             }
         }
 

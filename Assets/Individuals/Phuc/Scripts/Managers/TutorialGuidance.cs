@@ -19,10 +19,13 @@ public class TutorialGuidance : MonoBehaviour
     [Header("Animation Controller")]
     public Animator anim;
 
+    //EVENTS
     public UnityEvent OnIntroCompleted;
     public UnityEvent OnMovementPracticeCompleted;  
     public UnityEvent OnBuildingCompleted;
-
+    public UnityEvent OnCorruptedIntroCompleted;
+    
+    
     private List<Dialogue.DialogueLine> currentDialogueLines;
     private int currentLineIndex = 0;
     private bool isTutorialActive = false;
@@ -35,14 +38,17 @@ public class TutorialGuidance : MonoBehaviour
 
     private FreeFlyCamera _freeFlyCamera;
 
+    //TUTORIAL GAME OBJECTS
     public GameObject buildingDestination;
     public GameObject targetDestination;
+    public GameObject corruptedIntroDestination;
     
     //CHECK CONDITIONS 
     private bool hasReachedTargetDestination = false;
     private bool hasReachedBuildingDestination = false;
+    private bool hasReachedCorruptedZone = false;
 
-    
+
     [SerializeField] private BuildingManager buildingManager;
     private bool isTowerPlacementChecked = false;
     void Start()
@@ -50,6 +56,7 @@ public class TutorialGuidance : MonoBehaviour
         dialogueUI.SetActive(false);
         
         buildingDestination.SetActive(false);   
+        corruptedIntroDestination.SetActive(false);     
         
         nextButton.onClick.AddListener(OnNextButtonClicked);
 
@@ -172,30 +179,35 @@ public class TutorialGuidance : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        //TRIGGER FREE MOVEMENT TUTORIAL
-        if (other.gameObject == targetDestination && !hasReachedTargetDestination)
+       
+        switch (other.gameObject)
         {
-            hasReachedTargetDestination = true;
-            Debug.Log("Camera reached destination.");
+                case GameObject obj when obj == targetDestination && !hasReachedTargetDestination:
+                    hasReachedTargetDestination = true;
+                    Debug.Log("Camera reached destination.");
+                    DisableMovements();
+                    StartMovementPractice();
+                    Destroy(targetDestination);
+                    break;
 
-            DisableMovements();
-            StartMovementPractice();
-        
-            Destroy(targetDestination);
-        }
-        
-        //TRIGGER TOWER PLACEMENT
-        else if (other.gameObject == buildingDestination && !hasReachedBuildingDestination)
-        {
-            hasReachedBuildingDestination = true;
-            
-            DisableMovements();
-            StartBuildingTutorial();
-            Destroy(buildingDestination);
+                case GameObject obj when obj == buildingDestination && !hasReachedBuildingDestination:
+                    hasReachedBuildingDestination = true;
+                    DisableMovements();
+                    StartBuildingTutorial();
+                    Destroy(buildingDestination);
+                    break;
+
+                case GameObject obj when obj == corruptedIntroDestination && !hasReachedCorruptedZone:
+                    hasReachedCorruptedZone = true;
+                    StartCorruptedIntro(); 
+                    DisableMovements();
+                    
+                    Destroy(corruptedIntroDestination);
+                    break;
         }
     }
 
-    #region Start Tutorial Sections
+    #region Start Tutorial Functions
 
     public void StartMovementPractice()
     {
@@ -211,9 +223,15 @@ public class TutorialGuidance : MonoBehaviour
         anim.SetTrigger("hideUI");
         CurrencyManager.Instance.currentCurrency = 25;
     }
-    #endregion
 
+    public void StartCorruptedIntro()
+    {
+        SetDialogueSection("Corrupted Zone Intro", OnCorruptedIntroCompleted.Invoke);
+        anim.SetTrigger("hideUI");  
+        corruptedIntroDestination.SetActive(true);   
+    } 
     
+    #endregion
     
     
     private void EnableMovements()

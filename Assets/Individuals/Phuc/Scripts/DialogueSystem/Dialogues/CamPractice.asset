@@ -18,3 +18,7 @@ MonoBehaviour:
     dialogueText: 'Good job, now feel free to fly around and explore the map.
 
 '
+  - characterName: 'General:'
+    dialogueText: 'Move to the placeholder when you are ready.
+
+'
