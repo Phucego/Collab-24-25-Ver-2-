@@ -40,8 +40,10 @@ public class ProjectileController : MonoBehaviour, I_TowerProjectile
             {
                 ApplyDamage(collision.gameObject);
             }
-            ParticlesManager.Instance.SpawnParticles(transform.position, 42, 0);
-            Pooling.Despawn("CannonBall", this.gameObject);
+            GameObject particle = ParticlesManager.Instance.SpawnParticles(1, 0);
+            particle.transform.position = transform.position;
+
+            Pooling.Despawn("CannonBall", gameObject);
             transform.gameObject.SetActive(false);     
         }
     }

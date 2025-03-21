@@ -14,9 +14,12 @@ public class Pooling
 {
     public static Dictionary<string, PoolingData> poolingDictionary = new Dictionary<string, PoolingData>();
 
-    public static GameObject Spawn(string category, GameObject go)
+    public static GameObject Spawn(string category, GameObject go, string name)
     {
         PoolingData poolData;
+        string goFolderName = name;
+        if (goFolderName == "")
+            goFolderName = "_Fill";
 
         // Create new pool data if it has not existed
         if (!poolingDictionary.ContainsKey(category)) 
@@ -27,13 +30,15 @@ public class Pooling
         // Find if game object already existed
         for (int i = 0; i < poolData.deactiveList.Count; i++)
         {
-            if (!poolData.deactiveList[i].activeInHierarchy)
+            if (!poolData.deactiveList[i].activeInHierarchy && poolData.deactiveList[i] == go)
             {
+                poolData.activeList.Add(go);
+                poolData.deactiveList.Remove(go);
                 return poolData.deactiveList[i];
             }
         }
 
-        GameObject newObject = GameObject.Instantiate(go, go.transform.position, Quaternion.identity, GameObject.Find("_Projectiles").transform);
+        GameObject newObject = GameObject.Instantiate(go, go.transform.position, Quaternion.identity, GameObject.Find(goFolderName).transform);
         poolData.activeList.Add(newObject);
         return newObject;
         
