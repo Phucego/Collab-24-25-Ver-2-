@@ -18,6 +18,7 @@ public class Pooling
     {
         PoolingData poolData;
         string goFolderName = name;
+        // Put object into a specific folder
         if (goFolderName == "")
             goFolderName = "_Fill";
 
@@ -27,13 +28,13 @@ public class Pooling
 
         poolData = poolingDictionary[category];
         
-        // Find if game object already existed
+        // Find if game object already existed and ready for pooling
         for (int i = 0; i < poolData.deactiveList.Count; i++)
         {
-            if (!poolData.deactiveList[i].activeInHierarchy && poolData.deactiveList[i] == go)
+            if (!poolData.deactiveList[i].activeInHierarchy)
             {
-                poolData.activeList.Add(go);
-                poolData.deactiveList.Remove(go);
+                poolData.activeList.Add(poolData.deactiveList[i]);
+                poolData.deactiveList.Remove(poolData.deactiveList[i]);
                 return poolData.deactiveList[i];
             }
         }

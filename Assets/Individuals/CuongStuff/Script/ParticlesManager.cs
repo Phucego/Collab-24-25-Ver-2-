@@ -19,9 +19,10 @@ public class ParticlesManager : MonoBehaviour
         }
     }
 
-    public GameObject SpawnParticles(int particleID, float timeDestroy)
+    public GameObject SpawnParticles(int particleID, string particleName)
     {
-        GameObject particle = Pooling.Spawn("Particles", ParticlesPrefab.ParticlesList[particleID], "_Particles");
+        string particlename = ParticlesPrefab.ParticlesList[particleID].name + "(Clone)";
+        GameObject particle = Pooling.Spawn(particlename, ParticlesPrefab.ParticlesList[particleID], "_Particles");
         return particle;
     }
 }
