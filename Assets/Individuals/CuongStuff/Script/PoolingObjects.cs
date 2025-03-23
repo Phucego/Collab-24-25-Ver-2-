@@ -33,9 +33,10 @@ public class Pooling
         {
             if (!poolData.deactiveList[i].activeInHierarchy)
             {
+                GameObject gameObject = poolData.deactiveList[i];
                 poolData.activeList.Add(poolData.deactiveList[i]);
                 poolData.deactiveList.Remove(poolData.deactiveList[i]);
-                return poolData.deactiveList[i];
+                return gameObject;
             }
         }
 

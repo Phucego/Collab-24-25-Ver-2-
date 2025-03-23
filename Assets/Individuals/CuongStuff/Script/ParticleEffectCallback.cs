@@ -7,13 +7,12 @@ public class ParticleEffectCallback : MonoBehaviour
     public void Start()
     {
         var main = GetComponent<ParticleSystem>().main;
-        var name = gameObject.name;
         main.stopAction = ParticleSystemStopAction.Callback;
     }
 
     private void OnParticleSystemStopped()
     {
-        Pooling.Despawn(name, gameObject);
+        Pooling.Despawn(gameObject.name, gameObject);
         transform.gameObject.SetActive(false);
     }
 }
