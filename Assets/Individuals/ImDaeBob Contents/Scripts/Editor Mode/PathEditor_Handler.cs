@@ -33,7 +33,6 @@ public class PathEditor_Handler : MonoBehaviour
     [Header("")]
     [SerializeField] TMP_Dropdown _path;
     [SerializeField] TMP_InputField _saveAs;
-    [SerializeField] Button _saveButton;
     [Header("")]
     [SerializeField] TMP_Text _debugLog;
     private Coroutine _clearTextCoroutine;
@@ -294,10 +293,10 @@ public class PathEditor_Handler : MonoBehaviour
             }
         }
         else
-            DebugLog("There is not enough waypoin to initiate removal.");
+            DebugLog("There is not enough waypoint to initiate removal.");
     }
 
-    // [ JSON HANDLERS ] //
+    // [ DATA HANDLERS ] //
     private void SearchFiles()
     {
         _path.ClearOptions();
@@ -671,7 +670,7 @@ public class PathEditor_Handler : MonoBehaviour
         public List<PathData> list = new List<PathData>();
     }
 
-    public class PathData
+    public class PathData //For Json
     {
         [JsonProperty("Name")]
         public string name { get; set; }
@@ -685,7 +684,7 @@ public class PathEditor_Handler : MonoBehaviour
         }
     }
 
-    public class dataStruct
+    public class dataStruct //For Script
     {
         public string Name { get; set; }
         public float[] Data { get; set; }

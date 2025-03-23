@@ -25,10 +25,6 @@ public class EditorSelection_Handler : MonoBehaviour
         this.gameObject.GetComponent<CanvasGroup>().alpha = 1;
     }
 
-    void Start()
-    {
-    }
-
     void Update()
     {
         if (_inSelect && (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Backspace)))
