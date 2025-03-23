@@ -29,4 +29,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c3be4f4b7f72e1646a08e87e2b3bbf99, type: 2}
   - {fileID: 11400000, guid: 587c19609f113774593ce911bb17df01, type: 2}
   - {fileID: 11400000, guid: 8f85e82a427fc1b4ea861308772f0a83, type: 2}
-  towerSprite: {fileID: 21300000, guid: bcc11ea60cb70e141b4ec5c771e855e3, type: 3}
+  towerSprite: {fileID: 21300000, guid: 7b42dddeff2741c44acb058136f50f36, type: 3}

@@ -235,6 +235,15 @@ public class BuildingManager : MonoBehaviour
             Image buttonImage = go.transform.GetChild(2).GetComponent<Image>();
             buttonImage.sprite = sortedTowerData[count].towerSprite;
 
+            // Ensure proper scaling
+            RectTransform imageRectTransform = buttonImage.GetComponent<RectTransform>();
+            imageRectTransform.anchorMin = new Vector2(0, 0);
+            imageRectTransform.anchorMax = new Vector2(1, 1);
+            imageRectTransform.pivot = new Vector2(0.5f, 0.5f);
+            imageRectTransform.offsetMin = Vector2.zero;
+            imageRectTransform.offsetMax = Vector2.zero;
+            imageRectTransform.localScale = Vector3.one;
+
             go.GetComponent<Button>().onClick.AddListener(() =>
             {
                 SelectObject(sortedTowerData[count].towerPrefab);
@@ -243,6 +252,7 @@ public class BuildingManager : MonoBehaviour
             });
         }
     }
+
 
     public void SelectObject(GameObject prefab)
     {
