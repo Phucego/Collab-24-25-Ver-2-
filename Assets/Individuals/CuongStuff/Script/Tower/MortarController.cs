@@ -6,12 +6,17 @@ public class MortarController : TowerController
     [SerializeField] private float ProjectileRadius = 5f;
     protected override IEnumerator FireProjectile(Vector3 direction)
     {
-        GameObject Projectile = GetPooledObject();
+        GameObject Projectile = Pooling.Spawn("MortarBall", PrefabProjectile[0], "_Projectiles");
         Projectile.SetActive(true);
         Projectile.transform.position = AimPoint.transform.position;
         Projectile.transform.rotation = new Quaternion(0, 0, 0, 0);
         Projectile.GetComponent<MortarProjectile>().SetPositionLerp(AimPoint.transform.position, TargetPos);
-        
+
+        GameObject Particle = ParticlesManager.Instance.SpawnParticles(4, "MortarMuzzle");
+        Particle.transform.position = AimPoint.transform.position;
+        Particle.transform.rotation = AimPoint.transform.rotation;
+        Particle.SetActive(true);
+
         AudioManager.Instance.PlaySoundEffect("Mortar_SFX");
         
         
@@ -26,7 +31,6 @@ public class MortarController : TowerController
         TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 1f);
         Head.transform.LookAt(TargetPos);
         Head.transform.eulerAngles = new Vector3(0f, Head.transform.eulerAngles.y, 0f);
-
 
         StartCoroutine(FireProjectile(new Vector3(0,0,0)));
         yield return null;

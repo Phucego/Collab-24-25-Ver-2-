@@ -117,6 +117,9 @@ public class MortarProjectile : ProjectileController
         Collider[] colliders = Physics.OverlapSphere(transform.position, blastradius);
         
         AudioManager.Instance.PlaySoundEffect("Explosion_SFX");
+        GameObject particle = ParticlesManager.Instance.SpawnParticles(3, "MortarExplosion");
+        particle.transform.position = transform.position;
+        particle.SetActive(true);
         foreach (var collider in colliders)
         {
             if (collider.gameObject.CompareTag("Enemy"))
@@ -135,9 +138,10 @@ public class MortarProjectile : ProjectileController
     {
         if (collision != null)
         {
-            SetExplosion();
-            transform.gameObject.SetActive(false);
             Flying = false;
+            SetExplosion();
+            Pooling.Despawn("MortarBall", gameObject);
+            transform.gameObject.SetActive(false);
         }
     }
 
