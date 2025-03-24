@@ -79,6 +79,34 @@
           }
         ],
         "IsBossWave": true
+      },
+      {
+        "Groups": [
+          {
+            "Name": "Group 1",
+            "Enemies": [],
+            "Path": "",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "DelayBefore": 0.0,
+            "DelayAfter": 0.0
+          }
+        ],
+        "IsBossWave": false
+      },
+      {
+        "Groups": [
+          {
+            "Name": "Group 1",
+            "Enemies": [],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "DelayBefore": 0.0,
+            "DelayAfter": 0.0
+          }
+        ],
+        "IsBossWave": false
       }
     ]
   }

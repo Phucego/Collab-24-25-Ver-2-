@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class LevelEditor_Handler : MonoBehaviour
 {
@@ -55,6 +56,11 @@ public class LevelEditor_Handler : MonoBehaviour
     [SerializeField] GameObject _eList;
     [SerializeField] GameObject _anEnemyData;
 
+    // [ Accessibility ] //
+    List<TMP_InputField> _inputFieldList = new List<TMP_InputField>();
+    int _iField = 0;
+    bool _isEditing = false;
+
     // [ Transition ] //
     [Header("Transition")]
     [SerializeField] GameObject _transition;
@@ -77,9 +83,30 @@ public class LevelEditor_Handler : MonoBehaviour
         SearchFiles();
     }
 
+    void Start()
+    {
+        _inputFieldList.Add(_gLoopAmount);
+        _inputFieldList.Add(_gDelayBeforeSpawn);
+        _inputFieldList.Add(_gDelayAfterSpawn);
+        _inputFieldList.Add(_eAmount);
+        _inputFieldList.Add(_eInterval);
+    }
+
     void Update()
     {
-        
+        if (_isEditing)
+        {
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+
+                if (Input.GetKey(KeyCode.LeftShift))
+                    _iField = (_iField - 1) % _inputFieldList.Count;
+                else
+                    _iField = (_iField + 1) % _inputFieldList.Count;
+                EventSystem.current.SetSelectedGameObject(_inputFieldList[_iField].gameObject);
+            }
+        }
     }
 
     //-------------------------------------------------------------- < MINI FUNCTIONS > --------------------------------------------------------------//
@@ -151,7 +178,7 @@ public class LevelEditor_Handler : MonoBehaviour
         }
         _wave.AddOptions(_waveList);
         foreach (int i in _bossWaveIndex)
-            _wave.options[i].text = $"<color=red>Wave {i}</color>";
+            _wave.options[i].text = $"<color=red>Wave {i + 1}</color>";
         _wave.RefreshShownValue();
 
         LoadWave();
@@ -387,6 +414,14 @@ public class LevelEditor_Handler : MonoBehaviour
         _curData[0].Waves[_wave.value].Groups[_group.value].Path = _gPath.options[_gPath.value].text;
     }
 
+    public void LoopGroup(bool isLoop)
+    {
+        DebugLog($"Enable Loop for group {_group.options[_group.value].text}");
+
+        if (_curData.Count > 0)
+            _curData[0].Waves[_wave.value].Groups[_group.value].IsLoop = isLoop;
+    }
+
     public void LoadGroup(bool resest)
     {
         if (resest)
@@ -402,6 +437,11 @@ public class LevelEditor_Handler : MonoBehaviour
 
         _gPath.value = _paths.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Path);
         _gPath.RefreshShownValue();
+
+        _gLoop.isOn = _curData[0].Waves[_wave.value].Groups[_group.value].IsLoop;
+        _gLoopAmount.text = _curData[0].Waves[_wave.value].Groups[_group.value].LoopAmount.ToString();
+        _gDelayBeforeSpawn.text = _curData[0].Waves[_wave.value].Groups[_group.value].DelayBefore.ToString();
+        _gDelayAfterSpawn.text = _curData[0].Waves[_wave.value].Groups[_group.value].DelayAfter.ToString();
     }
 
     // [ ACCESSIBILITIES ] // 
@@ -412,6 +452,37 @@ public class LevelEditor_Handler : MonoBehaviour
         if (_clearTextCoroutine != null)
             StopCoroutine(_clearTextCoroutine);
         _clearTextCoroutine = StartCoroutine(ClearDebugLog(duration, interval));
+    }
+
+    private string _cachedValue = "";
+    public void CacheCurValue(string value)
+    {
+        _isEditing = true;
+
+        if (!string.IsNullOrEmpty(value))
+            _cachedValue = value;
+    }
+
+    public void GetNewValue(string value)
+    {
+        _isEditing = false;
+
+        TMP_InputField selectedField = EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();
+        if (!string.IsNullOrEmpty(value) && float.TryParse(value, out float result))
+        {
+            CacheCurValue(value);
+            float _numValue = float.Parse(value);
+
+            //Is there no better way to do this? T-T
+            if (selectedField == _gLoopAmount)
+            {
+                _iField = 0;
+                _curData[0].Waves[_wave.value].Groups[_group.value].LoopAmount = (int)(_numValue);
+            }
+
+            return;
+        }
+        selectedField.text = _cachedValue;
     }
 
     // [ IENUMERATOR HANDLERS ] //
