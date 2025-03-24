@@ -160,7 +160,7 @@ public class PathEditor_Handler : MonoBehaviour
                 EventSystem.current.SetSelectedGameObject(null);
 
                 if (Input.GetKey(KeyCode.LeftShift))
-                    _iField = (_iField - 1) % _inputFieldList.Count;
+                    _iField = (_iField - 1 + _inputFieldList.Count) % _inputFieldList.Count;
                 else
                     _iField = (_iField + 1) % _inputFieldList.Count;
                 EventSystem.current.SetSelectedGameObject(_inputFieldList[_iField].gameObject);

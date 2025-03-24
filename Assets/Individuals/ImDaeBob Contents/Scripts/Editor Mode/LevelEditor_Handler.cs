@@ -7,6 +7,8 @@ using UnityEngine.UI;
 using UnityEditor;
 using TMPro;
 using UnityEngine.EventSystems;
+using DG.Tweening;
+using Unity.VisualScripting;
 
 public class LevelEditor_Handler : MonoBehaviour
 {
@@ -16,14 +18,15 @@ public class LevelEditor_Handler : MonoBehaviour
     [SerializeField] bool _jsonReadInEditor = true;
     private string _jsonDirectory;
     private string _pathDirectory;
+    private string _enemtySODirectory;
 
     // [ Data Process ] //
     private List<string> _jsonFiles = new List<string>();
     private LevelData _curlevel = new LevelData();
+    private List<string> _paths = new List<string>();
+    private List<string> _enemySO = new List<string>();
 
     private List<LevelData> _curData = new List<LevelData>(); // Just store 1 item but needed to serialize
-
-    private List<string> _paths = new List<string>();
 
     // [ References ] //
     [Header("References")]
@@ -48,6 +51,8 @@ public class LevelEditor_Handler : MonoBehaviour
     [SerializeField] TMP_InputField _gDelayBeforeSpawn;
     [SerializeField] TMP_InputField _gDelayAfterSpawn;
     [Header("")]
+    [SerializeField] Image _iconNormal;
+    [SerializeField] Image _iconBoss;
     [SerializeField] TMP_Dropdown _enemy;
     [SerializeField] TMP_Dropdown _eType;
     [SerializeField] TMP_InputField _eAmount;
@@ -71,6 +76,7 @@ public class LevelEditor_Handler : MonoBehaviour
         this.gameObject.GetComponent<CanvasGroup>().alpha = 1;
 
         _pathDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Paths");
+        _enemtySODirectory = Path.Combine(Application.dataPath, "Data/Enemies/Types");
         #if UNITY_EDITOR
             if (_jsonReadInEditor)
                 _jsonDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Levels"); // Editors
@@ -101,7 +107,7 @@ public class LevelEditor_Handler : MonoBehaviour
                 EventSystem.current.SetSelectedGameObject(null);
 
                 if (Input.GetKey(KeyCode.LeftShift))
-                    _iField = (_iField - 1) % _inputFieldList.Count;
+                    _iField = (_iField - 1 + _inputFieldList.Count) % _inputFieldList.Count;
                 else
                     _iField = (_iField + 1) % _inputFieldList.Count;
                 EventSystem.current.SetSelectedGameObject(_inputFieldList[_iField].gameObject);
@@ -132,7 +138,21 @@ public class LevelEditor_Handler : MonoBehaviour
                 _paths.Add(fileName.ToUpper().Replace(".JSON", ""));
             }
         }
-        _gPath.AddOptions(new List<string>(_paths));
+        _gPath.AddOptions(_paths);
+
+        _eType.ClearOptions();
+        _enemySO.Clear();
+        if (Directory.Exists(_enemtySODirectory))
+        {
+            string[] files = Directory.GetFiles(_enemtySODirectory, "*.asset"); // Get all JSON files
+
+            foreach (string f in files)
+            {
+                string fileName = Path.GetFileName(f);
+                _enemySO.Add(fileName.ToUpper().Replace(".ASSET", ""));
+            }
+        }
+        _eType.AddOptions(_enemySO);
 
         _level.ClearOptions();
         _jsonFiles.Clear();
@@ -148,7 +168,7 @@ public class LevelEditor_Handler : MonoBehaviour
                 _jsonFiles.Add(fileName.ToUpper().Replace(".JSON", ""));
             }
         }
-        _level.AddOptions(new List<string>(_jsonFiles));
+        _level.AddOptions(_jsonFiles);
 
         LoadLevel();
     }
@@ -180,6 +200,8 @@ public class LevelEditor_Handler : MonoBehaviour
         foreach (int i in _bossWaveIndex)
             _wave.options[i].text = $"<color=red>Wave {i + 1}</color>";
         _wave.RefreshShownValue();
+
+        CheckEnemyIcon();
 
         LoadWave();
     }
@@ -340,16 +362,16 @@ public class LevelEditor_Handler : MonoBehaviour
 
     public void EnableBossWave(bool isBoss)
     {
-        DebugLog($"Enable Boss Wave for Wave {_wave.value + 1}");
-
         if (_curData.Count > 0)
         {
             _curData[0].Waves[_wave.value].IsBossWave = isBoss;
+
+            _wave.options[_wave.value].text = $"<color=#323232>Wave {_wave.value + 1}</color>";
             if (isBoss)
                 _wave.options[_wave.value].text = $"<color=red>Wave {_wave.value + 1}</color>";
-            else
-                _wave.options[_wave.value].text = $"<color=#323232>Wave {_wave.value + 1}</color>";
             _wave.RefreshShownValue();
+
+            CheckEnemyIcon();
         }
     }
 
@@ -360,6 +382,7 @@ public class LevelEditor_Handler : MonoBehaviour
             _isBoss.isOn = true;
         else
             _isBoss.isOn = false;
+        CheckEnemyIcon();
 
         //Load Group
         LoadGroup(true);
@@ -416,10 +439,16 @@ public class LevelEditor_Handler : MonoBehaviour
 
     public void LoopGroup(bool isLoop)
     {
-        DebugLog($"Enable Loop for group {_group.options[_group.value].text}");
-
         if (_curData.Count > 0)
+        {
             _curData[0].Waves[_wave.value].Groups[_group.value].IsLoop = isLoop;
+
+            string getName = _curData[0].Waves[_wave.value].Groups[_group.value].Name;
+            _group.options[_group.value].text = $"<color=#323232>{getName} </color>";
+            if (isLoop)
+                _group.options[_group.value].text = $"<color=purple>{getName} </color>";
+            _group.RefreshShownValue();
+        }
     }
 
     public void LoadGroup(bool resest)
@@ -432,16 +461,68 @@ public class LevelEditor_Handler : MonoBehaviour
             for (int i = 0; i < _curData[0].Waves[_wave.value].Groups.Count; i++)
                 _groupList.Add(_curData[0].Waves[_wave.value].Groups[i].Name);
             _group.AddOptions(_groupList);
-            _group.RefreshShownValue();
         }
 
         _gPath.value = _paths.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Path);
         _gPath.RefreshShownValue();
 
         _gLoop.isOn = _curData[0].Waves[_wave.value].Groups[_group.value].IsLoop;
+        string getName = _curData[0].Waves[_wave.value].Groups[_group.value].Name;
+        _group.options[_group.value].text = $"<color=#323232>{getName} </color>";
+        if (_gLoop.isOn)
+            _group.options[_group.value].text = $"<color=purple>{getName} </color>";
+        _group.RefreshShownValue();
+
         _gLoopAmount.text = _curData[0].Waves[_wave.value].Groups[_group.value].LoopAmount.ToString();
         _gDelayBeforeSpawn.text = _curData[0].Waves[_wave.value].Groups[_group.value].DelayBefore.ToString();
         _gDelayAfterSpawn.text = _curData[0].Waves[_wave.value].Groups[_group.value].DelayAfter.ToString();
+
+        CheckEnemyIcon();
+    }
+
+    // Load Enemy
+    public void AddEnemy()
+    {
+
+    }
+
+    public void RemoveLastEnemy()
+    {
+
+    }
+
+    public void LoadEnemy(bool reset)
+    {
+        if (reset)
+        {
+            _enemy.ClearOptions();
+
+            List<string> _enemyList = new List<string>();
+            for (int i = 0; i < _curData[0].Waves[_wave.value].Groups[_group.value].; i++)
+                _enemyList.Add(_curData[0].Waves[_wave.value].Groups[i].Name);
+            _group.AddOptions(_enemyList);
+        }
+    }
+
+    private Tween _iconTween;
+    public void CheckEnemyIcon()
+    {
+        if (_curData[0].Waves[_wave.value].IsBossWave)
+        {
+            if (_iconTween != null)
+                _iconTween.Kill();
+            _iconTween = _iconNormal.GetComponent<RectTransform>().DOScaleX(0f, 0.15f).SetEase(Ease.InCirc).OnComplete(delegate () {
+                _iconBoss.GetComponent<RectTransform>().DOScaleX(1f, 0.15f).SetEase(Ease.OutCirc);
+            });
+        }
+        else
+        {
+            if (_iconTween != null)
+                _iconTween.Kill();
+            _iconTween = _iconBoss.GetComponent<RectTransform>().DOScaleX(0f, 0.15f).SetEase(Ease.InCirc).OnComplete(delegate () {
+                _iconNormal.GetComponent<RectTransform>().DOScaleX(1f, 0.15f).SetEase(Ease.OutCirc);
+            });
+        }
     }
 
     // [ ACCESSIBILITIES ] // 
@@ -478,6 +559,16 @@ public class LevelEditor_Handler : MonoBehaviour
             {
                 _iField = 0;
                 _curData[0].Waves[_wave.value].Groups[_group.value].LoopAmount = (int)(_numValue);
+            }
+            else if (selectedField == _gDelayBeforeSpawn)
+            {
+                _iField = 1;
+                _curData[0].Waves[_wave.value].Groups[_group.value].DelayBefore = _numValue;
+            }
+            else if (selectedField == _gDelayAfterSpawn)
+            {
+                _iField = 2;
+                _curData[0].Waves[_wave.value].Groups[_group.value].DelayAfter = _numValue;
             }
 
             return;

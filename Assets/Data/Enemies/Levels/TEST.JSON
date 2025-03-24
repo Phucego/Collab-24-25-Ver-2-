@@ -13,7 +13,7 @@
               }
             ],
             "Path": "TUT_PATH2",
-            "IsLoop": false,
+            "IsLoop": true,
             "LoopAmount": 0,
             "DelayBefore": 0.0,
             "DelayAfter": 0.0
