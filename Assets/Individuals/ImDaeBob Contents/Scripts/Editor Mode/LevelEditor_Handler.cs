@@ -59,7 +59,7 @@ public class LevelEditor_Handler : MonoBehaviour
     [SerializeField] TMP_InputField _eAmount;
     [SerializeField] TMP_InputField _eInterval;
     [Header("")]
-    [SerializeField] GameObject _eList;
+    [SerializeField] Transform _eList;
     [SerializeField] GameObject _anEnemyData;
 
     // [ Accessibility ] //
@@ -555,23 +555,18 @@ public class LevelEditor_Handler : MonoBehaviour
 
     private void MatcheEnemyDataList()
     {
+        for (int i = 0; i < _eList.childCount; i++)
+            Destroy(_eList.GetChild(i).gameObject);
 
-        /*        if (_curData[0].Waves[_wave.value].Groups[_group.value].Enemies.Count > _eList.transform.childCount)
-                {
-                    for (int i = 0; i < _curData[0].Waves[_wave.value].Groups[_group.value].Enemies.Count - _eList.transform.childCount; i++)
-                    {
-                        Instantiate(_anEnemyData);
-                        _anEnemyData.transform.parent = _eList.transform;
-                    }
-                }*/
-
-        /*        foreach (GameObject item in _eList.transform)
-                {
-                    item.transform.Find("No.").GetComponent<Text>().text = (_enemy.value + 1).ToString();
-                    item.transform.Find("Enemy").GetComponent<Text>().text = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type;
-                    item.transform.Find("Amount").GetComponent<Text>().text = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Amount.ToString();
-                    item.transform.Find("Interval").GetComponent<Text>().text = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].SpawnInterval.ToString();
-                }*/
+        for (int i = 0; i < _curData[0].Waves[_wave.value].Groups[_group.value].Enemies.Count; i++)
+        {
+            GameObject _data = Instantiate(_anEnemyData);
+            _data.transform.SetParent(_eList);
+            _data.transform.Find("No.").GetComponent<TMP_Text>().text = (i + 1).ToString();
+            _data.transform.Find("Enemy").GetComponent<TMP_Text>().text = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[i].Type;
+            _data.transform.Find("Amount").GetComponent<TMP_Text>().text = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[i].Amount.ToString();
+            _data.transform.Find("Interval").GetComponent<TMP_Text>().text = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[i].SpawnInterval.ToString();
+        }
     }
 
     private Tween _iconTween;

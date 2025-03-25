@@ -10,9 +10,49 @@
                 "Type": "NORMAL",
                 "Amount": 1,
                 "SpawnInterval": 0.0
+              },
+              {
+                "Type": "NORMAL",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              },
+              {
+                "Type": "NORMAL",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              },
+              {
+                "Type": "NORMAL",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              },
+              {
+                "Type": "NORMAL",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              },
+              {
+                "Type": "NORMAL",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              },
+              {
+                "Type": "NORMAL",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              },
+              {
+                "Type": "NORMAL",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              },
+              {
+                "Type": "NORMAL",
+                "Amount": 1,
+                "SpawnInterval": 0.0
               }
             ],
-            "Path": "",
+            "Path": "TUT_PATH1",
             "IsLoop": false,
             "LoopAmount": 0,
             "DelayBefore": 0.0,
