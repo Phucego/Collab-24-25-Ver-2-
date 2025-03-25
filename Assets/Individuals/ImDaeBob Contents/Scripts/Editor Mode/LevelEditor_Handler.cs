@@ -9,6 +9,7 @@ using TMPro;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 using Unity.VisualScripting;
+using System.Xml.Schema;
 
 public class LevelEditor_Handler : MonoBehaviour
 {
@@ -334,7 +335,7 @@ public class LevelEditor_Handler : MonoBehaviour
     {
         DebugLog($"Added new Wave - Wave {_wave.options.Count + 1}");
 
-        _curData[0].Waves.Add(new WaveData(new List<GroupData>() { new GroupData(new List<EnemyData>())}));
+        _curData[0].Waves.Add(new WaveData(new List<GroupData>() { new GroupData(new List<EnemyData>() { new EnemyData() })}));
 
         _wave.AddOptions(new List<string>() { $"Wave {_wave.options.Count + 1}"});
         _wave.RefreshShownValue();
@@ -393,7 +394,7 @@ public class LevelEditor_Handler : MonoBehaviour
     {
         DebugLog($"Added new Group - Group {_group.options.Count + 1}");
 
-        _curData[0].Waves[_wave.value].Groups.Add(new GroupData(new List<EnemyData>(), $"Group {_group.options.Count + 1}"));
+        _curData[0].Waves[_wave.value].Groups.Add(new GroupData(new List<EnemyData>() { new EnemyData() }, $"Group {_group.options.Count + 1}"));
 
         _group.AddOptions(new List<string>() { $"Group {_group.options.Count + 1}" });
         _group.RefreshShownValue();
@@ -479,7 +480,7 @@ public class LevelEditor_Handler : MonoBehaviour
 
         CheckEnemyIcon();
 
-        LoadEnemy(false);
+        LoadEnemy(true);
     }
 
     // Load Enemy
@@ -516,11 +517,18 @@ public class LevelEditor_Handler : MonoBehaviour
 
     public void ChangeEnemyType()
     {
-        DebugLog($"Change {_enemy.options[_enemy.value].text}'s type to {_eType.options[_eType.value].text}!");
+        if ( _enemy.options.Count > 1)
+        {
+            var newType = _eType.options[_eType.value].text;
 
-        _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type = _eType.options[_eType.value].text;
+            DebugLog($"Change {_enemy.options[_enemy.value].text}'s type to {newType}!");
 
-        MatcheEnemyDataList();
+            _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type = newType;
+            _enemy.options[_enemy.value].text = $"{_enemy.value + 1}. {newType}"; 
+            _enemy.RefreshShownValue();
+
+            MatcheEnemyDataList();
+        }
     }
 
     public void LoadEnemy(bool reset)
@@ -533,6 +541,8 @@ public class LevelEditor_Handler : MonoBehaviour
             for (int i = 0; i < _curData[0].Waves[_wave.value].Groups[_group.value].Enemies.Count; i++)
                 _enemyTempList.Add($"{i + 1}. {_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[i].Type}");
             _enemy.AddOptions(_enemyTempList);
+
+            MatcheEnemyDataList();
         }
 
         _eType.value = _enemySO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type.ToString());
@@ -546,6 +556,22 @@ public class LevelEditor_Handler : MonoBehaviour
     private void MatcheEnemyDataList()
     {
 
+        /*        if (_curData[0].Waves[_wave.value].Groups[_group.value].Enemies.Count > _eList.transform.childCount)
+                {
+                    for (int i = 0; i < _curData[0].Waves[_wave.value].Groups[_group.value].Enemies.Count - _eList.transform.childCount; i++)
+                    {
+                        Instantiate(_anEnemyData);
+                        _anEnemyData.transform.parent = _eList.transform;
+                    }
+                }*/
+
+        /*        foreach (GameObject item in _eList.transform)
+                {
+                    item.transform.Find("No.").GetComponent<Text>().text = (_enemy.value + 1).ToString();
+                    item.transform.Find("Enemy").GetComponent<Text>().text = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type;
+                    item.transform.Find("Amount").GetComponent<Text>().text = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Amount.ToString();
+                    item.transform.Find("Interval").GetComponent<Text>().text = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].SpawnInterval.ToString();
+                }*/
     }
 
     private Tween _iconTween;
@@ -588,7 +614,7 @@ public class LevelEditor_Handler : MonoBehaviour
             _cachedValue = value;
     }
 
-    public void GetNewValue(string value, bool isInt)
+    public void GetNewValue(string value)
     {
         _isEditing = false;
 
@@ -596,10 +622,7 @@ public class LevelEditor_Handler : MonoBehaviour
         if (!string.IsNullOrEmpty(value) && float.TryParse(value, out float result))
         {
             CacheCurValue(value);
-            float _numValue = float.Parse(value);
-            if (isInt)
-                _numValue = (int)(_numValue);
-                
+            float _numValue = float.Parse(value);                
 
             //Is there no better way to do this? T-T
             if (selectedField == _gLoopAmount)
@@ -690,7 +713,7 @@ public class LevelEditor_Handler : MonoBehaviour
 
     public class GroupData //For Json
     {
-        public string Name { get; set; } = "Group 1";
+        public string Name { get; set; } = "GROUP 1";
         public List<EnemyData> Enemies { get; set; } = new List<EnemyData>();
         public string Path { get; set; } = "";
         public bool IsLoop { get; set; } = false;
@@ -700,7 +723,7 @@ public class LevelEditor_Handler : MonoBehaviour
 
         public GroupData() { } 
 
-        public GroupData(List<EnemyData> enemies, string name = "Group 1", string path = "", bool isLoop = false, int amount = 0, float delayBefore = 0f, float delayAfter = 0f)
+        public GroupData(List<EnemyData> enemies, string name = "GROUP 1", string path = "", bool isLoop = false, int amount = 0, float delayBefore = 0f, float delayAfter = 0f)
         {
             Name = name;
             Enemies = enemies;
@@ -714,11 +737,11 @@ public class LevelEditor_Handler : MonoBehaviour
 
     public class EnemyData //For Json
     {
-        public string Type { get; set; } = "Grounded";
+        public string Type { get; set; } = "NORMAL";
         public int Amount { get; set; } = 1;
         public float SpawnInterval { get; set; } = 0f;
 
-        public EnemyData(string type = "Grounded", int amount = 1, float spawnInterval = 0f)
+        public EnemyData(string type = "NORMAL", int amount = 1, float spawnInterval = 0f)
         {
             Type = type;
             Amount = amount;
