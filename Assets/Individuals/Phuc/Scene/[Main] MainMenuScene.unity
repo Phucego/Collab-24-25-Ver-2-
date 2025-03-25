@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.58348167, g: 0.65330434, b: 0.8301887, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 2bd8959f5fbd3644aa33af1a155fc147, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: cc421da483ed06c49933077a621bff25, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.09441164, g: 0.16731006, b: 0.36686364, a: 1}
+  m_IndirectSpecularColor: {r: 0.08996529, g: 0.073134586, b: 0.14581041, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2778,7 +2778,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05545f2305a1bfc439aa39f528633152, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backgroundAmbienceTracks: []
+  backgroundAmbienceTracks:
+  - {fileID: 8300000, guid: daf34605e4925714cb045ccf60a6137f, type: 3}
   soundEffects:
   - {fileID: 8300000, guid: 1f2813b3c1a72c74fa212445c2911d72, type: 3}
   - {fileID: 8300000, guid: 7f47c6d75ead3114ca22cc77a8ee370f, type: 3}
