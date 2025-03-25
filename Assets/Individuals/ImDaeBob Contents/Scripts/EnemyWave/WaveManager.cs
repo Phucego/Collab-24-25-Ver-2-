@@ -6,10 +6,10 @@ public class WaveManager : MonoBehaviour
 {
     [Header("Enemy Data:")]
     [SerializeField] GameObject _enemyPrefab;
-    [SerializeField] BaseEnemySO[] _typeList;
 
     void Update()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.Keypad1))
             SpawnEnemy("Tut_Path1", 0);
         else if (Input.GetKeyDown(KeyCode.Keypad2))
@@ -22,6 +22,7 @@ public class WaveManager : MonoBehaviour
             SpawnEnemy("Tut_Path2", 1);
         else if (Input.GetKeyDown(KeyCode.Keypad6))
             SpawnEnemy("Tut_Path2", 2);
+        */
     }
 
     private void SpawnEnemy(string path, int type)
@@ -29,7 +30,6 @@ public class WaveManager : MonoBehaviour
         GameObject anEnemy = Instantiate(_enemyPrefab);
 
         EnemyBehavior enemyBehavior = anEnemy.GetComponent<EnemyBehavior>();
-        enemyBehavior.data = _typeList[type];
         enemyBehavior.SetStats();
         enemyBehavior.SetPath(path);
         Capture(anEnemy);

@@ -15,17 +15,17 @@ public class LevelEditor_Handler : MonoBehaviour
 {
     //---------------------------------------------------------------- < VARIABLES > ----------------------------------------------------------------//
     // [ Json ] //
-    [Header("Toggle for Testing Mode (Editor Only)")]
-    [SerializeField] bool _jsonReadInEditor = true;
     private string _jsonDirectory;
     private string _pathDirectory;
-    private string _enemtySODirectory;
+    private string _enemySODirectory;
+    private string _bossSODirectory;
 
     // [ Data Process ] //
     private List<string> _jsonFiles = new List<string>();
     private LevelData _curlevel = new LevelData();
     private List<string> _paths = new List<string>();
     private List<string> _enemySO = new List<string>();
+    private List<string> _bossSO = new List<string>();
 
     private List<LevelData> _curData = new List<LevelData>(); // Just store 1 item but needed to serialize
 
@@ -77,12 +77,10 @@ public class LevelEditor_Handler : MonoBehaviour
         this.gameObject.GetComponent<CanvasGroup>().alpha = 1;
 
         _pathDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Paths");
-        _enemtySODirectory = Path.Combine(Application.dataPath, "Data/Enemies/Types");
+        _enemySODirectory = Path.Combine(Application.dataPath, "Data/Enemies/Types");
+        _bossSODirectory = Path.Combine(Application.dataPath, "Data/Enemies/Bosses");
         #if UNITY_EDITOR
-            if (_jsonReadInEditor)
-                _jsonDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Levels"); // Editors
-            else
-                _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData"); // Final Build
+             _jsonDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Levels"); // Editors
         #else
             _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData"); // Works in Final Build
         #endif
@@ -143,9 +141,9 @@ public class LevelEditor_Handler : MonoBehaviour
 
         _eType.ClearOptions();
         _enemySO.Clear();
-        if (Directory.Exists(_enemtySODirectory))
+        if (Directory.Exists(_enemySODirectory))
         {
-            string[] files = Directory.GetFiles(_enemtySODirectory, "*.asset"); // Get all JSON files
+            string[] files = Directory.GetFiles(_enemySODirectory, "*.asset"); // Get all JSON files
 
             foreach (string f in files)
             {
@@ -154,6 +152,18 @@ public class LevelEditor_Handler : MonoBehaviour
             }
         }
         _eType.AddOptions(_enemySO);
+
+        _bossSO.Clear();
+        if (Directory.Exists(_bossSODirectory))
+        {
+            string[] files = Directory.GetFiles(_bossSODirectory, "*.asset"); // Get all JSON files
+
+            foreach (string f in files)
+            {
+                string fileName = Path.GetFileName(f);
+                _bossSO.Add(fileName.ToUpper().Replace(".ASSET", ""));
+            }
+        }
 
         _level.ClearOptions();
         _jsonFiles.Clear();
@@ -171,7 +181,8 @@ public class LevelEditor_Handler : MonoBehaviour
         }
         _level.AddOptions(_jsonFiles);
 
-        LoadLevel();
+        if (_jsonFiles.Count > 0)
+            LoadLevel();
     }
 
     // Level Hanlders
@@ -372,6 +383,7 @@ public class LevelEditor_Handler : MonoBehaviour
                 _wave.options[_wave.value].text = $"<color=red>Wave {_wave.value + 1}</color>";
             _wave.RefreshShownValue();
 
+            AddBossTyping(isBoss);
             CheckEnemyIcon();
         }
     }
@@ -379,10 +391,9 @@ public class LevelEditor_Handler : MonoBehaviour
     public void LoadWave()
     {
         //Load Wave
-        if (_curData[0].Waves[_wave.value].IsBossWave)
-            _isBoss.isOn = true;
-        else
-            _isBoss.isOn = false;
+       _isBoss.isOn = _curData[0].Waves[_wave.value].IsBossWave;
+        AddBossTyping(_isBoss.isOn);
+
         CheckEnemyIcon();
 
         //Load Group
@@ -517,11 +528,9 @@ public class LevelEditor_Handler : MonoBehaviour
 
     public void ChangeEnemyType()
     {
-        if ( _enemy.options.Count > 1)
+        if ( _enemy.options.Count >= 1)
         {
             var newType = _eType.options[_eType.value].text;
-
-            DebugLog($"Change {_enemy.options[_enemy.value].text}'s type to {newType}!");
 
             _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type = newType;
             _enemy.options[_enemy.value].text = $"{_enemy.value + 1}. {newType}"; 
@@ -545,7 +554,11 @@ public class LevelEditor_Handler : MonoBehaviour
             MatcheEnemyDataList();
         }
 
-        _eType.value = _enemySO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type.ToString());
+        int _typingIndex = _enemySO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type.ToString());
+        if (_typingIndex <= -1)
+            _eType.value = _enemySO.Count + _bossSO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type.ToString());
+        else
+            _eType.value = _typingIndex;
         _eType.RefreshShownValue();
 
         _eAmount.text = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Amount.ToString();
@@ -558,15 +571,44 @@ public class LevelEditor_Handler : MonoBehaviour
         for (int i = 0; i < _eList.childCount; i++)
             Destroy(_eList.GetChild(i).gameObject);
 
-        for (int i = 0; i < _curData[0].Waves[_wave.value].Groups[_group.value].Enemies.Count; i++)
+        var _enemies = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies;
+
+        for (int i = 0; i < _enemies.Count; i++)
         {
-            GameObject _data = Instantiate(_anEnemyData);
-            _data.transform.SetParent(_eList);
-            _data.transform.Find("No.").GetComponent<TMP_Text>().text = (i + 1).ToString();
-            _data.transform.Find("Enemy").GetComponent<TMP_Text>().text = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[i].Type;
-            _data.transform.Find("Amount").GetComponent<TMP_Text>().text = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[i].Amount.ToString();
-            _data.transform.Find("Interval").GetComponent<TMP_Text>().text = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[i].SpawnInterval.ToString();
+            EnemyData e = _enemies[i];
+
+            GameObject _data = Instantiate(_anEnemyData, _eList);
+            TMP_Text _number = _data.transform.Find("No.").GetComponent<TMP_Text>();
+            TMP_Text _typing = _data.transform.Find("Enemy").GetComponent<TMP_Text>();
+            TMP_Text _amount = _data.transform.Find("Amount").GetComponent<TMP_Text>();
+            TMP_Text _interval = _data.transform.Find("Interval").GetComponent<TMP_Text>();
+
+            _number.text = (i + 1).ToString();
+            _typing.text = e.Type;
+            _amount.text = e.Amount.ToString();
+            _interval.text = e.SpawnInterval.ToString();
+
+            Color _color = _bossSO.Contains(e.Type) ? Color.red : Color.white;
+            _number.color = _color;
+            _typing.color = _color;
+            _amount.color = _color;
+            _interval.color = _color;
         }
+    }
+
+    private void AddBossTyping(bool isBoss)
+    {
+        _eType.ClearOptions();
+        _eType.AddOptions(_enemySO);
+        if (isBoss)
+            _eType.AddOptions(_bossSO);
+
+        int i = _enemySO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type.ToString());
+        if (i <= -1)
+            _eType.value = _enemySO.Count + _bossSO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type.ToString());
+        else
+            _eType.value = i;
+        _eType.RefreshShownValue();
     }
 
     private Tween _iconTween;

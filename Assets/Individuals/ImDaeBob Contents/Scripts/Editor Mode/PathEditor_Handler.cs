@@ -16,7 +16,6 @@ public class PathEditor_Handler : MonoBehaviour
 {
     //---------------------------------------------------------------- < VARIABLES > ----------------------------------------------------------------//
     // [ Json ] //
-    [Header("Toggle for Testing Mode (Editor Only)")]
     [SerializeField] bool _jsonReadInEditor = true;
     private string _jsonDirectory;
 
@@ -89,10 +88,7 @@ public class PathEditor_Handler : MonoBehaviour
         this.gameObject.GetComponent<CanvasGroup>().alpha = 1;
 
         #if UNITY_EDITOR
-            if (_jsonReadInEditor)
                 _jsonDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Paths"); // Editors
-            else
-                _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData"); // Final Build
         #else
             _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData"); // Works in Final Build
         #endif
@@ -317,7 +313,8 @@ public class PathEditor_Handler : MonoBehaviour
         //Add all found path.json files to dropdown
         _path.AddOptions(new List<string>(_jsonFiles));
 
-        LoadPath();
+        if (_jsonFiles.Count > 0)
+            LoadPath();
     }
 
     public void LoadPath()

@@ -104,7 +104,10 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
             _bar.setHealth(_health, data.maxHealth);
         else
             Death();
+    }
 
+    void FixedUpdate()
+    {
         // [Movement]
         if (_isMovable)
         {
