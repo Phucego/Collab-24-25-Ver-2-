@@ -478,17 +478,49 @@ public class LevelEditor_Handler : MonoBehaviour
         _gDelayAfterSpawn.text = _curData[0].Waves[_wave.value].Groups[_group.value].DelayAfter.ToString();
 
         CheckEnemyIcon();
+
+        LoadEnemy(false);
     }
 
     // Load Enemy
     public void AddEnemy()
     {
+        DebugLog($"Added new Enemy");
 
+        _curData[0].Waves[_wave.value].Groups[_group.value].Enemies.Add(new EnemyData());
+
+        _enemy.AddOptions(new List<string>() { $"{_enemy.options.Count + 1}. {_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.options.Count].Type}" });
+        _enemy.RefreshShownValue();
+
+        MatcheEnemyDataList();
     }
 
     public void RemoveLastEnemy()
     {
+        if (_enemy.options.Count > 1)
+        {
+            DebugLog($"Remove last enemy");
 
+            _curData[0].Waves[_wave.value].Groups[_group.value].Enemies.RemoveAt(_enemy.options.Count - 1);
+            _enemy.options.RemoveAt(_enemy.options.Count - 1);
+            _enemy.RefreshShownValue();
+
+            if (_enemy.value >= _enemy.options.Count - 1)
+                _enemy.value = _enemy.options.Count - 1;
+
+            MatcheEnemyDataList();
+        }
+        else
+            DebugLog("There is not enough enemy to initiate removal.");
+    }
+
+    public void ChangeEnemyType()
+    {
+        DebugLog($"Change {_enemy.options[_enemy.value].text}'s type to {_eType.options[_eType.value].text}!");
+
+        _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type = _eType.options[_eType.value].text;
+
+        MatcheEnemyDataList();
     }
 
     public void LoadEnemy(bool reset)
@@ -497,11 +529,23 @@ public class LevelEditor_Handler : MonoBehaviour
         {
             _enemy.ClearOptions();
 
-            List<string> _enemyList = new List<string>();
-            for (int i = 0; i < _curData[0].Waves[_wave.value].Groups[_group.value].; i++)
-                _enemyList.Add(_curData[0].Waves[_wave.value].Groups[i].Name);
-            _group.AddOptions(_enemyList);
+            List<string> _enemyTempList = new List<string>();
+            for (int i = 0; i < _curData[0].Waves[_wave.value].Groups[_group.value].Enemies.Count; i++)
+                _enemyTempList.Add($"{i + 1}. {_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[i].Type}");
+            _enemy.AddOptions(_enemyTempList);
         }
+
+        _eType.value = _enemySO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type.ToString());
+        _eType.RefreshShownValue();
+
+        _eAmount.text = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Amount.ToString();
+
+        _eInterval.text = _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].SpawnInterval.ToString();
+    }
+
+    private void MatcheEnemyDataList()
+    {
+
     }
 
     private Tween _iconTween;
@@ -544,7 +588,7 @@ public class LevelEditor_Handler : MonoBehaviour
             _cachedValue = value;
     }
 
-    public void GetNewValue(string value)
+    public void GetNewValue(string value, bool isInt)
     {
         _isEditing = false;
 
@@ -553,6 +597,9 @@ public class LevelEditor_Handler : MonoBehaviour
         {
             CacheCurValue(value);
             float _numValue = float.Parse(value);
+            if (isInt)
+                _numValue = (int)(_numValue);
+                
 
             //Is there no better way to do this? T-T
             if (selectedField == _gLoopAmount)
@@ -569,6 +616,20 @@ public class LevelEditor_Handler : MonoBehaviour
             {
                 _iField = 2;
                 _curData[0].Waves[_wave.value].Groups[_group.value].DelayAfter = _numValue;
+            }
+            else if (selectedField == _eAmount)
+            {
+                _iField = 2;
+                _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Amount = (int)(_numValue);
+
+                MatcheEnemyDataList();
+            }
+            else if (selectedField == _eInterval)
+            {
+                _iField = 2;
+                _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].SpawnInterval = _numValue;
+
+                MatcheEnemyDataList();
             }
 
             return;
