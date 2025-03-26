@@ -77,8 +77,8 @@ public class LevelEditor_Handler : MonoBehaviour
         this.gameObject.GetComponent<CanvasGroup>().alpha = 1;
 
         _pathDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Paths");
-        _enemySODirectory = Path.Combine(Application.dataPath, "Data/Enemies/Types");
-        _bossSODirectory = Path.Combine(Application.dataPath, "Data/Enemies/Bosses");
+        _enemySODirectory = Path.Combine(Application.dataPath, "Resources/EnemySO");
+        _bossSODirectory = Path.Combine(Application.dataPath, "Resources/BossSO");
         #if UNITY_EDITOR
              _jsonDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Levels"); // Editors
         #else

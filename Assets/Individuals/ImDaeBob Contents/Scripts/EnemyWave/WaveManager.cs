@@ -4,8 +4,19 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
-    [Header("Enemy Data:")]
     [SerializeField] GameObject _enemyPrefab;
+    private List<BaseEnemySO> _enemyTypes;
+
+    [Header("Level Data:")]
+    [SerializeField] string _selectedLevel;
+    private List<string> _lvList;
+
+    void Awake()
+    {
+        _enemyTypes = new List<BaseEnemySO>(Resources.LoadAll<BaseEnemySO>("EnemySO"));
+        _enemyTypes.AddRange(Resources.LoadAll<BaseEnemySO>("BossSO"));
+    }
+
 
     void Update()
     {
