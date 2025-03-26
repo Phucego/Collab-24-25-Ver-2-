@@ -30,7 +30,7 @@ public class BalistaController : TowerController
         
         AudioManager.Instance.PlaySoundEffect("Ballista_SFX");
         lockedIn = false;
-        GameObject Projectile = GetPooledObject();
+        GameObject Projectile = Pooling.Spawn("BallistaArrow", PrefabProjectile[0], "_Projectiles");
         Projectile.transform.position = AimPoint.transform.position;
         Projectile.transform.rotation = AimPoint.transform.rotation;
         if (Projectile.GetComponent<HitscanController>() != null)
@@ -39,7 +39,7 @@ public class BalistaController : TowerController
         }
         
         Projectile.SetActive(true);
-
+        SetStat(Projectile);
     }
 
     protected override IEnumerator LOSCheck()

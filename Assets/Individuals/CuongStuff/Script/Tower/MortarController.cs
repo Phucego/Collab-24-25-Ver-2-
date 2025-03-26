@@ -11,6 +11,7 @@ public class MortarController : TowerController
         Projectile.transform.position = AimPoint.transform.position;
         Projectile.transform.rotation = new Quaternion(0, 0, 0, 0);
         Projectile.GetComponent<MortarProjectile>().SetPositionLerp(AimPoint.transform.position, TargetPos);
+        SetStat(Projectile);
 
         GameObject Particle = ParticlesManager.Instance.SpawnParticles(4, "MortarMuzzle");
         Particle.transform.position = AimPoint.transform.position;
@@ -18,8 +19,7 @@ public class MortarController : TowerController
         Particle.SetActive(true);
 
         AudioManager.Instance.PlaySoundEffect("Mortar_SFX");
-        
-        
+               
         yield return null;
     }
 

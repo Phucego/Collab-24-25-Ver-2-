@@ -14,6 +14,7 @@ public class BallistaProjectileController : ProjectileController
         rb = GetComponent<Rigidbody>();
         trailRenderer = GetComponent<TrailRenderer>();
         meshRenderer = GetComponent<MeshRenderer>();
+        trailRenderer.Clear();
     }
 
     private void FixedUpdate()
@@ -37,6 +38,7 @@ public class BallistaProjectileController : ProjectileController
         meshRenderer.enabled = false;
         rb.isKinematic = true;
         yield return new WaitForSeconds(1);
+        Pooling.Despawn("BallistaArrow", gameObject);
         transform.gameObject.SetActive(false);
     }
 
@@ -48,6 +50,10 @@ public class BallistaProjectileController : ProjectileController
             {
                 ApplyDamage(collision.gameObject);
             }
+            GameObject Particle = ParticlesManager.Instance.SpawnParticles(0, "BallistaExplosion");
+            Particle.transform.position = transform.position;
+            Particle.SetActive(true);
+ 
             StartCoroutine(DisableObject());   
         }
     }

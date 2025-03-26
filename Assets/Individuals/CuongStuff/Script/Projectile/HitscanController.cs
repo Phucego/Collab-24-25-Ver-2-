@@ -99,6 +99,7 @@ public class HitscanController : MonoBehaviour, I_TowerProjectile
             yield return new WaitForFixedUpdate();
         }
 
+        //Pooling.Despawn("WizardBeam", gameObject);
         gameObject.SetActive(false);
     }
 
