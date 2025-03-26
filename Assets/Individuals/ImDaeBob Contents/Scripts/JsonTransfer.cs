@@ -13,8 +13,8 @@ public class BuildProcessor : IPreprocessBuildWithReport
     private readonly List<string> sourceFolders = new List<string>
     {
         "Assets/Data/Enemies/Levels",
-        "Assets/Data/Enemies/Waves",
-        "Assets/Data/Enemies/Bosses"
+        "Assets/Resources/EnemySO",
+        "Assets/Resources/BossSO"
     };
 
     private readonly string targetRootPath = Path.Combine(Application.streamingAssetsPath, "JsonData");

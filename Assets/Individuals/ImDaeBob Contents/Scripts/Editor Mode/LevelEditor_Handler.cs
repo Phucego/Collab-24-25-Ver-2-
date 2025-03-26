@@ -9,7 +9,6 @@ using TMPro;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 using Unity.VisualScripting;
-using System.Xml.Schema;
 
 public class LevelEditor_Handler : MonoBehaviour
 {
@@ -467,6 +466,7 @@ public class LevelEditor_Handler : MonoBehaviour
     {
         if (resest)
         {
+            _group.value = 0;
             _group.ClearOptions();
 
             List<string> _groupList = new List<string>();
@@ -544,6 +544,7 @@ public class LevelEditor_Handler : MonoBehaviour
     {
         if (reset)
         {
+            _enemy.value = 0;
             _enemy.ClearOptions();
 
             List<string> _enemyTempList = new List<string>();
@@ -602,6 +603,7 @@ public class LevelEditor_Handler : MonoBehaviour
         _eType.AddOptions(_enemySO);
         if (isBoss)
             _eType.AddOptions(_bossSO);
+
 
         int i = _enemySO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type.ToString());
         if (i <= -1)

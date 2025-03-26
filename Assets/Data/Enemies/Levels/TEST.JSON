@@ -1,0 +1,81 @@
+[
+  {
+    "Waves": [
+      {
+        "Groups": [
+          {
+            "Name": "GROUP 1",
+            "Enemies": [
+              {
+                "Type": "NORMAL",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              },
+              {
+                "Type": "NORMAL",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              },
+              {
+                "Type": "NORMAL",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "DelayBefore": 0.0,
+            "DelayAfter": 0.0
+          },
+          {
+            "Name": "Group 2",
+            "Enemies": [
+              {
+                "Type": "NORMAL",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              },
+              {
+                "Type": "NORMAL",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "DelayBefore": 0.0,
+            "DelayAfter": 0.0
+          }
+        ],
+        "IsBossWave": false
+      },
+      {
+        "Groups": [
+          {
+            "Name": "GROUP 1",
+            "Enemies": [
+              {
+                "Type": "NORMAL",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              },
+              {
+                "Type": "NORMAL",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "DelayBefore": 0.0,
+            "DelayAfter": 0.0
+          }
+        ],
+        "IsBossWave": false
+      }
+    ]
+  }
+]

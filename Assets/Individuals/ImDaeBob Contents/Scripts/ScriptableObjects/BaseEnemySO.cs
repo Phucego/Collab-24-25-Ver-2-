@@ -24,10 +24,16 @@ public class BaseEnemySO : ScriptableObject
     public string description;
     [Tooltip("Enemy Type")]
     public eType[] type;
-    public TargetTypeEnum[] targets;
 
+    [Header("")]
+    [Tooltip("Currency dropped after defeating the enemy")]
+    public int reward;
+
+    [Header("")]
     [Tooltip("Health the enemy spawns with")]
     public int maxHealth;
+
+    [Header("")]
     [Tooltip("How fast the enemy can run")]
     public float maxSpeed;
     [Tooltip("How fast can enemy start running to 'maxSpeed' and turn around corner!")]

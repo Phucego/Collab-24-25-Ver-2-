@@ -18,7 +18,7 @@ public class TowerController : MonoBehaviour
     [Header("Tower Stats")]
     [SerializeField] protected int Level = 0;
     [SerializeField] protected TowerTypeEnum TowerType;
-    [SerializeField] protected List<TargetTypeEnum> TargetType;
+    [SerializeField] protected List<eType> TargetType;
     [SerializeField] protected float Damage;
     [SerializeField] protected float Health;
     [SerializeField] protected float Radius;
@@ -188,14 +188,14 @@ public class TowerController : MonoBehaviour
             if (enemy != null)
             {
                 int point = 0;
-                TargetTypeEnum[] enemyType = enemy.GetComponent<I_GetType>().GetTargetType();
+                eType[] enemyType = enemy.GetComponent<I_GetType>().GetTargetType();
 
                 // Check if they have matching target type
-                foreach (TargetTypeEnum enemytype in enemyType)
+                foreach (eType enemytype in enemyType)
                 {
                     if (TargetType.Contains(enemytype))
                         point += 1;
-                    if (enemytype == TargetTypeEnum.Invisible) // If target has invisible and the tower has hidden detection
+                    if (enemytype == eType.Invisible) // If target has invisible and the tower has hidden detection
                         point -= 1;
                 }
                     
@@ -376,7 +376,7 @@ public class TowerController : MonoBehaviour
 
 
     // Change target types
-    public void ConfigTargetType(TargetTypeEnum type, bool action)
+    public void ConfigTargetType(eType type, bool action)
     {
         if (action)
             TargetType.Add(type);

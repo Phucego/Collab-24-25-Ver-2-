@@ -39,6 +39,11 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         _rb.useGravity = false;
     }
 
+    public void Spawn()
+    {
+
+    }
+
     public void SetStats()
     {
         _health = data.maxHealth;
@@ -188,7 +193,8 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
 
     public void Death()
     {
-        CurrencyManager.Instance.currentCurrency += coinDrop;
+        CurrencyManager.Instance.currentCurrency += data.reward;
+
         Destroy(gameObject);
     }
 
@@ -204,9 +210,9 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
 
     }
 
-    public TargetTypeEnum[] GetTargetType()
+    public eType[] GetTargetType()
     {
-        return data.targets;
+        return data.type;
     }
 
     IEnumerator StartEnemyMovement()

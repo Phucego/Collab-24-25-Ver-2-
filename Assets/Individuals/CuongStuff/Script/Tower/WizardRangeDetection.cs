@@ -16,7 +16,7 @@ public class WizardRangeDetection : TowerRangeDetection
         else if (target.gameObject.CompareTag("Tower") && !_TowerList.Contains(target.gameObject))
         {
             _TowerList.Add(target.gameObject);
-            target.gameObject.GetComponent<TowerController>().ConfigTargetType(TargetTypeEnum.Invisible, true);
+            target.gameObject.GetComponent<TowerController>().ConfigTargetType(eType.Invisible, true);
         }
 
     }
@@ -38,7 +38,7 @@ public class WizardRangeDetection : TowerRangeDetection
         else if (target.gameObject.CompareTag("Tower") && !target.isTrigger)
         {
             _TowerList.Remove(target.gameObject);
-            target.gameObject.GetComponent<TowerController>().ConfigTargetType(TargetTypeEnum.Invisible, false);
+            target.gameObject.GetComponent<TowerController>().ConfigTargetType(eType.Invisible, false);
         }
     }
 
@@ -47,7 +47,7 @@ public class WizardRangeDetection : TowerRangeDetection
         foreach (GameObject obj in _TowerList)
         {
             if (obj != null)
-                obj.GetComponent<TowerController>().ConfigTargetType(TargetTypeEnum.Invisible, false);
+                obj.GetComponent<TowerController>().ConfigTargetType(eType.Invisible, false);
 
         }
     }
