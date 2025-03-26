@@ -4,25 +4,27 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using DG.Tweening; 
 
 public class UIManager : MonoBehaviour
 {
     [Header("Game Objects")]
     public GameObject coinCounterParent, waveProgressParent, mainUI;
     public GameObject pauseMenu, towerSelectMenu, confirmationMenu, confirmationMenu_MainMenu;
-    
+
     [Header("Main UI Elements")] 
     public Button toggleTowerSelectButton, resumeButton, quitButton, mainMenuButton;
-    
+
     [Header("Confirmation UI Elements")] 
     public Button Quit_Yes, Quit_No, MainMenu_No, MainMenu_Yes;
 
     [Header("Choose Options UI Elements")] 
     public Button chooseOptions, speedUpButton, pauseButton, muteButton;
     public GameObject optionsContainer;
-    
+
     [Header("Other References")]
     public TextMeshProUGUI coinCounterText;
+    public TextMeshProUGUI lightningNotificationText; // Lightning Strike UI Notification
     public TutorialGuidance dialogueManager;
     public SceneField mainMenuScene;
 
@@ -50,25 +52,35 @@ public class UIManager : MonoBehaviour
         CurrencyManager.Instance.InitializeCurrency(0);
         UpdateCoinCounterUI();
 
+        // Initialize lightning notification
+        lightningNotificationText.alpha = 0f;
+
         // Button Listeners
         
-        //MAIN UI
+        // MAIN UI
         toggleTowerSelectButton.onClick.AddListener(ToggleTowerSelectPanel);
         resumeButton.onClick.AddListener(() => SetPauseState(false));
         quitButton.onClick.AddListener(() => ToggleConfirmationMenu(true));
         mainMenuButton.onClick.AddListener(() => ToggleConfirmationMenu(true, true));
 
-        //CONFIRMATION UI
+        // CONFIRMATION UI
         Quit_Yes.onClick.AddListener(Application.Quit);
         Quit_No.onClick.AddListener(() => ToggleConfirmationMenu(false));
         MainMenu_Yes.onClick.AddListener(() => SceneManager.LoadScene(mainMenuScene));
         MainMenu_No.onClick.AddListener(() => ToggleConfirmationMenu(false, true));
 
-        //CHOOSE OPTIONS UI
+        // CHOOSE OPTIONS UI
         chooseOptions.onClick.AddListener(ToggleChooseOptions);
         speedUpButton.onClick.AddListener(ToggleSpeed);
         pauseButton.onClick.AddListener(() => SetPauseState(true));
         muteButton.onClick.AddListener(ToggleMute);
+
+        // Register UIManager to listen for lightning strike events
+        LightningStrikeEvent lightningEvent = FindObjectOfType<LightningStrikeEvent>();
+        if (lightningEvent != null)
+        {
+            lightningEvent.OnLightningStrike.AddListener(UpdateLightningNotification);
+        }
     }
 
     private void Update() 
@@ -81,12 +93,10 @@ public class UIManager : MonoBehaviour
         {
             anim.SetBool("onNotifyCancel", true);
         }
-        
-        else if (BuildingManager.Instance.pendingObj == null)
+        else
         {
             anim.SetBool("onNotifyCancel", false);
         }
-    
     }
 
     private void UpdateCoinCounterUI()
@@ -151,8 +161,6 @@ public class UIManager : MonoBehaviour
     private void ToggleMute()
     {
         isMuteButtonPressed = !isMuteButtonPressed;
-
-
         AudioManager.Instance.SetAudioPaused(isMuteButtonPressed);
     }
 
@@ -162,14 +170,7 @@ public class UIManager : MonoBehaviour
         anim.SetBool("isChooseOptionsOpened", isRotated);
         StartCoroutine(RotateChooseOptions(isRotated ? -93 : 0));
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
-        if (isRotated)
-        {
-            optionsContainer.SetActive(true);
-        }
-        else
-        {
-            optionsContainer.SetActive(false);   
-        }
+        optionsContainer.SetActive(isRotated);
     }
 
     private IEnumerator RotateChooseOptions(float targetZRotation)
@@ -192,8 +193,38 @@ public class UIManager : MonoBehaviour
     private void ToggleSpeed()
     {
         isSpeedUp = !isSpeedUp;
-        AudioManager.Instance.PlaySoundEffect("SpeedUp_SFX");
         anim.SetTrigger("isSpeedChange");
         Time.timeScale = isSpeedUp ? 4f : 1f;
+        if (isSpeedUp)
+        {
+            AudioManager.Instance.PlaySoundEffect("SpeedUp_SFX");
+        }
+        else
+        {
+            AudioManager.Instance.PlaySoundEffect("SpeedDown_SFX");
+        }
     }
+
+    private void UpdateLightningNotification(string placeholderName, int pathID)
+    {
+        // Only display the path number
+        string message = pathID >= 0 ? $" Lightning struck at: Path {pathID}!" : " Lightning struck!";
+
+        lightningNotificationText.text = message;
+    
+        // Fade in instantly
+        lightningNotificationText.DOFade(1f, 0.3f).OnComplete(() =>
+        {
+            // Hold for 2 seconds, then fade out
+            StartCoroutine(FadeOutLightningNotification());
+        });
+    }
+
+
+    private IEnumerator FadeOutLightningNotification()
+    {
+        yield return new WaitForSeconds(2f);
+        lightningNotificationText.DOFade(0f, 0.5f); // Smooth fade out
+    }
+
 }

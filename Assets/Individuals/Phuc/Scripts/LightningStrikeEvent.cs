@@ -1,40 +1,47 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class LightningStrikeEvent : MonoBehaviour
 {
     [Header("Lightning Strike Settings")]
-    [SerializeField] private SceneField targetScene; // Specify the scene where the event occurs
+    [SerializeField] private SceneField targetScene; 
     [SerializeField] private GameObject lightningEffectPrefab;
     [SerializeField] private float strikeInterval = 10f;
     [SerializeField] private float effectDuration = 3f;
 
     public List<GameObject> placeableSpots = new List<GameObject>();
 
-    private void Start()
-    {
-        // Check if the current scene matches the target scene
-        if (SceneManager.GetActiveScene().name != targetScene)
-        {
-            Debug.Log("Lightning Strike Event is disabled in this scene.");
-            return;
-        }
+    [Header("Events")]
+    public UnityEvent<string, int> OnLightningStrike; // Sends both placeholder name & path ID
 
-        // Find all placeholders with the "Placeable" tag
+    private IEnumerator Start()
+    {
+        yield return new WaitForSeconds(1f); // Small delay to ensure everything initializes
+        if (SceneManager.GetActiveScene().name != targetScene) yield break;
+
         GameObject[] placeholders = GameObject.FindGameObjectsWithTag("Placeable");
         placeableSpots.AddRange(placeholders);
 
-        // Start the lightning strike coroutine
         StartCoroutine(LightningStrikeRoutine());
     }
+
 
     private IEnumerator LightningStrikeRoutine()
     {
         while (true)
         {
             yield return new WaitForSeconds(strikeInterval);
+
+            if (GameStatesManager.Instance.GetCurrentState() == GameStates.Pause || 
+                (DialogueDisplay.instance != null && DialogueDisplay.instance.isDialogueActive)) 
+            {
+                continue;
+            }
+
+
             TriggerLightningStrike();
         }
     }
@@ -43,20 +50,24 @@ public class LightningStrikeEvent : MonoBehaviour
     {
         if (placeableSpots.Count == 0) return;
 
-        // Pick a random placeholder
         GameObject targetSpot = placeableSpots[Random.Range(0, placeableSpots.Count)];
+
+        // Identify path ID
+        PlaceholderID pathInfo = targetSpot.GetComponent<PlaceholderID>();
+        int pathID = pathInfo != null ? pathInfo.placeholderID : -1; // Default to -1 if not found
 
         // Disable tower placement
         targetSpot.GetComponent<Collider>().enabled = false;
 
-        // Spawn lightning effect
-        GameObject lightningEffect = Instantiate(lightningEffectPrefab, targetSpot.transform.position + Vector3.up * 5f, Quaternion.identity);
+        // Spawn lightning effect with 90-degree X-axis rotation
+        GameObject lightningEffect = Instantiate(lightningEffectPrefab, targetSpot.transform.position + Vector3.up * 1.5f, Quaternion.Euler(-90f, 0f, 0f));
 
-            //ENABLE THIS LATER
-        //AudioManager.Instance.PlaySoundEffect("LightningStrike_SFX");
-        
+        // Play sound effect
+        AudioManager.Instance.PlaySoundEffect("LightningStrike_SFX");
 
-        // Re-enable placement after effectDuration
+        // Notify UI with placeholder & path ID
+        OnLightningStrike?.Invoke(targetSpot.name, pathID);
+
         StartCoroutine(ResetPlaceholder(targetSpot, lightningEffect));
     }
 
@@ -64,10 +75,7 @@ public class LightningStrikeEvent : MonoBehaviour
     {
         yield return new WaitForSeconds(effectDuration);
 
-        // Re-enable tower placement
         placeholder.GetComponent<Collider>().enabled = true;
-
-        // Destroy lightning effect
         Destroy(effect);
     }
 }

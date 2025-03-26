@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,12 +14,28 @@ public class DialogueDisplay : MonoBehaviour
     private Dialogue currentDialogue; // The currently active Dialogue ScriptableObject
     private DialogueTrigger currentTrigger; // The currently active DialogueTrigger
     private int currentLineIndex = 0;
-    private bool isDialogueActive = false;
+    public bool isDialogueActive = false;
 
     [Header("Player Interaction")]
     public GameObject dialogueUI; // Reference to the dialogue UI container
     public LayerMask interactableLayer; // Layer mask for interactable characters
     public float interactionRange = 2f; // Range within which the player can interact
+
+
+    public static DialogueDisplay instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
 
     void Start()
     {
