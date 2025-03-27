@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class MainMenuUI : MonoBehaviour
     [Header("Main Menu")]
     Animator anim;
 
+    public GameObject confirmationMenu;
     public GameObject levelSelectionCanvas;
     public GameObject mainMenuCanvas;
 
@@ -26,8 +28,9 @@ public class MainMenuUI : MonoBehaviour
     public Button Quit_No;
     public Button tutLevel;
 
-    [Header("Navigation Indicator")]
-    public RectTransform indicator;
+    [Header("Navigation Indicators")]
+    public RectTransform indicator; // Main menu indicator
+    public RectTransform confirmationIndicator; // Separate indicator for confirmation menu
     public float indicatorOffset = -3.4f;
 
     private int selectedIndex = 0;
@@ -52,8 +55,8 @@ public class MainMenuUI : MonoBehaviour
     public GameObject targetGate;
     private Vector3 closedPosition;
 
-
     public List<Button> menuButtons = new List<Button>();
+
     private void Awake()
     {
         Time.timeScale = 1f;
@@ -67,113 +70,55 @@ public class MainMenuUI : MonoBehaviour
 
         closedPosition = gate.transform.position;
 
-  
-        //TODO: Add buttons from the main menu
+        // Initialize main menu buttons
         menuButtons.Add(startButton);
         menuButtons.Add(settingsButton);
         menuButtons.Add(quitButton);
-        
-
 
         AssignButtonListeners();
         AssignHoverListeners();
-
         MoveIndicator(menuButtons[selectedIndex]);
+    }
+
+    private void Start()
+    {
+        Quit_Yes.onClick.AddListener(Application.Quit);
+        Quit_No.onClick.AddListener(() => ToggleConfirmationMenu(false));
     }
 
     private void Update()
     {
         HandleMenuNavigation();
-
-        if (indicator != null && menuButtons.Count > 0)
-        {
-            Vector3 targetPosition = new Vector3(indicator.position.x, menuButtons[selectedIndex].transform.position.y - indicatorOffset, indicator.position.z);
-            indicator.position = Vector3.Lerp(indicator.position, targetPosition, Time.deltaTime * 10f);
-        }
     }
 
-    public void OnLevelSelectionMenu()
+    private void ToggleConfirmationMenu(bool isActive, bool isMainMenu = false)
     {
-        menuButtons.Clear();        //clear the previous list
-
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
-        anim.SetBool("fromMenu", true);
-        levelSelectionCanvas.SetActive(true);
+        confirmationMenu.SetActive(isActive);
+        anim.SetBool(isMainMenu ? "isConfirmMainMenu" : "isConfirmationMenu", isActive);
 
-        StartCoroutine(MoveCamera(camTarget.position, camTarget.rotation));
-        StartCoroutine(OpenGate(true));
-
-        menuButtons.Add(backButton);
-        menuButtons.Add(tutLevel);
-    }
-
-    public void OnReturnToMainMenu()
-    {
         menuButtons.Clear();
 
-        anim.SetBool("fromMenu", false);
-        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
-        mainMenuCanvas.SetActive(true);
-        levelSelectionCanvas.SetActive(false);
-
-        StartCoroutine(MoveCamera(originalCamPos, originalCamRot));
-        StartCoroutine(OpenGate(false));
-
-        //TODO: Add buttons from the main menu
-        menuButtons.Add(startButton);
-        menuButtons.Add(settingsButton);
-        menuButtons.Add(quitButton);
-    }
-
-    IEnumerator MoveCamera(Vector3 targetPos, Quaternion targetRot)
-    {
-        float duration = 1f;
-        float elapsed = 0f;
-
-        Vector3 startPos = cam.transform.position;
-        Quaternion startRot = cam.transform.rotation;
-
-        while (elapsed < duration)
+        if (isActive)
         {
-            elapsed += Time.deltaTime;
-            float t = elapsed / duration;
-
-            cam.transform.position = Vector3.Lerp(startPos, targetPos, t);
-            cam.transform.rotation = Quaternion.Slerp(startRot, targetRot, t);
-
-            yield return null;
+            menuButtons.Add(Quit_Yes);
+            menuButtons.Add(Quit_No);
+            selectedIndex = 0; // Default to "Yes" button
+        }
+        else
+        {
+            menuButtons.Add(startButton);
+            menuButtons.Add(settingsButton);
+            menuButtons.Add(quitButton);
         }
 
-        cam.transform.position = targetPos;
-        cam.transform.rotation = targetRot;
+        MoveIndicator(menuButtons[selectedIndex]);
     }
-
     public void OnStartLevel()
     {
         levelSelectionCanvas.SetActive(false);
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         StartCoroutine(StartLevelTransition());
-    }
-
-    #region Confirmation Menu
-    private void OnConfirmQuit()
-    {
-        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
-        Debug.Log("Quit");
-        Application.Quit();
-    }
-
-    private void OnConfirmBack()
-    {
-        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
-        anim.SetBool("isConfirmationMenu", false);
-    }
-    #endregion
-
-    public void OnQuitGame()
-    {
-        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
-        anim.SetBool("isConfirmationMenu", true);
     }
 
     IEnumerator StartLevelTransition()
@@ -183,117 +128,37 @@ public class MainMenuUI : MonoBehaviour
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene(_tutorialScene);
     }
-
-    IEnumerator OpenGate(bool openGate)
-    {
-        Debug.Log(openGate);
-        float duration = 2.5f;
-        Vector3 targetPos = openGate ? targetGate.transform.position : closedPosition;
-        Vector3 startPos = gate.transform.position;
-
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / duration;
-
-            gate.transform.position = Vector3.Lerp(startPos, targetPos, t);
-
-            yield return null;
-        }
-
-        gate.transform.position = targetPos;
-    }
-
-    #region Button Indicator
-    private void AssignButtonListeners()
-    {
-        //MAIN MENU
-        startButton.onClick.AddListener(() => { MoveIndicator(startButton); OnLevelSelectionMenu(); });
-        settingsButton.onClick.AddListener(() => MoveIndicator(settingsButton));
-        quitButton.onClick.AddListener(() => { MoveIndicator(quitButton); OnQuitGame(); });
-
-        //LEVEL SELECTION
-        backButton.onClick.AddListener(() => { MoveIndicator(backButton); OnReturnToMainMenu(); }); 
-        tutLevel.onClick.AddListener(() => { MoveIndicator(tutLevel); OnStartLevel(); }); 
-    }
-
-    private void AssignHoverListeners()
-    {
-        foreach (var button in menuButtons)
-        {
-            if (button == null) continue;
-
-            EventTrigger trigger = button.GetComponent<EventTrigger>() ?? button.gameObject.AddComponent<EventTrigger>();
-            trigger.triggers.Clear();
-
-            EventTrigger.Entry entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
-            entry.callback.AddListener((data) => { OnButtonHover(button); });
-
-            trigger.triggers.Add(entry);
-        }
-    }
-
-    private void MoveIndicator(Button targetButton)
-    {
-        StopAllCoroutines(); // Stop any ongoing movement before starting a new one
-        StartCoroutine(SmoothMoveIndicator(targetButton));
-    }
-
-    private void OnButtonHover(Button hoveredButton)
-    {
-        // Reset all button colors before applying new hover effect
-        foreach (var button in menuButtons)
-        {
-            ResetButtonColor(button);
-        }
-
-        // Apply hover effect to the hovered button
-        selectedIndex = menuButtons.IndexOf(hoveredButton);
-        HighlightButton(hoveredButton);
-    }
-
     private void HandleMenuNavigation()
     {
         int previousIndex = selectedIndex;
 
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        if (confirmationMenu.activeSelf)
         {
-            selectedIndex = (selectedIndex - 1 + menuButtons.Count) % menuButtons.Count;
+            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                selectedIndex = Mathf.Max(0, selectedIndex - 1);
+            }
+            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                selectedIndex = Mathf.Min(menuButtons.Count - 1, selectedIndex + 1);
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        else
         {
-            selectedIndex = (selectedIndex + 1) % menuButtons.Count;
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                selectedIndex = (selectedIndex - 1 + menuButtons.Count) % menuButtons.Count;
+            }
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                selectedIndex = (selectedIndex + 1) % menuButtons.Count;
+            }
         }
 
         if (previousIndex != selectedIndex)
         {
             StartCoroutine(SmoothMoveIndicator(menuButtons[selectedIndex]));
             AudioManager.Instance.PlaySoundEffect("Hover_SFX");
-
-            // Reset previous button color and hover effect
-            if (menuButtons[previousIndex] != null)
-            {
-                ResetButtonColor(menuButtons[previousIndex]);
-
-                HoverAnim previousHover = menuButtons[previousIndex].GetComponent<HoverAnim>();
-                if (previousHover != null)
-                {
-                    previousHover.RemoveKeyboardSelection();
-                }
-            }
-
-            // Apply new button highlight
-            if (menuButtons[selectedIndex] != null)
-            {
-                HighlightButton(menuButtons[selectedIndex]);
-
-                HoverAnim newHover = menuButtons[selectedIndex].GetComponent<HoverAnim>();
-                if (newHover != null)
-                {
-                    newHover.ApplyKeyboardSelection();
-                }
-            }
         }
 
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
@@ -302,45 +167,57 @@ public class MainMenuUI : MonoBehaviour
         }
     }
 
-
-
-    // Smoothly moves the indicator to the selected button
     private IEnumerator SmoothMoveIndicator(Button targetButton)
     {
         float duration = 0.2f;
         float elapsed = 0f;
 
-        Vector3 startPos = indicator.position;
-        Vector3 targetPos = new Vector3(indicator.position.x, targetButton.transform.position.y - indicatorOffset, indicator.position.z);
+        RectTransform targetIndicator = confirmationMenu.activeSelf ? confirmationIndicator : indicator;
+
+        Vector3 startPos = targetIndicator.position;
+        Vector3 targetPos = new Vector3(
+            confirmationMenu.activeSelf ? targetButton.transform.position.x : targetIndicator.position.x,
+            targetButton.transform.position.y - indicatorOffset,
+            targetIndicator.position.z
+        );
 
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             float t = elapsed / duration;
-            indicator.position = Vector3.Lerp(startPos, targetPos, t);
+            targetIndicator.position = Vector3.Lerp(startPos, targetPos, t);
             yield return null;
         }
 
-        indicator.position = targetPos; // Ensure it reaches the final position
+        targetIndicator.position = targetPos;
     }
 
-    // Changes the button color to a highlighted state
-    private void HighlightButton(Button button)
+    private void MoveIndicator(Button button)
     {
-        ColorBlock colors = button.colors;
-        colors.normalColor = Color.white; 
-        button.colors = colors;
+        RectTransform targetIndicator = confirmationMenu.activeSelf ? confirmationIndicator : indicator;
+
+        targetIndicator.position = new Vector3(
+            confirmationMenu.activeSelf ? button.transform.position.x : targetIndicator.position.x,
+            button.transform.position.y - indicatorOffset,
+            targetIndicator.position.z
+        );
     }
 
-    // Resets the button color to default
-    private void ResetButtonColor(Button button)
+    private void AssignButtonListeners()
     {
-        ColorBlock colors = button.colors;
-        colors.normalColor = Color.gray; // Default color
-        button.colors = colors;
+        startButton.onClick.AddListener(OnStartLevel);
+        settingsButton.onClick.AddListener(() => Debug.Log("Open Settings"));
+        quitButton.onClick.AddListener(() => ToggleConfirmationMenu(true));
     }
 
-   
-    #endregion
-
+    private void AssignHoverListeners()
+    {
+        foreach (Button button in menuButtons)
+        {
+            EventTrigger trigger = button.gameObject.AddComponent<EventTrigger>();
+            EventTrigger.Entry entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+            entry.callback.AddListener((eventData) => MoveIndicator(button));
+            trigger.triggers.Add(entry);
+        }
+    }
 }

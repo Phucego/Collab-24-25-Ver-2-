@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.09445876, g: 0.16732967, b: 0.36685812, a: 1}
+  m_IndirectSpecularColor: {r: 0.09441164, g: 0.16731006, b: 0.36686364, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -25432,6 +25432,30 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: c6832556e14656f4aa9139f49f4fba1d, type: 3}
+    - target: {fileID: 1049552478530945501, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+      propertyPath: m_margin.x
+      value: -30.558472
+      objectReference: {fileID: 0}
+    - target: {fileID: 1049552478530945501, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 7a39610e9937e8c47a5263e64efcfdee, type: 2}
+    - target: {fileID: 1049552478530945501, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+      propertyPath: m_fontStyle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1049552478530945501, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 220090195982973356, guid: 7a39610e9937e8c47a5263e64efcfdee, type: 2}
+    - target: {fileID: 1049552478530945501, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 1049552478530945501, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1183632078082408198, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -25699,6 +25723,14 @@ PrefabInstance:
     - target: {fileID: 3952736807094252420, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4138171813830668247, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4194591847853872843, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4194591847853872843, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
       propertyPath: m_AnchorMax.y
