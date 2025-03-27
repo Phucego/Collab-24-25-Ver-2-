@@ -15,11 +15,17 @@ public class LightningStrikeEvent : MonoBehaviour
     public List<GameObject> placeableSpots = new List<GameObject>();
 
     [Header("Events")]
-    public UnityEvent<string, int> OnLightningStrike; // Sends both placeholder name & path ID
+    public UnityEvent<string, int> OnLightningStrike; // Sends placeholder name & path ID
 
-    private IEnumerator Start()
+    private void Start()
     {
-        yield return new WaitForSeconds(1f); // Small delay to ensure everything initializes
+        StartCoroutine(InitializeLightningStrike());
+    }
+
+    private IEnumerator InitializeLightningStrike()
+    {
+        yield return new WaitForSeconds(1f); // Small delay for scene initialization
+
         if (SceneManager.GetActiveScene().name != targetScene) yield break;
 
         GameObject[] placeholders = GameObject.FindGameObjectsWithTag("Placeable");
@@ -27,7 +33,6 @@ public class LightningStrikeEvent : MonoBehaviour
 
         StartCoroutine(LightningStrikeRoutine());
     }
-
 
     private IEnumerator LightningStrikeRoutine()
     {
@@ -40,7 +45,6 @@ public class LightningStrikeEvent : MonoBehaviour
             {
                 continue;
             }
-
 
             TriggerLightningStrike();
         }
@@ -59,13 +63,13 @@ public class LightningStrikeEvent : MonoBehaviour
         // Disable tower placement
         targetSpot.GetComponent<Collider>().enabled = false;
 
-        // Spawn lightning effect with 90-degree X-axis rotation
+        // Spawn lightning effect
         GameObject lightningEffect = Instantiate(lightningEffectPrefab, targetSpot.transform.position + Vector3.up * 1.5f, Quaternion.Euler(-90f, 0f, 0f));
 
         // Play sound effect
         AudioManager.Instance.PlaySoundEffect("LightningStrike_SFX");
 
-        // Notify UI with placeholder & path ID
+        // Notify UI
         OnLightningStrike?.Invoke(targetSpot.name, pathID);
 
         StartCoroutine(ResetPlaceholder(targetSpot, lightningEffect));
@@ -77,5 +81,22 @@ public class LightningStrikeEvent : MonoBehaviour
 
         placeholder.GetComponent<Collider>().enabled = true;
         Destroy(effect);
+    }
+
+    // New functions to update the placeable spots list
+    public void RemovePlaceholder(GameObject placeholder)
+    {
+        if (placeableSpots.Contains(placeholder))
+        {
+            placeableSpots.Remove(placeholder);
+        }
+    }
+
+    public void AddPlaceholder(GameObject placeholder)
+    {
+        if (!placeableSpots.Contains(placeholder))
+        {
+            placeableSpots.Add(placeholder);
+        }
     }
 }

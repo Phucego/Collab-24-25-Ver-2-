@@ -8699,7 +8699,7 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 50
+    m_Top: 154
     m_Bottom: 0
   m_ChildAlignment: 0
   m_Spacing: 0
@@ -10728,6 +10728,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1c45f87acbe5b1c4890b5d8e223d5618, type: 3}
   - {fileID: 8300000, guid: 10959615eb93c49b0a89d8041f4e9ccb, type: 3}
   - {fileID: 8300000, guid: 38fc81e46b729c042a8c3ecf866017da, type: 3}
+  - {fileID: 8300000, guid: 95183835742b1094a81c7afe2e3c3750, type: 3}
 --- !u!1001 &820589032
 PrefabInstance:
   m_ObjectHideFlags: 0
