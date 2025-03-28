@@ -7,10 +7,14 @@ using UnityEngine.UI;
 using System.IO;
 using Unity.VisualScripting;
 using System.Linq;
+using static PathEditor_Handler;
 
 public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
 {
-    public BaseEnemySO data;
+    private BaseEnemySO data;
+
+    // [ DIRECTORY ] //
+    private string _pathDirectory;
 
     // [ ENEMY'S UI ] //
     private Enemy_HPBar _bar;
@@ -29,8 +33,16 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
     private Vector3 _startPosition, _targetPosition, _velocity;
     private float _moveTime = 0f, _curSpeed = 0f;
 
-    public int coinDrop = 10;
-    
+    //----------------------------------------------------------------- < SET UP > -----------------------------------------------------------------//
+    void Awake()
+    {
+        #if UNITY_EDITOR
+        _pathDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Paths"); // Editors
+        #else
+            _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData"); // Works in Final Build
+        #endif
+    }
+
     void Start()
     {
         _bar = GetComponentInChildren<Enemy_HPBar>();
@@ -38,31 +50,52 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         _rb = GetComponent<Rigidbody>();
         _rb.useGravity = false;
     }
+    
+    //-------------------------------------------------------------- < ACCESSORS > ---------------------------------------------------------------//
+    public void Death()
+    {
+        CurrencyManager.Instance.currentCurrency += data.reward;
 
-    public void Spawn()
+        Destroy(gameObject);
+    }
+
+    public void TakeDamage(float dmg)
+    {
+        _health -= dmg;
+    }
+
+    public void ApplyDebuff(float smth)
     {
 
     }
 
-    public void SetStats()
+    public eType[] GetTargetType()
     {
-        _health = data.maxHealth;
-        _speed = data.maxSpeed;
-        _acceleration = data.acceleration;
-        _gravity = data.gravity * -1;
-        _heightAboveGround = data.levitation;
-
-        GetComponent<Renderer>().material.color = data.color;
+        return data.type;
     }
 
-    public void SetPath(string pathway)
+    //-------------------------------------------------------------- < PROCEESSORS > --------------------------------------------------------------//
+    public void Spawn(BaseEnemySO type, string path)
+    {
+        data = type;
+
+        _health = type.maxHealth;
+        _speed = type.maxSpeed;
+        _acceleration = type.acceleration;
+        _gravity = type.gravity * -1;
+        _heightAboveGround = type.levitation;
+
+        GetComponent<Renderer>().material.color = type.color;
+
+        SetPath(path);
+    }
+
+    private void SetPath(string pathway)
     {
         // Path.json Processor
         if (!string.IsNullOrEmpty(pathway))
         {
-            string _jsonPath = $"{Application.dataPath}/Data/Enemies/Paths/{pathway}";
-            string _getFile = $"{_jsonPath}.json";
-
+            string _getFile = $"{_pathDirectory}/{pathway}.JSON";
             if (File.Exists(_getFile))
             {
                 PathDataList _pathDataJSON = new PathDataList();
@@ -89,7 +122,10 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
                 Destroy(gameObject);
         }
         else
+        {
+            Debug.LogError($"No path found for enemy {this.gameObject}");
             Destroy(gameObject);
+        }
 
         StartCoroutine("StartEnemyMovement");
     }
@@ -109,10 +145,7 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
             _bar.setHealth(_health, data.maxHealth);
         else
             Death();
-    }
 
-    void FixedUpdate()
-    {
         // [Movement]
         if (_isMovable)
         {
@@ -129,6 +162,11 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
             // Apply velocity
             _ctrl.Move(_velocity * Time.deltaTime);
         }
+    }
+
+    void FixedUpdate()
+    {
+
     }
 
     void MoveToward()
@@ -191,66 +229,9 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         }
     }
 
-    public void Death()
-    {
-        CurrencyManager.Instance.currentCurrency += data.reward;
-
-        Destroy(gameObject);
-    }
-
-    public void TakeDamage(float dmg)
-    {
-        _health -= dmg;
-        
-        
-    }
-
-    public void ApplyDebuff(float smth)
-    {
-
-    }
-
-    public eType[] GetTargetType()
-    {
-        return data.type;
-    }
-
     IEnumerator StartEnemyMovement()
     {
         yield return new WaitForSeconds(0.1f);
         _isMovable = true;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////
-    // Classes & Structs
-    public class PathDataList
-    {
-        public List<PathData> list = new List<PathData>();
-    }
-
-    public class PathData
-    {
-        [JsonProperty("Name")]
-        public string name { get; set; }
-        [JsonProperty("Data")]
-        public float[] data { get; set; }
-
-        public PathData(string _name = "Point ?", Vector3 _position = new Vector3(), float _size = 1f)
-        {
-            name = _name;
-            data = new float[] { _position.x, _position.y, _position.z, _size };
-        }
-    }
-
-    public class dataStruct
-    {
-        public string Name { get; set; }
-        public float[] Data { get; set; }
-
-        public dataStruct(string _name, float _x, float _y, float _z, float _size)
-        {
-            Name = _name;
-            Data = new float[] { _x, _y, _z, _size };
-        }
     }
 }

@@ -32,7 +32,7 @@ Transform:
   - {fileID: 3388742635221730016}
   - {fileID: 5029493323806074166}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9073465194050615556
 MonoBehaviour:
@@ -47,7 +47,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyPrefab: {fileID: 3388112230214641791, guid: f668f0ef8fb5f394b94435288f78f4e6, type: 3}
-  _typeList: []
+  _selectedLevel: 
+  _timerBetweenWave: 30
+  _enemyPool: {fileID: 8243912780038645679}
+  _visualPool: {fileID: 4660469306971749866}
 --- !u!1 &4660469306971749866
 GameObject:
   m_ObjectHideFlags: 0

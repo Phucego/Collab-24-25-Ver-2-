@@ -8,45 +8,33 @@
             "Enemies": [
               {
                 "Type": "NORMAL",
-                "Amount": 1,
-                "SpawnInterval": 0.0
+                "Amount": 5,
+                "SpawnInterval": 0.1
               },
               {
-                "Type": "NORMAL",
-                "Amount": 1,
-                "SpawnInterval": 0.0
-              },
-              {
-                "Type": "NORMAL",
-                "Amount": 1,
-                "SpawnInterval": 0.0
+                "Type": "AIRBORNE",
+                "Amount": 2,
+                "SpawnInterval": 3.0
               }
             ],
-            "Path": "TUT_PATH1",
+            "Path": "TEST",
             "IsLoop": false,
-            "LoopAmount": 0,
-            "DelayBefore": 0.0,
-            "DelayAfter": 0.0
+            "LoopAmount": 1,
+            "Delay": 0.0
           },
           {
             "Name": "Group 2",
             "Enemies": [
               {
-                "Type": "NORMAL",
-                "Amount": 1,
-                "SpawnInterval": 0.0
-              },
-              {
-                "Type": "NORMAL",
-                "Amount": 1,
-                "SpawnInterval": 0.0
+                "Type": "INVISIBLE",
+                "Amount": 2,
+                "SpawnInterval": 5.0
               }
             ],
-            "Path": "TUT_PATH1",
-            "IsLoop": false,
-            "LoopAmount": 0,
-            "DelayBefore": 0.0,
-            "DelayAfter": 0.0
+            "Path": "TEST",
+            "IsLoop": true,
+            "LoopAmount": 2,
+            "Delay": 5.0
           }
         ],
         "IsBossWave": false
@@ -58,23 +46,17 @@
             "Enemies": [
               {
                 "Type": "NORMAL",
-                "Amount": 1,
-                "SpawnInterval": 0.0
-              },
-              {
-                "Type": "NORMAL",
-                "Amount": 1,
+                "Amount": 5,
                 "SpawnInterval": 0.0
               }
             ],
-            "Path": "TUT_PATH1",
-            "IsLoop": false,
-            "LoopAmount": 0,
-            "DelayBefore": 0.0,
-            "DelayAfter": 0.0
+            "Path": "TEST",
+            "IsLoop": true,
+            "LoopAmount": 3,
+            "Delay": 5.0
           }
         ],
-        "IsBossWave": false
+        "IsBossWave": true
       }
     ]
   }

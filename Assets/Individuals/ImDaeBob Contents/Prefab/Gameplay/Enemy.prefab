@@ -158,7 +158,7 @@ GameObject:
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -191,7 +191,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 0}
-  coinDrop: 10
 --- !u!33 &4932414293563701507
 MeshFilter:
   m_ObjectHideFlags: 0

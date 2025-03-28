@@ -88,7 +88,7 @@ public class PathEditor_Handler : MonoBehaviour
         this.gameObject.GetComponent<CanvasGroup>().alpha = 1;
 
         #if UNITY_EDITOR
-                _jsonDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Paths"); // Editors
+            _jsonDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Paths"); // Editors
         #else
             _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData"); // Works in Final Build
         #endif

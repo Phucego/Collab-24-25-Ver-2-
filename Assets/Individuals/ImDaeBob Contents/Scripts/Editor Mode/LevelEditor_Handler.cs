@@ -48,8 +48,7 @@ public class LevelEditor_Handler : MonoBehaviour
     [SerializeField] TMP_Dropdown _gPath;
     [SerializeField] Toggle _gLoop;
     [SerializeField] TMP_InputField _gLoopAmount;
-    [SerializeField] TMP_InputField _gDelayBeforeSpawn;
-    [SerializeField] TMP_InputField _gDelayAfterSpawn;
+    [SerializeField] TMP_InputField _gDelay;
     [Header("")]
     [SerializeField] Image _iconNormal;
     [SerializeField] Image _iconBoss;
@@ -90,8 +89,7 @@ public class LevelEditor_Handler : MonoBehaviour
     void Start()
     {
         _inputFieldList.Add(_gLoopAmount);
-        _inputFieldList.Add(_gDelayBeforeSpawn);
-        _inputFieldList.Add(_gDelayAfterSpawn);
+        _inputFieldList.Add(_gDelay);
         _inputFieldList.Add(_eAmount);
         _inputFieldList.Add(_eInterval);
     }
@@ -470,9 +468,18 @@ public class LevelEditor_Handler : MonoBehaviour
             _group.ClearOptions();
 
             List<string> _groupList = new List<string>();
+            List<int> _loopGroupIndex = new List<int>();
             for (int i = 0; i < _curData[0].Waves[_wave.value].Groups.Count; i++)
+            {
                 _groupList.Add(_curData[0].Waves[_wave.value].Groups[i].Name);
+                if (_curData[0].Waves[_wave.value].Groups[i].IsLoop)
+                    _loopGroupIndex.Add(i);
+            }
             _group.AddOptions(_groupList);
+
+            foreach (int i in _loopGroupIndex)
+                _group.options[i].text = $"<color=purple>{_curData[0].Waves[_wave.value].Groups[i].Name} </color>";
+            _group.RefreshShownValue();
         }
 
         _gPath.value = _paths.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Path);
@@ -486,8 +493,7 @@ public class LevelEditor_Handler : MonoBehaviour
         _group.RefreshShownValue();
 
         _gLoopAmount.text = _curData[0].Waves[_wave.value].Groups[_group.value].LoopAmount.ToString();
-        _gDelayBeforeSpawn.text = _curData[0].Waves[_wave.value].Groups[_group.value].DelayBefore.ToString();
-        _gDelayAfterSpawn.text = _curData[0].Waves[_wave.value].Groups[_group.value].DelayAfter.ToString();
+        _gDelay.text = _curData[0].Waves[_wave.value].Groups[_group.value].Delay.ToString();
 
         CheckEnemyIcon();
 
@@ -667,28 +673,31 @@ public class LevelEditor_Handler : MonoBehaviour
             if (selectedField == _gLoopAmount)
             {
                 _iField = 0;
+                if (_numValue <= 0)
+                    _numValue = 1;
                 _curData[0].Waves[_wave.value].Groups[_group.value].LoopAmount = (int)(_numValue);
             }
-            else if (selectedField == _gDelayBeforeSpawn)
+            else if (selectedField == _gDelay)
             {
                 _iField = 1;
-                _curData[0].Waves[_wave.value].Groups[_group.value].DelayBefore = _numValue;
-            }
-            else if (selectedField == _gDelayAfterSpawn)
-            {
-                _iField = 2;
-                _curData[0].Waves[_wave.value].Groups[_group.value].DelayAfter = _numValue;
+                if (_numValue < 0)
+                    _numValue = 0;
+                _curData[0].Waves[_wave.value].Groups[_group.value].Delay = _numValue;
             }
             else if (selectedField == _eAmount)
             {
                 _iField = 2;
+                if (_numValue <= 0)
+                    _numValue = 1;
                 _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Amount = (int)(_numValue);
 
                 MatcheEnemyDataList();
             }
             else if (selectedField == _eInterval)
             {
-                _iField = 2;
+                _iField = 3;
+                if (_numValue < 0)
+                    _numValue = 0;
                 _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].SpawnInterval = _numValue;
 
                 MatcheEnemyDataList();
@@ -757,20 +766,18 @@ public class LevelEditor_Handler : MonoBehaviour
         public string Path { get; set; } = "";
         public bool IsLoop { get; set; } = false;
         public int LoopAmount { get; set; } = 0;
-        public float DelayBefore { get; set; } = 0f;
-        public float DelayAfter { get; set; } = 0f;
+        public float Delay { get; set; } = 0f;
 
         public GroupData() { } 
 
-        public GroupData(List<EnemyData> enemies, string name = "GROUP 1", string path = "", bool isLoop = false, int amount = 0, float delayBefore = 0f, float delayAfter = 0f)
+        public GroupData(List<EnemyData> enemies, string name = "GROUP 1", string path = "", bool isLoop = false, int amount = 0, float delay = 0f)
         {
             Name = name;
             Enemies = enemies;
             Path = path;
             IsLoop = isLoop;
             LoopAmount = amount;
-            DelayBefore = delayBefore;
-            DelayAfter = delayAfter;
+            Delay = delay;
         }
     }
 

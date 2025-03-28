@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Airborne
   m_EditorClassIdentifier: 
   color: {r: 0.4669811, g: 0.9338727, b: 1, a: 1}
-  name: Air
+  name: Airborne
   description: Da baloon
   type: 01000000
-  targets: 01000000
+  reward: 0
   maxHealth: 100
   maxSpeed: 9
   acceleration: 5
