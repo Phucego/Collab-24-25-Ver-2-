@@ -38,17 +38,19 @@ public class BalistaController : TowerController
             Projectile.GetComponent<HitscanController>().SetTarget(Target);
         }
         
-        Projectile.SetActive(true);
         SetStat(Projectile);
+        Projectile.SetActive(true);
     }
 
     protected override IEnumerator LOSCheck()
     {
-        if (_EnemyList.Count <= 0) { yield return null; }
+        if (_EnemyList.Count <= 0)
+        {
+            TimeBeforeFire = FireRate;
+            yield return null;
+        }
         lockedIn = true;
         bool targetFaced = false;
-        RaycastHit hit;
-        // Does the ray intersect any objects excluding the player layer
         while (!targetFaced)
         {
             StartCoroutine(FireProjectile(new Vector3(0,0,0)));

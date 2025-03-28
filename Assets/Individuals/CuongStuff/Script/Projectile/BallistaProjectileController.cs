@@ -15,6 +15,9 @@ public class BallistaProjectileController : ProjectileController
         trailRenderer = GetComponent<TrailRenderer>();
         meshRenderer = GetComponent<MeshRenderer>();
         trailRenderer.Clear();
+        Moving = false;
+        meshRenderer.enabled = false;
+        rb.isKinematic = true;
     }
 
     private void FixedUpdate()
@@ -25,6 +28,7 @@ public class BallistaProjectileController : ProjectileController
 
     private void OnEnable()
     {
+        collisionCount = false;
         trailRenderer.Clear();
         Moving = true;
         meshRenderer.enabled = true;
@@ -44,8 +48,9 @@ public class BallistaProjectileController : ProjectileController
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision != null)
+        if (collision != null && !collisionCount)
         {
+            collisionCount = true;
             if (collision.gameObject.CompareTag("Enemy"))
             {
                 ApplyDamage(collision.gameObject);
