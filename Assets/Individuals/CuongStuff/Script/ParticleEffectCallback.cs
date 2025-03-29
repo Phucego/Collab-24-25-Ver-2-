@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class ParticleEffectCallback : MonoBehaviour
 {
-
-    public void Init()
+    public void Start()
     {
-
+        var main = GetComponent<ParticleSystem>().main;
+        main.stopAction = ParticleSystemStopAction.Callback;
     }
 
     private void OnParticleSystemStopped()
     {
-        //;Pooling.Despawn(gameObject);
+        Pooling.Despawn(gameObject.name, gameObject);
+        transform.gameObject.SetActive(false);
     }
 }
 

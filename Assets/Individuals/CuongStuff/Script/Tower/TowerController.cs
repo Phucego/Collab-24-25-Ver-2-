@@ -140,12 +140,17 @@ public class TowerController : MonoBehaviour
     // Fire projectiles
     protected virtual IEnumerator FireProjectile(Vector3 direction)
     {
-        GameObject Projectile = Pooling.Spawn("CannonBall", PrefabProjectile[0]);
+        GameObject Projectile = Pooling.Spawn("CannonBall", PrefabProjectile[0], "_Projectiles");
         Projectile.transform.position = AimPoint.transform.position;
         Projectile.transform.rotation = AimPoint.transform.rotation;
         Projectile.SetActive(true);
+        SetStat(Projectile);
 
-        ParticlesManager.Instance.SpawnParticles(AimPoint.transform.position, 45, 0);
+        GameObject Particle = ParticlesManager.Instance.SpawnParticles(2, "CannonMuzzle");
+        Particle.transform.position = AimPoint.transform.position;
+        Particle.transform.rotation = AimPoint.transform.rotation;
+        Particle.SetActive(true);
+
         AudioManager.Instance.PlaySoundEffect("Cannon_SFX");
         //Projectile.GetComponent<ProjectileController>().SetDirection(direction.normalized);
 

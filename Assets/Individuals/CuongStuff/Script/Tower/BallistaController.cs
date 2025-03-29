@@ -30,7 +30,7 @@ public class BalistaController : TowerController
         
         AudioManager.Instance.PlaySoundEffect("Ballista_SFX");
         lockedIn = false;
-        GameObject Projectile = GetPooledObject();
+        GameObject Projectile = Pooling.Spawn("BallistaArrow", PrefabProjectile[0], "_Projectiles");
         Projectile.transform.position = AimPoint.transform.position;
         Projectile.transform.rotation = AimPoint.transform.rotation;
         if (Projectile.GetComponent<HitscanController>() != null)
@@ -38,17 +38,19 @@ public class BalistaController : TowerController
             Projectile.GetComponent<HitscanController>().SetTarget(Target);
         }
         
+        SetStat(Projectile);
         Projectile.SetActive(true);
-
     }
 
     protected override IEnumerator LOSCheck()
     {
-        if (_EnemyList.Count <= 0) { yield return null; }
+        if (_EnemyList.Count <= 0)
+        {
+            TimeBeforeFire = FireRate;
+            yield return null;
+        }
         lockedIn = true;
         bool targetFaced = false;
-        RaycastHit hit;
-        // Does the ray intersect any objects excluding the player layer
         while (!targetFaced)
         {
             StartCoroutine(FireProjectile(new Vector3(0,0,0)));

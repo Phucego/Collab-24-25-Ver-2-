@@ -19,13 +19,10 @@ public class ParticlesManager : MonoBehaviour
         }
     }
 
-    public void SpawnParticles(Vector3 spawnPos, int particleID, float timeDestroy)
+    public GameObject SpawnParticles(int particleID, string particleName)
     {
-        
-        GameObject particle = Instantiate(ParticlesPrefab.ParticlesList[particleID], spawnPos, Quaternion.identity);
-        if (timeDestroy <= 0)
-            Destroy(particle, 1f);
-        else
-            Destroy(particle, timeDestroy);
+        string particlename = ParticlesPrefab.ParticlesList[particleID].name + "(Clone)";
+        GameObject particle = Pooling.Spawn(particlename, ParticlesPrefab.ParticlesList[particleID], "_Particles");
+        return particle;
     }
 }

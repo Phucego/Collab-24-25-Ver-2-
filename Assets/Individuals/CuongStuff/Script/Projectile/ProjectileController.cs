@@ -10,6 +10,8 @@ public class ProjectileController : MonoBehaviour, I_TowerProjectile
     protected float CritAmp = 1f;
     [SerializeField] protected float Speed = 10f;
 
+    protected bool collisionCount = false;
+
     private Vector3 shootDirection;
 
     protected virtual void Awake()
@@ -29,19 +31,24 @@ public class ProjectileController : MonoBehaviour, I_TowerProjectile
 
     private void OnEnable()
     {
+        collisionCount = false;
         rb.velocity = Vector3.zero;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision != null)
+        if (collision != null && !collisionCount)
         {
+            collisionCount = true;
             if (collision.gameObject.CompareTag("Enemy"))
             {
                 ApplyDamage(collision.gameObject);
             }
-            ParticlesManager.Instance.SpawnParticles(transform.position, 42, 0);
-            Pooling.Despawn("CannonBall", this.gameObject);
+            GameObject particle = ParticlesManager.Instance.SpawnParticles(1, "CannonExplode");
+            particle.transform.position = transform.position;
+            particle.SetActive(true);
+
+            Pooling.Despawn("CannonBall", gameObject);
             transform.gameObject.SetActive(false);     
         }
     }

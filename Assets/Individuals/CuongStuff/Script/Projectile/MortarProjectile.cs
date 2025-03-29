@@ -14,7 +14,7 @@ public class MortarProjectile : ProjectileController
     private float distt;
     private float blastradius = 5f;
 
-    private bool Flying = false;
+    private bool flying = false;
 
     //TEST
     private float maxCalculateDistance = 24f;
@@ -35,7 +35,7 @@ public class MortarProjectile : ProjectileController
     // Drop down physics
     private void FixedUpdate()
     {
-        if (!Flying) { return; }
+        if (!flying) { return; }
 
         rb.AddForce(Vector3.down * gravity * rb.mass, ForceMode.Force);
 
@@ -108,8 +108,9 @@ public class MortarProjectile : ProjectileController
 
     private void OnEnable()
     {
+        collisionCount = false;
         rb.velocity = Vector3.zero;
-        Flying = true;
+        flying = true;
     }
 
     private void SetExplosion()
@@ -117,6 +118,9 @@ public class MortarProjectile : ProjectileController
         Collider[] colliders = Physics.OverlapSphere(transform.position, blastradius);
         
         AudioManager.Instance.PlaySoundEffect("Explosion_SFX");
+        GameObject particle = ParticlesManager.Instance.SpawnParticles(3, "MortarExplosion");
+        particle.transform.position = transform.position;
+        particle.SetActive(true);
         foreach (var collider in colliders)
         {
             if (collider.gameObject.CompareTag("Enemy"))
@@ -133,11 +137,13 @@ public class MortarProjectile : ProjectileController
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision != null)
+        if (collision != null && !collisionCount)
         {
+            collisionCount = true;
+            flying = false;
             SetExplosion();
+            Pooling.Despawn("MortarBall", gameObject);
             transform.gameObject.SetActive(false);
-            Flying = false;
         }
     }
 
