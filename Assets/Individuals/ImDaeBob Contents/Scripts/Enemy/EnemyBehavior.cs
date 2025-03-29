@@ -77,6 +77,11 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         _health -= dmg;
     }
 
+    public float GetSpeed()
+    {
+        return _speed;
+    }
+
     public void ApplyDebuff(float smth)
     {
 
