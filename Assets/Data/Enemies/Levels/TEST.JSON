@@ -1,0 +1,58 @@
+[
+  {
+    "Waves": [
+      {
+        "Groups": [
+          {
+            "Name": "GROUP 1",
+            "Enemies": [
+              {
+                "Name": "DEMON",
+                "Amount": 5,
+                "SpawnInterval": 0.3
+              }
+            ],
+            "Path": "TEST_PATH",
+            "IsLoop": true,
+            "LoopAmount": 3,
+            "Delay": 5.0
+          },
+          {
+            "Name": "Group 2",
+            "Enemies": [
+              {
+                "Name": "CLOAK",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              }
+            ],
+            "Path": "TEST_PATH",
+            "IsLoop": true,
+            "LoopAmount": 2,
+            "Delay": 3.0
+          }
+        ],
+        "IsBossWave": false
+      },
+      {
+        "Groups": [
+          {
+            "Name": "GROUP 1",
+            "Enemies": [
+              {
+                "Name": "BIRD",
+                "Amount": 3,
+                "SpawnInterval": 0.25
+              }
+            ],
+            "Path": "TEST_PATH",
+            "IsLoop": true,
+            "LoopAmount": 3,
+            "Delay": 3.0
+          }
+        ],
+        "IsBossWave": true
+      }
+    ]
+  }
+]

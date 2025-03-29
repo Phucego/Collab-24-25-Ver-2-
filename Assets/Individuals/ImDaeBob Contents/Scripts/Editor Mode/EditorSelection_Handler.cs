@@ -23,12 +23,6 @@ public class EditorSelection_Handler : MonoBehaviour
     {
         _inSelect = true;
         this.gameObject.GetComponent<CanvasGroup>().alpha = 1;
-        _pathEditor.SetActive(false);
-        _waveEditor.SetActive(false);
-    }
-
-    void Start()
-    {
     }
 
     void Update()
