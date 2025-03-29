@@ -23,7 +23,7 @@ public class BaseEnemySO : ScriptableObject
     [Tooltip("Description")]
     public string description;
     [Tooltip("Enemy Type")]
-    public eType[] type;
+    public List<eType> typing;
 
     [Header("")]
     [Tooltip("Currency dropped after defeating the enemy")]
@@ -45,7 +45,7 @@ public class BaseEnemySO : ScriptableObject
 
     private void OnEnable()
     {
-        if (type == null || type.Length == 0)
-            type = new eType[] { eType.Normal };
+        if (typing == null || typing.Count == 0)
+            typing.Add(eType.Normal);
     }
 }

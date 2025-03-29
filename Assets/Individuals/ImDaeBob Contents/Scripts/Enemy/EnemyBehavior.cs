@@ -8,6 +8,7 @@ using System.IO;
 using Unity.VisualScripting;
 using System.Linq;
 using static PathEditor_Handler;
+using System.Net.NetworkInformation;
 
 public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
 {
@@ -20,6 +21,7 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
     private Enemy_HPBar _bar;
 
     // [ ENEMY'S DATA ] //
+    private int _reward;
     private float _health, _speed, _acceleration, _gravity, _heightAboveGround;
 
     // [ Rigidbody & CharacterController ] //
@@ -43,6 +45,14 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         #endif
     }
 
+    void OnDisable()
+    {
+        _isMovable = false;
+        StopAllCoroutines();
+        _dataIndex = 1;
+        _dataList.Clear();
+    }
+
     void Start()
     {
         _bar = GetComponentInChildren<Enemy_HPBar>();
@@ -54,9 +64,12 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
     //-------------------------------------------------------------- < ACCESSORS > ---------------------------------------------------------------//
     public void Death()
     {
-        CurrencyManager.Instance.currentCurrency += data.reward;
+        if (CurrencyManager.Instance != null)
+            CurrencyManager.Instance.currentCurrency += _reward;
+        if (LevelEditor_Handler.Instance != null)
+            LevelEditor_Handler.Instance._coinTest += _reward;
 
-        Destroy(gameObject);
+        WaveManager.Instance.ReturnToPool(gameObject, data.name);
     }
 
     public void TakeDamage(float dmg)
@@ -69,9 +82,9 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
 
     }
 
-    public eType[] GetTargetType()
+    public List<eType> GetTargetType()
     {
-        return data.type;
+        return data.typing ?? new List<eType> { eType.Normal };
     }
 
     //-------------------------------------------------------------- < PROCEESSORS > --------------------------------------------------------------//
@@ -80,6 +93,7 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         data = type;
 
         _health = type.maxHealth;
+        _reward = type.reward;
         _speed = type.maxSpeed;
         _acceleration = type.acceleration;
         _gravity = type.gravity * -1;
@@ -145,13 +159,16 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
             _bar.setHealth(_health, data.maxHealth);
         else
             Death();
+    }
 
+    void FixedUpdate()
+    {
         // [Movement]
         if (_isMovable)
         {
             MoveToward();
 
-            if (!data.type.Contains(eType.Airborne))
+            if (!data.typing.Contains(eType.Airborne))
             {
                 if (!_ctrl.isGrounded) // Gravity
                     _velocity.y += _gravity * Time.deltaTime;
@@ -162,11 +179,6 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
             // Apply velocity
             _ctrl.Move(_velocity * Time.deltaTime);
         }
-    }
-
-    void FixedUpdate()
-    {
-
     }
 
     void MoveToward()
@@ -204,7 +216,7 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
                 _dataIndex++;
                 if (_dataIndex >= _dataList.Count)
                 {
-                    Destroy(gameObject);
+                    Death();
                 }
                 else
                 {

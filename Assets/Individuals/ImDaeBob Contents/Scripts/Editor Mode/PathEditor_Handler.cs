@@ -299,14 +299,14 @@ public class PathEditor_Handler : MonoBehaviour
         _jsonFiles.Clear();
         if (Directory.Exists(_jsonDirectory))
         {
-            string[] files = Directory.GetFiles(_jsonDirectory, "*.json"); // Get all JSON files
+            string[] _files = Directory.GetFiles(_jsonDirectory, "*.json"); // Get all JSON files
 
-            foreach (string f in files)
+            foreach (string f in _files)
             {
                 //Debug.Log($"Loaded: {f}");
 
-                string fileName = Path.GetFileName(f);
-                _jsonFiles.Add(fileName.ToUpper().Replace(".JSON", ""));
+                string _fileName = Path.GetFileName(f);
+                _jsonFiles.Add(_fileName.ToUpper().Replace(".JSON", ""));
             }
         }
 

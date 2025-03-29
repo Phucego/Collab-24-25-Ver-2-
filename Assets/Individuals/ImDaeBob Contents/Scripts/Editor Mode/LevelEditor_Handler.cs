@@ -9,10 +9,13 @@ using TMPro;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 using Unity.VisualScripting;
+using System;
 
 public class LevelEditor_Handler : MonoBehaviour
 {
     //---------------------------------------------------------------- < VARIABLES > ----------------------------------------------------------------//
+    public static LevelEditor_Handler Instance;
+
     // [ Json ] //
     private string _jsonDirectory;
     private string _pathDirectory;
@@ -31,10 +34,16 @@ public class LevelEditor_Handler : MonoBehaviour
     // [ References ] //
     [Header("References")]
     [SerializeField] GameObject _selectionPanel;
+    [SerializeField] GameObject _editorPanel;
+    [SerializeField] GameObject _testingPanel;
+    bool _toggle = true;
     [Header("")]
     [SerializeField] Button _return;
     [Header("")]
     [SerializeField] TMP_Text _debugLog;
+    [SerializeField] TMP_Text _testDebugLog;
+    private bool _testDebugger = false;
+    [HideInInspector] public int _coinTest = 0;
     private Coroutine _clearTextCoroutine;
     [Header("")]
     [SerializeField] TMP_Dropdown _level;
@@ -70,7 +79,13 @@ public class LevelEditor_Handler : MonoBehaviour
     [SerializeField] GameObject _transition;
 
     //-------------------------------------------------------------- < MAIN FUNCTIONS > --------------------------------------------------------------//
-    void OnEnable()
+    void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+    }
+
+        void OnEnable()
     {
         this.gameObject.GetComponent<CanvasGroup>().alpha = 1;
 
@@ -86,14 +101,29 @@ public class LevelEditor_Handler : MonoBehaviour
         SearchFiles();
     }
 
+    private void TestFinished()
+    {
+        if (_testDebugger)
+        {
+            _testDebugger = false;
+            Debug.Log($"Wave {_wave.value} testing finished");
+        }
+    }
+
     void Start()
     {
+        RectTransform rt = _testingPanel.GetComponent<RectTransform>();
+        rt.anchoredPosition = new Vector2(rt.rect.width, rt.anchoredPosition.y);
+
         _inputFieldList.Add(_gLoopAmount);
         _inputFieldList.Add(_gDelay);
         _inputFieldList.Add(_eAmount);
         _inputFieldList.Add(_eInterval);
+
+        WaveManager.Instance.OnWaveComplete += TestFinished;
     }
 
+    private float _elapsedTime = 0f;
     void Update()
     {
         if (_isEditing)
@@ -109,6 +139,13 @@ public class LevelEditor_Handler : MonoBehaviour
                 EventSystem.current.SetSelectedGameObject(_inputFieldList[_iField].gameObject);
             }
         }
+
+        if (_testDebugger)
+        {
+            _elapsedTime += Time.deltaTime;
+
+            _testDebugLog.text = $"> Wave: {_wave.value + 1}\n> Level: {_level.options[_level.value].text}\n\n> Time:\n{Math.Round(_elapsedTime, 2)}\n\n> Progress:\n{Math.Round(WaveManager.Instance.GetWaveProgress(), 1)}%\n\n> Enemy:\n{WaveManager.Instance._summonedInWave}/{WaveManager.Instance._allEnemiesInWave}\n\n> Coin:\n{_coinTest}";
+        }
     }
 
     //-------------------------------------------------------------- < MINI FUNCTIONS > --------------------------------------------------------------//
@@ -119,6 +156,54 @@ public class LevelEditor_Handler : MonoBehaviour
         StartCoroutine(EndTransition());
     }
 
+    public void ToggleEditor(TMP_Text sign)
+    {
+        if (_toggle)
+        {
+            sign.text = ">";
+            _editorPanel.GetComponent<RectTransform>().DOMoveX(-_editorPanel.GetComponent<Image>().rectTransform.rect.width/2.15f, 0.75f).SetEase(Ease.InOutCirc);
+            _testingPanel.GetComponent<RectTransform>().DOMoveX(50 + _testingPanel.GetComponent<Image>().rectTransform.rect.width / 2f, 0.5f).SetEase(Ease.OutCirc);
+        }
+        else
+        {
+            sign.text = "<";
+            _editorPanel.GetComponent<RectTransform>().DOMoveX(50 + _editorPanel.GetComponent<Image>().rectTransform.rect.width/2f, 0.5f).SetEase(Ease.InOutCirc);
+            _testingPanel.GetComponent<RectTransform>().DOMoveX(_testingPanel.GetComponent<Image>().rectTransform.rect.width, 0.25f).SetEase(Ease.InCirc);
+        }
+        _toggle = !_toggle;
+    }
+
+    public void TestButton(int button)
+    {
+        switch (button)
+        {
+            case 0:
+                if (!_testDebugger)
+                {
+                    _testDebugger = true;
+                    _elapsedTime = 0;
+                    _coinTest = 0;
+                    WaveManager.Instance.TestCurWave(_curData[0].Waves[_wave.value]);
+                }
+                break;
+            case 1:
+                if (_elapsedTime > 0)
+                {
+                    _elapsedTime = 0;
+                    _coinTest = 0;
+
+                    _testDebugger = true;
+                    WaveManager.Instance.ResetTest(_curData[0].Waves[_wave.value]);
+                }   
+                break;
+            case 2:
+                _testDebugger = false;
+                _testDebugLog.text = "> No Test running.";
+                WaveManager.Instance.KillAllTest();
+                break;
+        }
+    }
+
     // [ DATA HANDLERS ] //
     void SearchFiles()
     {
@@ -126,12 +211,12 @@ public class LevelEditor_Handler : MonoBehaviour
         _paths.Clear();
         if (Directory.Exists(_pathDirectory))
         {
-            string[] files = Directory.GetFiles(_pathDirectory, "*.json"); // Get all JSON files
+            string[] _files = Directory.GetFiles(_pathDirectory, "*.json"); // Get all JSON files
 
-            foreach (string f in files)
+            foreach (string f in _files)
             {
-                string fileName = Path.GetFileName(f);
-                _paths.Add(fileName.ToUpper().Replace(".JSON", ""));
+                string _fileName = Path.GetFileName(f);
+                _paths.Add(_fileName.ToUpper().Replace(".JSON", ""));
             }
         }
         _gPath.AddOptions(_paths);
@@ -140,12 +225,12 @@ public class LevelEditor_Handler : MonoBehaviour
         _enemySO.Clear();
         if (Directory.Exists(_enemySODirectory))
         {
-            string[] files = Directory.GetFiles(_enemySODirectory, "*.asset"); // Get all JSON files
+            string[] _files = Directory.GetFiles(_enemySODirectory, "*.asset"); // Get all JSON files
 
-            foreach (string f in files)
+            foreach (string f in _files)
             {
-                string fileName = Path.GetFileName(f);
-                _enemySO.Add(fileName.ToUpper().Replace(".ASSET", ""));
+                string _fileName = Path.GetFileName(f);
+                _enemySO.Add(_fileName.ToUpper().Replace(".ASSET", ""));
             }
         }
         _eType.AddOptions(_enemySO);
@@ -153,12 +238,12 @@ public class LevelEditor_Handler : MonoBehaviour
         _bossSO.Clear();
         if (Directory.Exists(_bossSODirectory))
         {
-            string[] files = Directory.GetFiles(_bossSODirectory, "*.asset"); // Get all JSON files
+            string[] _files = Directory.GetFiles(_bossSODirectory, "*.asset"); // Get all JSON files
 
-            foreach (string f in files)
+            foreach (string f in _files)
             {
-                string fileName = Path.GetFileName(f);
-                _bossSO.Add(fileName.ToUpper().Replace(".ASSET", ""));
+                string _fileName = Path.GetFileName(f);
+                _bossSO.Add(_fileName.ToUpper().Replace(".ASSET", ""));
             }
         }
 
@@ -172,8 +257,8 @@ public class LevelEditor_Handler : MonoBehaviour
             {
                 //Debug.Log($"Loaded: {f}");
 
-                string fileName = Path.GetFileName(f);
-                _jsonFiles.Add(fileName.ToUpper().Replace(".JSON", ""));
+                string _fileName = Path.GetFileName(f);
+                _jsonFiles.Add(_fileName.ToUpper().Replace(".JSON", ""));
             }
         }
         _level.AddOptions(_jsonFiles);
@@ -387,14 +472,12 @@ public class LevelEditor_Handler : MonoBehaviour
 
     public void LoadWave()
     {
-        //Load Wave
-       _isBoss.isOn = _curData[0].Waves[_wave.value].IsBossWave;
+        LoadGroup(true);
+
+        _isBoss.isOn = _curData[0].Waves[_wave.value].IsBossWave;
         AddBossTyping(_isBoss.isOn);
 
         CheckEnemyIcon();
-
-        //Load Group
-        LoadGroup(true);
     }
 
     //Group Handlers
@@ -486,10 +569,10 @@ public class LevelEditor_Handler : MonoBehaviour
         _gPath.RefreshShownValue();
 
         _gLoop.isOn = _curData[0].Waves[_wave.value].Groups[_group.value].IsLoop;
-        string getName = _curData[0].Waves[_wave.value].Groups[_group.value].Name;
-        _group.options[_group.value].text = $"<color=#323232>{getName} </color>";
+        string _getName = _curData[0].Waves[_wave.value].Groups[_group.value].Name;
+        _group.options[_group.value].text = $"<color=#323232>{_getName} </color>";
         if (_gLoop.isOn)
-            _group.options[_group.value].text = $"<color=purple>{getName} </color>";
+            _group.options[_group.value].text = $"<color=purple>{_getName} </color>";
         _group.RefreshShownValue();
 
         _gLoopAmount.text = _curData[0].Waves[_wave.value].Groups[_group.value].LoopAmount.ToString();
@@ -507,7 +590,7 @@ public class LevelEditor_Handler : MonoBehaviour
 
         _curData[0].Waves[_wave.value].Groups[_group.value].Enemies.Add(new EnemyData());
 
-        _enemy.AddOptions(new List<string>() { $"{_enemy.options.Count + 1}. {_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.options.Count].Type}" });
+        _enemy.AddOptions(new List<string>() { $"{_enemy.options.Count + 1}. {_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.options.Count].Name}" });
         _enemy.RefreshShownValue();
 
         MatcheEnemyDataList();
@@ -536,10 +619,10 @@ public class LevelEditor_Handler : MonoBehaviour
     {
         if ( _enemy.options.Count >= 1)
         {
-            var newType = _eType.options[_eType.value].text;
+            var _newType = _eType.options[_eType.value].text;
 
-            _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type = newType;
-            _enemy.options[_enemy.value].text = $"{_enemy.value + 1}. {newType}"; 
+            _curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Name = _newType;
+            _enemy.options[_enemy.value].text = $"{_enemy.value + 1}. {_newType}"; 
             _enemy.RefreshShownValue();
 
             MatcheEnemyDataList();
@@ -555,15 +638,15 @@ public class LevelEditor_Handler : MonoBehaviour
 
             List<string> _enemyTempList = new List<string>();
             for (int i = 0; i < _curData[0].Waves[_wave.value].Groups[_group.value].Enemies.Count; i++)
-                _enemyTempList.Add($"{i + 1}. {_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[i].Type}");
+                _enemyTempList.Add($"{i + 1}. {_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[i].Name}");
             _enemy.AddOptions(_enemyTempList);
 
             MatcheEnemyDataList();
         }
 
-        int _typingIndex = _enemySO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type.ToString());
+        int _typingIndex = _enemySO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Name.ToString());
         if (_typingIndex <= -1)
-            _eType.value = _enemySO.Count + _bossSO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type.ToString());
+            _eType.value = _enemySO.Count + _bossSO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Name.ToString());
         else
             _eType.value = _typingIndex;
         _eType.RefreshShownValue();
@@ -591,11 +674,11 @@ public class LevelEditor_Handler : MonoBehaviour
             TMP_Text _interval = _data.transform.Find("Interval").GetComponent<TMP_Text>();
 
             _number.text = (i + 1).ToString();
-            _typing.text = e.Type;
+            _typing.text = e.Name;
             _amount.text = e.Amount.ToString();
             _interval.text = e.SpawnInterval.ToString();
 
-            Color _color = _bossSO.Contains(e.Type) ? Color.red : Color.white;
+            Color _color = _bossSO.Contains(e.Name) ? Color.red : Color.white;
             _number.color = _color;
             _typing.color = _color;
             _amount.color = _color;
@@ -611,9 +694,9 @@ public class LevelEditor_Handler : MonoBehaviour
             _eType.AddOptions(_bossSO);
 
 
-        int i = _enemySO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type.ToString());
+        int i = _enemySO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Name.ToString());
         if (i <= -1)
-            _eType.value = _enemySO.Count + _bossSO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Type.ToString());
+            _eType.value = _enemySO.Count + _bossSO.IndexOf(_curData[0].Waves[_wave.value].Groups[_group.value].Enemies[_enemy.value].Name.ToString());
         else
             _eType.value = i;
         _eType.RefreshShownValue();
@@ -783,13 +866,13 @@ public class LevelEditor_Handler : MonoBehaviour
 
     public class EnemyData //For Json
     {
-        public string Type { get; set; } = "NORMAL";
+        public string Name { get; set; } = "NULL";
         public int Amount { get; set; } = 1;
         public float SpawnInterval { get; set; } = 0f;
 
-        public EnemyData(string type = "NORMAL", int amount = 1, float spawnInterval = 0f)
+        public EnemyData(string name = "NULL", int amount = 1, float spawnInterval = 0f)
         {
-            Type = type;
+            Name = name;
             Amount = amount;
             SpawnInterval = spawnInterval;
         }

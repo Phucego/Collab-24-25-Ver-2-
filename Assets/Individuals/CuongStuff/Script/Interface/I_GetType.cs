@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface I_GetType
 {
-    eType[] GetTargetType() { return new eType[] { eType.Normal }; }
+    List<eType> GetTargetType();
 }

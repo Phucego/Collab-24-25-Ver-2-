@@ -49,6 +49,9 @@ MonoBehaviour:
   _enemyPrefab: {fileID: 3388112230214641791, guid: f668f0ef8fb5f394b94435288f78f4e6, type: 3}
   _selectedLevel: 
   _timerBetweenWave: 30
+  _allEnemiesInWave: 0
+  _summonedInWave: 0
+  _despawnedInWave: 0
   _enemyPool: {fileID: 8243912780038645679}
   _visualPool: {fileID: 4660469306971749866}
 --- !u!1 &4660469306971749866

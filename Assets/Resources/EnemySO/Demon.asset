@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d848d119cef2d05478e47e5986df311c, type: 3}
-  m_Name: Airborne
+  m_Name: Demon
   m_EditorClassIdentifier: 
-  color: {r: 0.4669811, g: 0.9338727, b: 1, a: 1}
-  name: Airborne
-  description: Da baloon
-  type: 01000000
+  color: {r: 1, g: 1, b: 1, a: 1}
+  name: Demon
+  description: Just your generic enemy, walk on ground
+  typing: 00000000
   reward: 0
   maxHealth: 100
-  maxSpeed: 9
-  acceleration: 5
-  gravity: 1
-  levitation: 10
+  maxSpeed: 10
+  acceleration: 4
+  gravity: 7
+  levitation: 0.5

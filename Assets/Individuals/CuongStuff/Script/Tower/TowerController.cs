@@ -188,7 +188,7 @@ public class TowerController : MonoBehaviour
             if (enemy != null)
             {
                 int point = 0;
-                eType[] enemyType = enemy.GetComponent<I_GetType>().GetTargetType();
+                List<eType> enemyType = enemy.GetComponent<I_GetType>().GetTargetType();
 
                 // Check if they have matching target type
                 foreach (eType enemytype in enemyType)

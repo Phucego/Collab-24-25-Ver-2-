@@ -7,34 +7,29 @@
             "Name": "GROUP 1",
             "Enemies": [
               {
-                "Type": "NORMAL",
+                "Name": "DEMON",
                 "Amount": 5,
-                "SpawnInterval": 0.1
-              },
-              {
-                "Type": "AIRBORNE",
-                "Amount": 2,
-                "SpawnInterval": 3.0
+                "SpawnInterval": 0.3
               }
             ],
-            "Path": "TEST",
-            "IsLoop": false,
-            "LoopAmount": 1,
-            "Delay": 0.0
+            "Path": "TEST_PATH",
+            "IsLoop": true,
+            "LoopAmount": 3,
+            "Delay": 5.0
           },
           {
             "Name": "Group 2",
             "Enemies": [
               {
-                "Type": "INVISIBLE",
-                "Amount": 2,
-                "SpawnInterval": 5.0
+                "Name": "CLOAK",
+                "Amount": 1,
+                "SpawnInterval": 0.0
               }
             ],
-            "Path": "TEST",
+            "Path": "TEST_PATH",
             "IsLoop": true,
             "LoopAmount": 2,
-            "Delay": 5.0
+            "Delay": 3.0
           }
         ],
         "IsBossWave": false
@@ -45,15 +40,15 @@
             "Name": "GROUP 1",
             "Enemies": [
               {
-                "Type": "NORMAL",
-                "Amount": 5,
-                "SpawnInterval": 0.0
+                "Name": "BIRD",
+                "Amount": 3,
+                "SpawnInterval": 0.25
               }
             ],
-            "Path": "TEST",
+            "Path": "TEST_PATH",
             "IsLoop": true,
             "LoopAmount": 3,
-            "Delay": 5.0
+            "Delay": 3.0
           }
         ],
         "IsBossWave": true
