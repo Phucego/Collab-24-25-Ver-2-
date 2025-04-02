@@ -232,17 +232,13 @@ public class BuildingManager : MonoBehaviour
             go.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = sortedTowerData[count].towerPrefab.name;
             go.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"Cost: {sortedTowerData[count].Cost}";
 
+            // Get the Image component
             Image buttonImage = go.transform.GetChild(2).GetComponent<Image>();
             buttonImage.sprite = sortedTowerData[count].towerSprite;
 
-            // Ensure proper scaling
-            RectTransform imageRectTransform = buttonImage.GetComponent<RectTransform>();
-            imageRectTransform.anchorMin = new Vector2(0, 0);
-            imageRectTransform.anchorMax = new Vector2(1, 1);
-            imageRectTransform.pivot = new Vector2(0.5f, 0.5f);
-            imageRectTransform.offsetMin = Vector2.zero;
-            imageRectTransform.offsetMax = Vector2.zero;
-            imageRectTransform.localScale = Vector3.one;
+            // Adjust the size of the Image
+            RectTransform imageRect = buttonImage.GetComponent<RectTransform>();
+            imageRect.sizeDelta = new Vector2(40f ,40f); // Set width to 80 and height to 80
 
             go.GetComponent<Button>().onClick.AddListener(() =>
             {
