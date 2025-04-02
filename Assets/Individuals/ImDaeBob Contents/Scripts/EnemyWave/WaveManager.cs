@@ -299,14 +299,13 @@ public class WaveManager : MonoBehaviour
         {
             List<Coroutine> _enemySpawns = new List<Coroutine>();
 
+            yield return new WaitForSeconds(group.Delay);
+
             foreach (var enemyData in group.Enemies)
                 _enemySpawns.Add(StartCoroutine(SpawnEnemyBatch(enemyData, path)));
 
             foreach (Coroutine enemySpawn in _enemySpawns) // Wait for all enemy types in the group to finish spawning before looping again
                 yield return enemySpawn;
-
-            if (loop < _loopCount - 1 && group.Delay > 0)
-                yield return new WaitForSeconds(group.Delay);
         }
     }
 
