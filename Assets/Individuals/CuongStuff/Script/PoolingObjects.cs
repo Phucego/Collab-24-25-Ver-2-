@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static PoolingObjects;
 
@@ -31,7 +32,7 @@ public class Pooling
         // Find if game object already existed and ready for pooling
         for (int i = 0; i < poolData.deactiveList.Count; i++)
         {
-            if (!poolData.deactiveList[i].activeInHierarchy)
+            if (!poolData.deactiveList[i].activeSelf)
             {
                 GameObject gameObject = poolData.deactiveList[i];
                 poolData.activeList.Add(poolData.deactiveList[i]);
@@ -58,6 +59,29 @@ public class Pooling
 
 public class PoolingData
 {
+    public List<GameObject> tmpListGameObject;
+
     public List<GameObject> activeList = new List<GameObject>();
     public List<GameObject> deactiveList = new List<GameObject>();
+
+    public bool IsContainedGameObject(GameObject go)
+    {
+        bool isContained = false;
+        tmpListGameObject.ForEach(x =>
+        {
+            if (x == go)
+                isContained = true;
+        });
+        return isContained;
+    }
+
+    public GameObject GetObjectFromDeActiveList(GameObject go)
+    {
+        return deactiveList.FirstOrDefault(x => x == go);
+    }
+
+    private GameObject GetPoolingObject(GameObject go)
+    {
+        return tmpListGameObject.FirstOrDefault(obj => obj == go);
+    }
 }
