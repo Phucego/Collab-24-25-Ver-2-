@@ -25,7 +25,8 @@ public class WaveManager : MonoBehaviour
     private List<LevelData> _curData = new List<LevelData>();
 
     [Header("Wave Control")]
-    [SerializeField] private float _timerBetweenWave = 30f;
+    [SerializeField] private int _timerBetweenWave = 30;
+    private int _remTime = 0;
     private bool _waitingForNextWave = false;
 
     private int _curWave = 0;
@@ -62,6 +63,11 @@ public class WaveManager : MonoBehaviour
             Debug.Log("Skipping to next wave!");
             _waitingForNextWave = false;
         }
+    }
+
+    public int GetTimeBetweenWave()
+    {
+        return _remTime;
     }
 
     public void ResetLevel()
@@ -116,13 +122,21 @@ public class WaveManager : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.F1))
-        {
             StartWave();
-        }
         else if (Input.GetKeyDown(KeyCode.F2))
-        {
             SkipToNextWave();
-        }
+        else if (Input.GetKeyDown(KeyCode.Keypad1))
+            SpawnEnemy("DEMON", "TUT_PATH1");
+        else if (Input.GetKeyDown(KeyCode.Keypad2))
+            SpawnEnemy("BIRD", "TUT_PATH1");
+        else if (Input.GetKeyDown(KeyCode.Keypad3))
+            SpawnEnemy("CLOAK", "TUT_PATH1");
+        else if (Input.GetKeyDown(KeyCode.Keypad4))
+            SpawnEnemy("DEMON", "TUT_PATH2");
+        else if (Input.GetKeyDown(KeyCode.Keypad5))
+            SpawnEnemy("BIRD", "TUT_PATH2");
+        else if (Input.GetKeyDown(KeyCode.Keypad6))
+            SpawnEnemy("CLOAK", "TUT_PATH2");
     }
 
     void Awake()
@@ -271,11 +285,11 @@ public class WaveManager : MonoBehaviour
             {
                 Debug.Log($"Wave {_curWave} finished! Commencing timer for Wave {_curWave + 1} to start!");
                 _waitingForNextWave = true;
-                float _remTime = _timerBetweenWave;
+                _remTime = _timerBetweenWave;
                 while (_waitingForNextWave && _remTime > 0)
                 {
                     yield return new WaitForSeconds(1f);
-                    _remTime -= 1f;
+                    _remTime -= 1;
                 }
             }
         }
