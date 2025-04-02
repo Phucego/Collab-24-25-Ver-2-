@@ -29,6 +29,7 @@ public class TowerController : MonoBehaviour
     protected GameObject[] _HeadModel = new GameObject[] { };
     protected GameObject[] _BodyModel = new GameObject[] { };
     protected List<GameObject> _ProjectileList = new List<GameObject>();
+    protected int moneyValue = 0;
     //protected List<GameObject> ProjectileList = new List<GameObject>();
 
     
@@ -103,7 +104,8 @@ public class TowerController : MonoBehaviour
         ProjectileSpeed = _DeepCopyTowerData.ProjectileSpeed;
         CritChance = _DeepCopyTowerData.CritChance;
         CritAmp = _DeepCopyTowerData.CritAmplifier;
-        
+
+        moneyValue = _DeepCopyTowerData.Cost;
     }
 
     // Update is called once per frame
@@ -233,6 +235,14 @@ public class TowerController : MonoBehaviour
         }
     }
 
+    public virtual void SellTower()
+    {
+        int realValue = moneyValue / 2;
+        CurrencyManager.Instance.DeductCurrency(-realValue);
+        //AudioManager.Instance.PlaySoundEffect("DestroyTower_SFX");
+        Destroy(gameObject);
+    }
+
     public virtual void UpgradeTower()
     {
         if (Level >= TowerData.listUpgrades.Count)
@@ -251,6 +261,7 @@ public class TowerController : MonoBehaviour
 
         // Deduct the cost from the player's currency
         CurrencyManager.Instance.DeductCurrency(upgradeCost);
+        moneyValue += upgradeCost;
 
         // Proceed with the upgrade
         Level += 1;

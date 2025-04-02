@@ -3127,7 +3127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05545f2305a1bfc439aa39f528633152, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backgroundMusic: {fileID: 8300000, guid: b9c92811bc382ab4f896913346415def, type: 3}
+  backgroundAmbienceTracks: []
   soundEffects:
   - {fileID: 8300000, guid: 4f35bb8e376e3ae4ba1ba177132daf76, type: 3}
   - {fileID: 8300000, guid: e023aabd07bf8ef4a9753f45498ff819, type: 3}
@@ -5258,10 +5258,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coinCounterParent: {fileID: 9090227092309201280}
   waveProgressParent: {fileID: 9090227092309201278}
-  pauseAndWaveParent: {fileID: 9090227092309201279}
   mainUI: {fileID: 622176622}
-  startWaveButton: {fileID: 9090227092309201283}
-  pauseButton: {fileID: 9090227092309201282}
+  pauseMenu: {fileID: 31323390}
+  towerSelectMenu: {fileID: 1583933394}
+  confirmationMenu: {fileID: 1688421069}
+  confirmationMenu_MainMenu: {fileID: 1132735161}
   toggleTowerSelectButton: {fileID: 1570777478}
   resumeButton: {fileID: 859379811}
   quitButton: {fileID: 1002851599}
@@ -5270,20 +5271,17 @@ MonoBehaviour:
   Quit_No: {fileID: 808905502}
   MainMenu_No: {fileID: 1222307355}
   MainMenu_Yes: {fileID: 1989902231}
-  circleImage: {fileID: 1052123460}
-  m_StartWaveButton: {fileID: 9090227092309201283}
-  m_TestEnemy: {fileID: 0}
+  chooseOptions: {fileID: 0}
+  speedUpButton: {fileID: 0}
+  pauseButton: {fileID: 9090227092309201282}
+  muteButton: {fileID: 0}
+  optionsContainer: {fileID: 0}
   coinCounterText: {fileID: 1130766934}
-  selectionPanelIsOpened: 0
+  lightningNotificationText: {fileID: 0}
+  dialogueManager: {fileID: 0}
   mainMenuScene:
     m_SceneAsset: {fileID: 102900000, guid: 5ab70225f46419e44b0924c46a99e266, type: 3}
-    m_SceneName: MainMenuScene
-  pauseMenu: {fileID: 31323390}
-  towerSelectMenu: {fileID: 1583933394}
-  confirmationMenu: {fileID: 1688421069}
-  confirmationMenu_MainMenu: {fileID: 1132735161}
-  startingCoinAmount: 0
-  dialogueManager: {fileID: 0}
+    m_SceneName: '[Main] MainMenuScene'
 --- !u!95 &1676139304
 Animator:
   serializedVersion: 5
@@ -6402,7 +6400,6 @@ MonoBehaviour:
   placementIndicator: {fileID: 0}
   snapHeight: 10
   canPlace: 0
-  Instance: {fileID: 0}
   placeableLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -7167,11 +7164,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4200960621166259537, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
   m_PrefabInstance: {fileID: 9090227092309201277}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &9090227092309201279 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4357457749391618255, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
-  m_PrefabInstance: {fileID: 9090227092309201277}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &9090227092309201280 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4458921827307625948, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
@@ -7180,17 +7172,6 @@ GameObject:
 --- !u!114 &9090227092309201282 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7839000376409588550, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
-  m_PrefabInstance: {fileID: 9090227092309201277}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &9090227092309201283 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1327110754543049915, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
   m_PrefabInstance: {fileID: 9090227092309201277}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
