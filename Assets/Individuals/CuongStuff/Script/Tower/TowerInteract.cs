@@ -55,20 +55,22 @@ public class TowerInteract : MonoBehaviour, I_Interactable
 
     public void UpgradeSelected()
     {
-        SellTower.Invoke();
+        UpgradeTower.Invoke();
+        _CanvasInfo.GetComponent<TowerCanvasHandler>().Upgrade();
     }
 
     public void Sell(InputAction.CallbackContext input)
     {
         if (_CanvasInfo.activeInHierarchy)
         {
-            UpgradeSelected();
+            SellSelected();
         }
     }
 
     public void SellSelected()
     {
-
+        SellTower.Invoke();
+        Deselect();
     }
 
     void LateUpdate()

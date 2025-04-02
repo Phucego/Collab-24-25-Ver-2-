@@ -165,23 +165,6 @@ public class TowerController : MonoBehaviour
         projectile.GetComponent<I_TowerProjectile>().SetDamage(Damage);
     }
 
-    // Pooling objects
-    protected virtual GameObject GetPooledObject()
-    {
-        for (int i = 0; i < _ProjectileList.Count; i++) {
-            if (!_ProjectileList[i].activeInHierarchy)
-            {
-                return _ProjectileList[i];
-            }
-        }
-
-        // Create more projectiles if no more pooled objects are available
-        GameObject NewProjectile = Instantiate(PrefabProjectile[0], AimPoint.transform.position, Quaternion.identity, GameObject.Find("_Projectiles").transform);
-        _ProjectileList.Add(NewProjectile);
-        SetStat(NewProjectile);
-        return NewProjectile;
-    }
-
     // This function determine how the turret will target enemy, currently it target the first enemy in the line / nearest to the MAIN center
     // Will plan on expanding this if the first semester goes well
     public virtual void FindNearestEnemy()
@@ -240,7 +223,7 @@ public class TowerController : MonoBehaviour
         int realValue = moneyValue / 2;
         CurrencyManager.Instance.DeductCurrency(-realValue);
         //AudioManager.Instance.PlaySoundEffect("DestroyTower_SFX");
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
     public virtual void UpgradeTower()
