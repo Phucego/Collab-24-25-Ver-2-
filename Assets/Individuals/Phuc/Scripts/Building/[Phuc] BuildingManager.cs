@@ -125,13 +125,14 @@ public class BuildingManager : MonoBehaviour
     {
         foreach (GameObject tower in placedTowers)
         {
-            if (Vector3.Distance(position, tower.transform.position) < minimumPlacementDistance)
+            if (tower != null && Vector3.Distance(position, tower.transform.position) < minimumPlacementDistance)
             {
                 return false;
             }
         }
         return true;
     }
+
 
     public void PlaceObject()
     {
@@ -248,7 +249,14 @@ public class BuildingManager : MonoBehaviour
             });
         }
     }
-
+    //USE THIS IN CUONG'S TOWER CONTROLLER
+    public void RemoveTowerFromList(GameObject tower)
+    {
+        if (placedTowers.Contains(tower))
+        {
+            placedTowers.Remove(tower);
+        }
+    }
 
     public void SelectObject(GameObject prefab)
     {

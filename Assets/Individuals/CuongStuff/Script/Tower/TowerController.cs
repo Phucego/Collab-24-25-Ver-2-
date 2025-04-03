@@ -223,8 +223,11 @@ public class TowerController : MonoBehaviour, I_TowerInfo
     {
         int realValue = moneyValue / 2;
         CurrencyManager.Instance.DeductCurrency(-realValue);
-        //AudioManager.Instance.PlaySoundEffect("DestroyTower_SFX");
-        //Destroy(gameObject);
+        
+        //Remove the tower from the placed list (I think)
+        BuildingManager.Instance.RemoveTowerFromList(gameObject);
+        AudioManager.Instance.PlaySoundEffect("DestroyTower_SFX");
+        Destroy(gameObject);
     }
 
     public virtual void UpgradeTower()

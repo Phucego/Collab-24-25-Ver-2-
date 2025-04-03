@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,7 @@ public class TutorialGuidance : MonoBehaviour
     public UnityEvent OnMovementPracticeCompleted;  
     public UnityEvent OnBuildingCompleted;
     public UnityEvent OnCorruptedIntroCompleted;
+    public UnityEvent OnTowerDamaged;
     
     
     private List<Dialogue.DialogueLine> currentDialogueLines;
@@ -47,10 +49,17 @@ public class TutorialGuidance : MonoBehaviour
     private bool hasReachedTargetDestination = false;
     private bool hasReachedBuildingDestination = false;
     private bool hasReachedCorruptedZone = false;
-
-
-    [SerializeField] private BuildingManager buildingManager;
+    private bool firstTimeTowerDamaged = false;
     private bool isTowerPlacementChecked = false;
+    [SerializeField] private BuildingManager buildingManager;
+    
+    public static TutorialGuidance _instance;
+
+    private void Awake()
+    {
+        _instance = this;
+    }
+
     void Start()
     {
         dialogueUI.SetActive(false);
@@ -88,6 +97,8 @@ public class TutorialGuidance : MonoBehaviour
                 movementDetected = true;
             }
         }
+
+
     }
 
     private void StartIntro()
@@ -229,8 +240,15 @@ public class TutorialGuidance : MonoBehaviour
         SetDialogueSection("Corrupted Zone Intro", OnCorruptedIntroCompleted.Invoke);
         anim.SetTrigger("hideUI");  
         corruptedIntroDestination.SetActive(true);   
-    } 
-    
+    }
+
+    public void OnTowerDamageIntro()
+    {
+        SetDialogueSection("Tower Health Intro", OnTowerDamaged.Invoke);
+        anim.SetTrigger("hideUI");  
+        corruptedIntroDestination.SetActive(true);      
+        
+    }
     #endregion
     
     
