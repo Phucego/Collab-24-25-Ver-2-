@@ -6,15 +6,15 @@ using TMPro;
 
 public class TowerCanvasHandler : MonoBehaviour
 {
-    private TowerController towerController;
+    private I_TowerInfo towerController;
 
-    [SerializeField] private TMP_Text towerName, towerCurrent, towerUpgrade, towerLevel;
+    [SerializeField] private TMP_Text towerName, towerCurrent, towerUpgrade, towerLevel, towerCost, towerSellValue;
     [SerializeField] private GameObject towerBar;
     [SerializeField] private List<Image> bars = new List<Image>();
 
     private void Awake()
     {
-        towerController = gameObject.GetComponentInParent<TowerController>();
+        towerController = gameObject.GetComponentInParent<I_TowerInfo>();
         foreach (var bar in towerBar.GetComponentsInChildren<Image>())
         {
             bars.Add(bar);
@@ -34,6 +34,8 @@ public class TowerCanvasHandler : MonoBehaviour
             towerCurrent.text = towerController.GetCurrentStats();
             towerUpgrade.text = towerController.GetUpgradeStats();
             towerLevel.text = towerController.GetLevelString();
+            towerCost.text = towerController.GetCost();
+            towerSellValue.text = towerController.GetSellValue();
             UpdateBar();
         }
     }

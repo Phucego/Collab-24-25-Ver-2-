@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static Cinemachine.DocumentationSortingAttribute;
 
-public class TowerController : MonoBehaviour
+public class TowerController : MonoBehaviour, I_TowerInfo
 {
     // Start is called before the first frame update
     [Header("Tower Set Up")]
@@ -313,6 +314,27 @@ public class TowerController : MonoBehaviour
     public virtual int GetLevelInt()
     {
         return Level;
+    }
+
+    public virtual string GetCost()
+    {
+        string costText = "";
+        if (Level < TowerData.listUpgrades.Count)
+        {
+            int upgradeCost = TowerData.listUpgrades[Level].Cost;
+            costText = "Cost: " + upgradeCost.ToString();
+        } 
+        else if (Level >= TowerData.listUpgrades.Count)
+            costText = "MAXED";
+        
+        return costText;
+    }
+
+    public virtual string GetSellValue()
+    {
+        int realValue = moneyValue / 2;
+        string sellText = "Value: " + realValue.ToString();
+        return sellText;
     }
 
     public virtual string GetUpgradeStats()
