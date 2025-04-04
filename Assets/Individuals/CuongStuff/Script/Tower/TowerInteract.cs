@@ -69,8 +69,9 @@ public class TowerInteract : MonoBehaviour, I_Interactable
 
     public void SellSelected()
     {
-        SellTower.Invoke();
+        MainCam.GetComponent<InteractController>().DeleteInteractedObject();
         Deselect();
+        SellTower.Invoke();
     }
 
     void LateUpdate()
@@ -110,6 +111,7 @@ public class TowerInteract : MonoBehaviour, I_Interactable
         MainCam = null; 
         _RadiusSphere.SetActive(false);
         _CanvasInfo.SetActive(false);
+       
     }
 
     public void TowerInfo(bool enable)

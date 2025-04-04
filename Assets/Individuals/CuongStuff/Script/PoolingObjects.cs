@@ -32,7 +32,7 @@ public class Pooling
         // Find if game object already existed and ready for pooling
         if (poolData.deactiveList.Count > 0)
         {
-            GameObject pooledObject = poolData.GetObjectFromDeactiveList(go);
+            GameObject pooledObject = poolData.deactiveList[0];
             poolData.deactiveList.Remove(pooledObject);
             poolData.activeList.Add(pooledObject);
             return pooledObject;
@@ -60,11 +60,5 @@ public class PoolingData
 {
     public List<GameObject> activeList = new List<GameObject>();
     public List<GameObject> deactiveList = new List<GameObject>();
-
-    public GameObject GetObjectFromDeactiveList(GameObject go)
-    {
-        return deactiveList.FirstOrDefault(x => x == go);
-    }
-
 
 }

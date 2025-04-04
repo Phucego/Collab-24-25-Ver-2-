@@ -57,8 +57,6 @@ public class TowerController : MonoBehaviour, I_TowerInfo
         layerMask = LayerMask.GetMask("Enemy"); 
         _HeadModel = new GameObject[TowerData.listUpgrades.Count + 1];
         _BodyModel = new GameObject[TowerData.listUpgrades.Count + 1];
-        
-        
     }
 
     private void OnEnable()
@@ -67,12 +65,11 @@ public class TowerController : MonoBehaviour, I_TowerInfo
         DeepCopyData();
         RadiusDetector.radius = Radius;
         RadiusDetector.height = Radius*3;
-        CallChangeStat.Invoke(UpgradeType.Radius, Radius);
         GetAllModels(HeadParent, 1);
         GetAllModels(BodyParent, 2);
         CurrentHead = _HeadModel[0];
         CurrentBody = _BodyModel[0];
-
+        CallChangeStat.Invoke(UpgradeType.Radius, Radius);
     }
 
     protected virtual void GetAllModels(GameObject parent, int index)
@@ -172,7 +169,7 @@ public class TowerController : MonoBehaviour, I_TowerInfo
     {
         foreach (var enemy in _EnemyList)
         {  
-            if (enemy != null)
+            if (enemy != null && enemy.activeSelf)
             {
                 int point = 0;
                 List<eType> enemyType = enemy.GetComponent<I_GetType>().GetTargetType();

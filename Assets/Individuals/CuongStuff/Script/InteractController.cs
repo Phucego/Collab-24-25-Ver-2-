@@ -20,33 +20,7 @@ public class InteractController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            bool targethit = false;  
-
-            // Check available colliders
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit[] hit = Physics.RaycastAll(ray, 150f, layerMask);
-            for (int i = 0; i < hit.Length; i++) 
-            {
-                if (hit[i].collider == null)
-                    continue;
-                if (hit[i].collider.isTrigger)
-                    continue;
-                if (hit[i].collider.GetComponent<I_Interactable>() == null)
-                    continue;
-
-                if (LatestInteract != hit[i].collider.GetComponent<I_Interactable>())
-                {
-                    if (LatestInteract != null)
-                    {
-                        LatestInteract.Deselect();
-                        LatestInteract = null;
-                    }
-                    LatestInteract = hit[i].collider.GetComponent<I_Interactable>();
-                    LatestInteract.Interact(Camera.main);
-                    targethit = true;
-                }
-                break;
-            }
+            bool targethit = false;
 
             // Check available canvas buttons 
             PointerEventData pointerEventData = new PointerEventData(eventSystem) { position = Input.mousePosition };
@@ -57,12 +31,43 @@ public class InteractController : MonoBehaviour
             {
                 targethit = true;
             }
-
             if (LatestInteract != null && !targethit)
             {
                 LatestInteract.Deselect();
                 LatestInteract = null;
             }
+
+            // Check available colliders
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit[] hit = Physics.RaycastAll(ray, 150f, layerMask);
+            for (int i = 0; i < hit.Length; i++)
+            {
+                if (hit[i].collider == null)
+                    continue;
+                if (hit[i].collider.isTrigger)
+                    continue;
+                if (hit[i].collider.GetComponent<I_Interactable>() == null)
+                    continue;
+
+                if (LatestInteract != hit[i].collider.GetComponent<I_Interactable>())
+                {
+                    //If overlapped, disable the previous tower
+                    if (LatestInteract != null)
+                    {
+                        LatestInteract.Deselect();
+                        LatestInteract = null;
+                    }
+                    LatestInteract = hit[i].collider.GetComponent<I_Interactable>();
+                    LatestInteract.Interact(Camera.main);
+                }
+                break;
+            }
+     
         }
+    }
+
+    public void DeleteInteractedObject()
+    {
+        LatestInteract = null;
     }
 }
