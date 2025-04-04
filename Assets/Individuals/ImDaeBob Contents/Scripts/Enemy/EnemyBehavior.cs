@@ -80,7 +80,7 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
 
     public float GetSpeed()
     {
-        return _speed;
+        return _velocity.normalized.magnitude * _acceleration;
     }
 
     public void ApplyDebuff(float smth)

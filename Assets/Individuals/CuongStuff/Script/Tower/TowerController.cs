@@ -140,7 +140,7 @@ public class TowerController : MonoBehaviour, I_TowerInfo
     {
         float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
         Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
-        TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.25f);
+        TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.5f);
         Head.transform.LookAt(TargetPos);
 
         StartCoroutine(FireProjectile(TargetPos - AimPoint.transform.position));
