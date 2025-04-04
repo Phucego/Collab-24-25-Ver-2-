@@ -6680,6 +6680,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MapModel
       objectReference: {fileID: 0}
+    - target: {fileID: 3636028017238980116, guid: efe321c9805cdf54d98cc08ab25a7eb7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4124756964709625006, guid: efe321c9805cdf54d98cc08ab25a7eb7, type: 3}
       propertyPath: m_RootOrder
       value: -1

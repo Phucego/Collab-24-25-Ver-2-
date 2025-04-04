@@ -63,12 +63,12 @@ public class TowerController : MonoBehaviour, I_TowerInfo
     {
         //TowerPlaced = true;
         DeepCopyData();
-        RadiusDetector.radius = Radius;
-        RadiusDetector.height = Radius*3;
         GetAllModels(HeadParent, 1);
         GetAllModels(BodyParent, 2);
         CurrentHead = _HeadModel[0];
         CurrentBody = _BodyModel[0];
+        RadiusDetector.radius = Radius;
+        RadiusDetector.height = Radius * 3;
         CallChangeStat.Invoke(UpgradeType.Radius, Radius);
     }
 
@@ -114,8 +114,19 @@ public class TowerController : MonoBehaviour, I_TowerInfo
 
         if (Target != null && TimeBeforeFire <= 0)
         {
-            StartCoroutine(LOSCheck());
-            TimeBeforeFire = FireRate;
+            if (Target.activeSelf)
+            {
+                StartCoroutine(LOSCheck());
+                TimeBeforeFire = FireRate;
+            }
+            else
+            {
+                _EnemyList.Remove(Target);
+                Target = null;
+                TargetPos = new Vector3(0, 0, 0);
+            }
+            
+
         }
         else if (TimeBeforeFire > 0)
         {
