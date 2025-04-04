@@ -70,7 +70,7 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
             LevelEditor_Handler.Instance._coinTest += _reward;
 
         WaveManager.Instance.ReturnToPool(gameObject, data.name);
-        transform.position = new Vector3(0, 0, 0);
+        transform.position = new Vector3(100, 100, 100);
     }
 
     public void TakeDamage(float dmg)

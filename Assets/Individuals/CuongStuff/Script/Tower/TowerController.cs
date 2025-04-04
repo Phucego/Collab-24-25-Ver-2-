@@ -180,7 +180,7 @@ public class TowerController : MonoBehaviour, I_TowerInfo
     {
         foreach (var enemy in _EnemyList)
         {  
-            if (enemy != null && enemy.activeSelf)
+            if (enemy != null && enemy.activeSelf && Vector3.Distance(transform.position, enemy.transform.position) <= Radius * 3f)
             {
                 int point = 0;
                 List<eType> enemyType = enemy.GetComponent<I_GetType>().GetTargetType();
