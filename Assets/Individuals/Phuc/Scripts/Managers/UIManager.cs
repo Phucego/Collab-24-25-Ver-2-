@@ -19,7 +19,7 @@ public class UIManager : MonoBehaviour
     public Button Quit_Yes, Quit_No, MainMenu_No, MainMenu_Yes;
 
     [Header("Choose Options UI Elements")] 
-    public Button chooseOptions, speedUpButton, pauseButton, muteButton;
+    public Button chooseOptions, speedUpButton, pauseButton, muteButton, restartButton;
     public GameObject optionsContainer;
 
     [Header("Other References")]
@@ -74,7 +74,8 @@ public class UIManager : MonoBehaviour
         speedUpButton.onClick.AddListener(ToggleSpeed);
         pauseButton.onClick.AddListener(() => SetPauseState(true));
         muteButton.onClick.AddListener(ToggleMute);
-
+        restartButton.onClick.AddListener(RestartCurrentScene);
+        
         // Register UIManager to listen for lightning strike events
         LightningStrikeEvent lightningEvent = FindObjectOfType<LightningStrikeEvent>();
         if (lightningEvent != null)
@@ -134,6 +135,17 @@ public class UIManager : MonoBehaviour
         anim.SetBool(isMainMenu ? "isConfirmMainMenu" : "isConfirmationMenu", isActive);
     }
 
+
+    private void RestartCurrentScene()
+    {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
+
+        // Reset timescale in case it was changed (e.g., paused or sped up)
+        Time.timeScale = 1f;
+
+        // Reload the current active scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
     private void ToggleTowerSelectPanel()
     {
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
@@ -156,6 +168,8 @@ public class UIManager : MonoBehaviour
         mainUI.SetActive(true);
         confirmationMenu.SetActive(false);
         confirmationMenu_MainMenu.SetActive(false);
+
+        
     }
 
     private void ToggleMute()

@@ -13,4 +13,11 @@ MonoBehaviour:
   m_Name: TowerHealthIntro
   m_EditorClassIdentifier: 
   sectionName: Tower Health Intro
-  dialogueLines: []
+  dialogueLines:
+  - characterName: 'General:'
+    dialogueText: 'As you can see, you were damaged.
+
+'
+  - characterName: 'General:'
+    dialogueText: If your health bar goes out, the game is over, pay close attention
+      to it!

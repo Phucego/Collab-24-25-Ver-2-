@@ -108,7 +108,7 @@ public class TutorialGuidance : MonoBehaviour
         SetDialogueSection("Introduction", OnIntroCompleted.Invoke);
     }
 
-    private void SetDialogueSection(string sectionName, UnityAction onComplete)
+    public void SetDialogueSection(string sectionName, UnityAction onComplete)
     {
         Dialogue dialogue = dialogueScriptables.Find(d => d.sectionName == sectionName);
         if (dialogue == null || dialogue.dialogueLines.Count == 0)
@@ -242,16 +242,10 @@ public class TutorialGuidance : MonoBehaviour
         corruptedIntroDestination.SetActive(true);   
     }
 
-    public void OnTowerDamageIntro()
-    {
-        SetDialogueSection("Tower Health Intro", OnTowerDamaged.Invoke);
-        anim.SetTrigger("hideUI");  
-        corruptedIntroDestination.SetActive(true);      
-        
-    }
     #endregion
-    
-    
+
+
+
     private void EnableMovements()
     {
         _freeFlyCamera._enableRotation = true;
