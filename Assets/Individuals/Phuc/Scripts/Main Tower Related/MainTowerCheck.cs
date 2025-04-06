@@ -1,45 +1,33 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class MainTowerCheck : MonoBehaviour
 {
-    [SerializeField] private MainTowerHealthUI mainTower; // Reference to the main tower script
-    [SerializeField] private float damageAmount = 10f;    // Damage caused by an enemy
-
-    private void Start()
-    {
-        mainTower = GetComponentInParent<MainTowerHealthUI>();
-
-        if (mainTower == null)
-        {
-            Debug.LogError("MainTowerHealthUI not found on parent object!");
-        }
-    }
+    [SerializeField] private float damageAmount = 10f;
+    private HashSet<GameObject> damagedEnemies = new HashSet<GameObject>();
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
-            if (mainTower != null)
+            if (!damagedEnemies.Contains(other.gameObject))
             {
-                mainTower.ApplyDamage(other.gameObject, damageAmount);
-            }
+                damagedEnemies.Add(other.gameObject);
 
-            if (LevelManager.instance != null)
-            {
-                LevelManager.instance.TriggerVignetteEffect();
-            }
-            else
-            {
-                Debug.LogError("LevelManager instance not found!");
-            }
+                if (MainTowerStateManager.Instance != null)
+                {
+                    MainTowerHealthUI.Instance.ApplyDamage(other.gameObject, damageAmount);
+                }
 
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.PlaySoundEffect("GroundEnemy_SFX");
-            }
-            else
-            {
-                Debug.LogError("AudioManager instance not found!");
+                if (LevelManager.instance != null)
+                {
+                    LevelManager.instance.TriggerVignetteEffect();
+                }
+
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlaySoundEffect("GroundEnemy_SFX");
+                }
             }
         }
     }
