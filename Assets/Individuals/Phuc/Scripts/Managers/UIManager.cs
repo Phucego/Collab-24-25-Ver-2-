@@ -12,8 +12,12 @@ public class UIManager : MonoBehaviour
     public GameObject coinCounterParent, waveProgressParent, mainUI;
     public GameObject pauseMenu, towerSelectMenu, confirmationMenu, confirmationMenu_MainMenu;
 
-    [Header("Main UI Elements")] 
-    public Button toggleTowerSelectButton, resumeButton, quitButton, mainMenuButton;
+    [Header("Main UI Elements")]
+    public Button toggleTowerSelectButton;
+    public Button resumeButton;
+    public Button quitButton; 
+    public Button mainMenuButton;
+        
 
     [Header("Confirmation UI Elements")] 
     public Button Quit_Yes, Quit_No, MainMenu_No, MainMenu_Yes;
@@ -27,7 +31,15 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI lightningNotificationText; // Lightning Strike UI Notification
     public TutorialGuidance dialogueManager;
     public SceneField mainMenuScene;
-
+    
+    [Header("Wave Start UI")]
+    public Button startWaveButton;
+    public RectTransform startWaveRect;
+    public TextMeshProUGUI nextWaveCountdownText;
+    private bool hasStartedFirstWave = false;
+    private Coroutine countdownCoroutine;
+    
+    
     private Animator anim;
     private Camera cam;
     private bool isRotated = false;
@@ -76,6 +88,13 @@ public class UIManager : MonoBehaviour
         muteButton.onClick.AddListener(ToggleMute);
         restartButton.onClick.AddListener(RestartCurrentScene);
         
+        // Initialize Wave Start UI
+        startWaveButton.onClick.AddListener(OnStartWaveClicked);
+        startWaveButton.gameObject.SetActive(true);
+        nextWaveCountdownText.gameObject.SetActive(false);
+        nextWaveCountdownText.alpha = 0f;
+        
+
         // Register UIManager to listen for lightning strike events
         LightningStrikeEvent lightningEvent = FindObjectOfType<LightningStrikeEvent>();
         if (lightningEvent != null)
@@ -203,6 +222,62 @@ public class UIManager : MonoBehaviour
 
         chooseOptions.transform.rotation = targetRotation;
     }
+    private void OnStartWaveClicked()
+    {
+        if (hasStartedFirstWave) return;
+
+        hasStartedFirstWave = true;
+
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
+
+        // Animate button upward and fade out
+        Sequence waveButtonSeq = DOTween.Sequence();
+        waveButtonSeq.Append(startWaveRect.DOAnchorPosY(200f, 0.5f).SetEase(Ease.InBack));
+        waveButtonSeq.Join(startWaveButton.image.DOFade(0f, 0.5f));
+        waveButtonSeq.OnComplete(() =>
+        {
+            startWaveButton.gameObject.SetActive(false);
+        });
+
+        // Start first wave
+        WaveManager.Instance.StartWave();
+    }
+
+    public void StartNextWaveCountdown()
+    {
+        if (countdownCoroutine != null)
+            StopCoroutine(countdownCoroutine);
+
+        countdownCoroutine = StartCoroutine(NextWaveCountdownRoutine());
+    }
+
+    private IEnumerator NextWaveCountdownRoutine()
+    {
+        float duration = 30f;
+        float timer = duration;
+
+        nextWaveCountdownText.gameObject.SetActive(true);
+        nextWaveCountdownText.transform.localScale = Vector3.zero;
+
+        // Pop in + fade
+        nextWaveCountdownText.DOFade(1f, 0.3f);
+        nextWaveCountdownText.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+
+        while (timer > 0)
+        {
+            nextWaveCountdownText.text = $"Next Wave in: {Mathf.Ceil(timer)}s";
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+
+        // Fade out + scale down
+        nextWaveCountdownText.DOFade(0f, 0.3f);
+        nextWaveCountdownText.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack)
+            .OnComplete(() => nextWaveCountdownText.gameObject.SetActive(false));
+
+        WaveManager.Instance.SkipToNextWave();
+    }
+
 
     private void ToggleSpeed()
     {

@@ -7,96 +7,109 @@ using UnityEngine.SceneManagement;
 public class LightningStrikeEvent : MonoBehaviour
 {
     [Header("Lightning Strike Settings")]
-    [SerializeField] private SceneField targetScene; 
+    [SerializeField] private SceneField targetScene;
     [SerializeField] private GameObject lightningEffectPrefab;
-    [SerializeField] private float strikeInterval = 10f;
-    [SerializeField] private float effectDuration = 3f;
 
     public List<GameObject> placeableSpots = new List<GameObject>();
+    private Dictionary<GameObject, GameObject> activeEffects = new Dictionary<GameObject, GameObject>();
 
     [Header("Events")]
-    public UnityEvent<string, int> OnLightningStrike; // Sends placeholder name & path ID
+    public UnityEvent<string, int> OnLightningStrike;
 
     private void Start()
     {
         StartCoroutine(InitializeLightningStrike());
+
+        if (WaveManager.Instance != null)
+        {
+            HookWaveEvents();
+        }
+        else
+        {
+            StartCoroutine(WaitForWaveManager());
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (WaveManager.Instance != null)
+            WaveManager.Instance.OnWaveComplete -= StopLightning;
+    }
+
+    private IEnumerator WaitForWaveManager()
+    {
+        while (WaveManager.Instance == null)
+            yield return null;
+
+        HookWaveEvents();
+    }
+
+    private void HookWaveEvents()
+    {
+        WaveManager.Instance.OnWaveComplete += StopLightning;
+        StartCoroutine(WatchForWaveStart());
     }
 
     private IEnumerator InitializeLightningStrike()
     {
-        yield return new WaitForSeconds(1f); // Small delay for scene initialization
+        yield return new WaitForSeconds(1f);
 
         if (SceneManager.GetActiveScene().name != targetScene) yield break;
 
         GameObject[] placeholders = GameObject.FindGameObjectsWithTag("Placeable");
         placeableSpots.AddRange(placeholders);
-
-        StartCoroutine(LightningStrikeRoutine());
     }
 
-    private IEnumerator LightningStrikeRoutine()
+    private IEnumerator WatchForWaveStart()
     {
+        bool wasSpawning = false;
+
         while (true)
         {
-            yield return new WaitForSeconds(strikeInterval);
-
-            if (GameStatesManager.Instance.GetCurrentState() == GameStates.Pause || 
-                (DialogueDisplay.instance != null && DialogueDisplay.instance.isDialogueActive)) 
+            if (WaveManager.Instance != null)
             {
-                continue;
+                bool isSpawning = typeof(WaveManager).GetField("_isSpawning", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(WaveManager.Instance) as bool? ?? false;
+
+                if (isSpawning && !wasSpawning)
+                {
+                    StartLightning();
+                }
+
+                wasSpawning = isSpawning;
             }
 
-            TriggerLightningStrike();
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
-    private void TriggerLightningStrike()
+    private void StartLightning()
     {
         if (placeableSpots.Count == 0) return;
 
         GameObject targetSpot = placeableSpots[Random.Range(0, placeableSpots.Count)];
 
-        // Identify path ID
-        PlaceholderID pathInfo = targetSpot.GetComponent<PlaceholderID>();
-        int pathID = pathInfo != null ? pathInfo.placeholderID : -1; // Default to -1 if not found
+        if (targetSpot.TryGetComponent(out Collider col))
+            col.enabled = false;
 
-        // Disable tower placement
-        targetSpot.GetComponent<Collider>().enabled = false;
-
-        // Spawn lightning effect
         GameObject lightningEffect = Instantiate(lightningEffectPrefab, targetSpot.transform.position + Vector3.up * 1.5f, Quaternion.Euler(-90f, 0f, 0f));
-
-        // Play sound effect
         AudioManager.Instance.PlaySoundEffect("LightningStrike_SFX");
 
-        // Notify UI
-        OnLightningStrike?.Invoke(targetSpot.name, pathID);
+        if (targetSpot.TryGetComponent(out PlaceholderID pathInfo))
+            OnLightningStrike?.Invoke(targetSpot.name, pathInfo.placeholderID);
 
-        StartCoroutine(ResetPlaceholder(targetSpot, lightningEffect));
+        activeEffects[targetSpot] = lightningEffect;
     }
 
-    private IEnumerator ResetPlaceholder(GameObject placeholder, GameObject effect)
+    private void StopLightning()
     {
-        yield return new WaitForSeconds(effectDuration);
-
-        placeholder.GetComponent<Collider>().enabled = true;
-        Destroy(effect);
-    }
-
-    // New functions to update the placeable spots list
-    public void RemovePlaceholder(GameObject placeholder)
-    {
-        if (placeableSpots.Contains(placeholder))
+        foreach (var pair in activeEffects)
         {
-            placeableSpots.Remove(placeholder);
-        }
-    }
+            if (pair.Key.TryGetComponent(out Collider col))
+                col.enabled = true;
 
-    public void AddPlaceholder(GameObject placeholder)
-    {
-        if (!placeableSpots.Contains(placeholder))
-        {
-            placeableSpots.Add(placeholder);
+            Destroy(pair.Value);
         }
+
+        activeEffects.Clear();
     }
 }
