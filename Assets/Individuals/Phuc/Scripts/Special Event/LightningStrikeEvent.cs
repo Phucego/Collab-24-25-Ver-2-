@@ -75,10 +75,21 @@ public class LightningStrikeEvent : MonoBehaviour
                 {
                     int currentWave = UIManager.Instance != null ? UIManager.Instance.currentWave : 1;
 
-                    // Ensure we don't try to pick more unique spots than available
-                    int strikes = Mathf.Min(currentWave, placeableSpots.Count);
+                    // Filter out placeholders that already have towers
+                    List<GameObject> availableSpots = new List<GameObject>();
+                    foreach (var spot in placeableSpots)
+                    {
+                        // Assuming PlaceholderID or another component can help identify if a tower is present
+                        if (spot.GetComponent<TowerController>() == null) // No tower on this spot
+                        {
+                            availableSpots.Add(spot);
+                        }
+                    }
 
-                    List<GameObject> shuffled = new List<GameObject>(placeableSpots);
+                    // Ensure we don't try to pick more unique spots than available
+                    int strikes = Mathf.Min(currentWave, availableSpots.Count);
+
+                    List<GameObject> shuffled = new List<GameObject>(availableSpots);
                     ShuffleList(shuffled);
 
                     for (int i = 0; i < strikes; i++)
@@ -93,6 +104,7 @@ public class LightningStrikeEvent : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
     }
+
     private void ShuffleList<T>(List<T> list)
     {
         for (int i = list.Count - 1; i > 0; i--)
@@ -137,17 +149,38 @@ public class LightningStrikeEvent : MonoBehaviour
 
         if (placeableSpots.Count == 0) return;
 
-        int actualStrikeCount = Mathf.Min(strikeCount, placeableSpots.Count);
+        // Filter out placeholders that already have towers
+        List<GameObject> availableSpots = new List<GameObject>();
+        foreach (var spot in placeableSpots)
+        {
+            // Assuming PlaceholderID or another component can help identify if a tower is present
+            if (spot.GetComponent<TowerController>() == null) // No tower on this spot
+            {
+                availableSpots.Add(spot);
+            }
+        }
 
-        List<GameObject> shuffled = new List<GameObject>(placeableSpots);
+        // Ensure we don't strike more places than available
+        int actualStrikeCount = Mathf.Min(strikeCount, availableSpots.Count);
+
+        List<GameObject> shuffled = new List<GameObject>(availableSpots);
         ShuffleList(shuffled);
 
         for (int i = 0; i < actualStrikeCount; i++)
         {
             StartLightning(shuffled[i]);
         }
-    }
 
+        // If there are not enough valid spots, place the remaining strikes on the available spots
+        if (actualStrikeCount < strikeCount)
+        {
+            int remainingStrikes = strikeCount - actualStrikeCount;
+            for (int i = 0; i < remainingStrikes; i++)
+            {
+                StartLightning(shuffled[i % shuffled.Count]); // Repeating strikes if not enough spots
+            }
+        }
+    }
 
     private void StopLightning()
     {
