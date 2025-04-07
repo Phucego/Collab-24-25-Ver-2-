@@ -85,7 +85,7 @@ public class LevelEditor_Handler : MonoBehaviour
             Instance = this;
     }
 
-        void OnEnable()
+    void OnEnable()
     {
         this.gameObject.GetComponent<CanvasGroup>().alpha = 1;
 
