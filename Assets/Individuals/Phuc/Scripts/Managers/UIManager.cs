@@ -38,7 +38,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI nextWaveCountdownText;
     private bool hasStartedFirstWave = false;
     private Coroutine countdownCoroutine;
-    private int currentWave = 0; // Stores the current wave number
+    public int currentWave = 0; // Stores the current wave number
     
     
     private Animator anim;
@@ -270,23 +270,19 @@ public class UIManager : MonoBehaviour
 
     private IEnumerator NextWaveCountdownRoutine()
     {
-        float duration = 30f; // Set countdown duration
+        float duration = 30f;
         float timer = duration;
 
-        // Show countdown text UI
         nextWaveCountdownText.gameObject.SetActive(true);
         nextWaveCountdownText.transform.localScale = Vector3.zero;
 
-        // Set initial alpha to 0
         Color startColor = nextWaveCountdownText.color;
         startColor.a = 0f;
         nextWaveCountdownText.color = startColor;
 
-        // Fade in and scale up countdown text
         nextWaveCountdownText.DOFade(1f, 0.3f);
         nextWaveCountdownText.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
 
-        // Countdown logic
         while (timer > 0)
         {
             nextWaveCountdownText.text = $"Next Wave in: {Mathf.CeilToInt(timer)}s";
@@ -294,19 +290,25 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
 
-        // Clear text after countdown
         nextWaveCountdownText.text = "";
 
-        // Fade out and scale down countdown text
         Sequence endSeq = DOTween.Sequence();
         endSeq.Append(nextWaveCountdownText.DOFade(0f, 0.3f));
         endSeq.Join(nextWaveCountdownText.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack));
         endSeq.OnComplete(() => nextWaveCountdownText.gameObject.SetActive(false));
 
-        // Start the next wave after the countdown
+        //Trigger Lightning Strikes based on wave
+        LightningStrikeEvent lightningEvent = FindObjectOfType<LightningStrikeEvent>();
+        if (lightningEvent != null)
+        {
+            lightningEvent.StrikeRandomSpots(currentWave);
+        }
+
+        // Start the next wave
         WaveManager.Instance.StartWave();
-        currentWave++; // Increment the current wave number after each wave
+        currentWave++;
     }
+
     
     private void ToggleSpeed()
     {

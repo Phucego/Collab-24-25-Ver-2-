@@ -15,7 +15,8 @@ public class LightningStrikeEvent : MonoBehaviour
 
     [Header("Events")]
     public UnityEvent<string, int> OnLightningStrike;
-
+    
+    private bool hasPlayedLightningSound = false;  // Flag to track sound play status
     private void Start()
     {
         StartCoroutine(InitializeLightningStrike());
@@ -72,7 +73,18 @@ public class LightningStrikeEvent : MonoBehaviour
 
                 if (isSpawning && !wasSpawning)
                 {
-                    StartLightning();
+                    int currentWave = UIManager.Instance != null ? UIManager.Instance.currentWave : 1;
+
+                    // Ensure we don't try to pick more unique spots than available
+                    int strikes = Mathf.Min(currentWave, placeableSpots.Count);
+
+                    List<GameObject> shuffled = new List<GameObject>(placeableSpots);
+                    ShuffleList(shuffled);
+
+                    for (int i = 0; i < strikes; i++)
+                    {
+                        StartLightning(shuffled[i]);
+                    }
                 }
 
                 wasSpawning = isSpawning;
@@ -81,26 +93,61 @@ public class LightningStrikeEvent : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
     }
-
-    private void StartLightning()
+    private void ShuffleList<T>(List<T> list)
     {
-        if (placeableSpots.Count == 0) return;
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int rnd = Random.Range(0, i + 1);
+            T temp = list[i];
+            list[i] = list[rnd];
+            list[rnd] = temp;
+        }
+    }
 
-        GameObject targetSpot = placeableSpots[Random.Range(0, placeableSpots.Count)];
+
+
+    private void StartLightning(GameObject targetSpot)
+    {
+        if (targetSpot == null) return;
 
         if (targetSpot.TryGetComponent(out Collider col))
             col.enabled = false;
 
         GameObject lightningEffect = Instantiate(lightningEffectPrefab, targetSpot.transform.position + Vector3.up * 1.5f, Quaternion.Euler(-90f, 0f, 0f));
-        AudioManager.Instance.PlaySoundEffect("LightningStrike_SFX");
+
+        // Play lightning sound only once per strike event
+        if (!hasPlayedLightningSound)
+        {
+            AudioManager.Instance.PlaySoundEffect("LightningStrike_SFX");
+            hasPlayedLightningSound = true;
+        }
 
         if (targetSpot.TryGetComponent(out PlaceholderID pathInfo))
             OnLightningStrike?.Invoke(targetSpot.name, pathInfo.placeholderID);
 
         activeEffects[targetSpot] = lightningEffect;
-        
+
         UIManager.Instance.StartNextWaveCountdown();
     }
+
+    public void StrikeRandomSpots(int strikeCount)
+    {
+        // Reset the sound flag before striking
+        hasPlayedLightningSound = false;
+
+        if (placeableSpots.Count == 0) return;
+
+        int actualStrikeCount = Mathf.Min(strikeCount, placeableSpots.Count);
+
+        List<GameObject> shuffled = new List<GameObject>(placeableSpots);
+        ShuffleList(shuffled);
+
+        for (int i = 0; i < actualStrikeCount; i++)
+        {
+            StartLightning(shuffled[i]);
+        }
+    }
+
 
     private void StopLightning()
     {
