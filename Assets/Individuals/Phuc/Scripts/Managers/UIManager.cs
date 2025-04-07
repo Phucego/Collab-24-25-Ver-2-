@@ -38,6 +38,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI nextWaveCountdownText;
     private bool hasStartedFirstWave = false;
     private Coroutine countdownCoroutine;
+    private int currentWave = 0; // Stores the current wave number
     
     
     private Animator anim;
@@ -88,19 +89,27 @@ public class UIManager : MonoBehaviour
         muteButton.onClick.AddListener(ToggleMute);
         restartButton.onClick.AddListener(RestartCurrentScene);
         
-        // Initialize Wave Start UI
+        // Initialize UI and button listeners
         startWaveButton.onClick.AddListener(OnStartWaveClicked);
         startWaveButton.gameObject.SetActive(true);
         nextWaveCountdownText.gameObject.SetActive(false);
-        nextWaveCountdownText.alpha = 0f;
-        
 
-        // Register UIManager to listen for lightning strike events
+        // Ensure Lightning event triggers countdown from the start
         LightningStrikeEvent lightningEvent = FindObjectOfType<LightningStrikeEvent>();
         if (lightningEvent != null)
         {
             lightningEvent.OnLightningStrike.AddListener(UpdateLightningNotification);
         }
+
+        // Subscribe to Wave complete event for countdown between waves
+        if (WaveManager.Instance != null)
+        {
+            WaveManager.Instance.OnWaveComplete += StartNextWaveCountdown;
+        }
+        Color c = nextWaveCountdownText.color;
+        c.a = 0f;
+        nextWaveCountdownText.color = c;
+        
     }
 
     private void Update() 
@@ -222,7 +231,7 @@ public class UIManager : MonoBehaviour
 
         chooseOptions.transform.rotation = targetRotation;
     }
-    private void OnStartWaveClicked()
+   private void OnStartWaveClicked()
     {
         if (hasStartedFirstWave) return;
 
@@ -230,7 +239,7 @@ public class UIManager : MonoBehaviour
 
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
 
-        // Animate button upward and fade out
+        // Animate the start wave button and hide it after the animation
         Sequence waveButtonSeq = DOTween.Sequence();
         waveButtonSeq.Append(startWaveRect.DOAnchorPosY(200f, 0.5f).SetEase(Ease.InBack));
         waveButtonSeq.Join(startWaveButton.image.DOFade(0f, 0.5f));
@@ -239,12 +248,20 @@ public class UIManager : MonoBehaviour
             startWaveButton.gameObject.SetActive(false);
         });
 
-        // Start first wave
+        // Start Wave 1
         WaveManager.Instance.StartWave();
+        currentWave = 1; // Update current wave to 1
     }
 
     public void StartNextWaveCountdown()
     {
+        // Skip countdown on the first wave (currentWave == 1)
+        if (currentWave == 1)
+        {
+            currentWave++;
+            return;
+        }
+
         if (countdownCoroutine != null)
             StopCoroutine(countdownCoroutine);
 
@@ -253,32 +270,44 @@ public class UIManager : MonoBehaviour
 
     private IEnumerator NextWaveCountdownRoutine()
     {
-        float duration = 30f;
+        float duration = 30f; // Set countdown duration
         float timer = duration;
 
+        // Show countdown text UI
         nextWaveCountdownText.gameObject.SetActive(true);
         nextWaveCountdownText.transform.localScale = Vector3.zero;
 
-        // Pop in + fade
+        // Set initial alpha to 0
+        Color startColor = nextWaveCountdownText.color;
+        startColor.a = 0f;
+        nextWaveCountdownText.color = startColor;
+
+        // Fade in and scale up countdown text
         nextWaveCountdownText.DOFade(1f, 0.3f);
         nextWaveCountdownText.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
 
+        // Countdown logic
         while (timer > 0)
         {
-            nextWaveCountdownText.text = $"Next Wave in: {Mathf.Ceil(timer)}s";
+            nextWaveCountdownText.text = $"Next Wave in: {Mathf.CeilToInt(timer)}s";
             timer -= Time.deltaTime;
             yield return null;
         }
 
-        // Fade out + scale down
-        nextWaveCountdownText.DOFade(0f, 0.3f);
-        nextWaveCountdownText.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack)
-            .OnComplete(() => nextWaveCountdownText.gameObject.SetActive(false));
+        // Clear text after countdown
+        nextWaveCountdownText.text = "";
 
-        WaveManager.Instance.SkipToNextWave();
+        // Fade out and scale down countdown text
+        Sequence endSeq = DOTween.Sequence();
+        endSeq.Append(nextWaveCountdownText.DOFade(0f, 0.3f));
+        endSeq.Join(nextWaveCountdownText.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack));
+        endSeq.OnComplete(() => nextWaveCountdownText.gameObject.SetActive(false));
+
+        // Start the next wave after the countdown
+        WaveManager.Instance.StartWave();
+        currentWave++; // Increment the current wave number after each wave
     }
-
-
+    
     private void ToggleSpeed()
     {
         isSpeedUp = !isSpeedUp;
@@ -298,6 +327,7 @@ public class UIManager : MonoBehaviour
     {
         // Only display the path number
         string message = pathID >= 0 ? $" Lightning struck at: Path {pathID}!" : " Lightning struck!";
+   
 
         lightningNotificationText.text = message;
     
@@ -308,7 +338,18 @@ public class UIManager : MonoBehaviour
             StartCoroutine(FadeOutLightningNotification());
         });
     }
+    
+    
+    public void ShowLightningStrikeUI()
+    {
+        lightningNotificationText.text = "⚡ Lightning Strike Active!";
+        lightningNotificationText.DOFade(1f, 0.3f);
+    }
 
+    public void HideLightningStrikeUI()
+    {
+        StartCoroutine(FadeOutLightningNotification());
+    }
 
     private IEnumerator FadeOutLightningNotification()
     {

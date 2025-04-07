@@ -98,6 +98,8 @@ public class LightningStrikeEvent : MonoBehaviour
             OnLightningStrike?.Invoke(targetSpot.name, pathInfo.placeholderID);
 
         activeEffects[targetSpot] = lightningEffect;
+        
+        UIManager.Instance.StartNextWaveCountdown();
     }
 
     private void StopLightning()
@@ -111,5 +113,6 @@ public class LightningStrikeEvent : MonoBehaviour
         }
 
         activeEffects.Clear();
+        UIManager.Instance.HideLightningStrikeUI();
     }
 }

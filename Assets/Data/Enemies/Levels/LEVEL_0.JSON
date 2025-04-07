@@ -79,62 +79,6 @@
             "IsLoop": false,
             "LoopAmount": 0,
             "Delay": 3.0
-          },
-          {
-            "Name": "Group 2",
-            "Enemies": [
-              {
-                "Name": "NULL",
-                "Amount": 1,
-                "SpawnInterval": 0.0
-              }
-            ],
-            "Path": "",
-            "IsLoop": false,
-            "LoopAmount": 0,
-            "Delay": 0.0
-          },
-          {
-            "Name": "Group 3",
-            "Enemies": [
-              {
-                "Name": "NULL",
-                "Amount": 1,
-                "SpawnInterval": 0.0
-              }
-            ],
-            "Path": "",
-            "IsLoop": false,
-            "LoopAmount": 0,
-            "Delay": 0.0
-          },
-          {
-            "Name": "Group 4",
-            "Enemies": [
-              {
-                "Name": "NULL",
-                "Amount": 1,
-                "SpawnInterval": 0.0
-              }
-            ],
-            "Path": "",
-            "IsLoop": false,
-            "LoopAmount": 0,
-            "Delay": 0.0
-          },
-          {
-            "Name": "Group 5",
-            "Enemies": [
-              {
-                "Name": "NULL",
-                "Amount": 1,
-                "SpawnInterval": 0.0
-              }
-            ],
-            "Path": "",
-            "IsLoop": false,
-            "LoopAmount": 0,
-            "Delay": 0.0
           }
         ],
         "IsBossWave": false
