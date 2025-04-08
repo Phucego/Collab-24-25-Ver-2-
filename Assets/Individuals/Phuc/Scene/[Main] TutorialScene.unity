@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 9d5113df137d9814aa7948864fa36b8e, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -20892,6 +20892,12 @@ MonoBehaviour:
   startWaveButton: {fileID: 1487527919}
   startWaveRect: {fileID: 1487527915}
   nextWaveCountdownText: {fileID: 1783490439}
+  currentWave: 0
+  waveProgressSlider: {fileID: 0}
+  waveProgressText: {fileID: 0}
+  minibossNotificationText: {fileID: 0}
+  currentLevelName: Level 1
+  miniBossWaves: 030000000600000009000000
 --- !u!95 &1676139304
 Animator:
   serializedVersion: 5
