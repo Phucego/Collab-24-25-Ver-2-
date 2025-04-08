@@ -13,11 +13,11 @@ public class LevelSlideshowUI : MonoBehaviour
     public Image levelDisplayImage;
     public TextMeshProUGUI levelNameText;
     public Button leftButton, rightButton, playButton, backButton;
-    [SerializeField] private GameObject levelSelectionTitle;
+    [SerializeField] private TextMeshProUGUI levelSelectionTitle;
+
     [Header("Slideshow Data")]
     public List<SlideshowLevelData> levels = new List<SlideshowLevelData>();
-    
-    // ✅ Updated title positions
+
     public Vector2 titleHiddenPos = new Vector2(-78f, -100f);
     public Vector2 titleVisiblePos = new Vector2(-78f, -12f);
 
@@ -44,32 +44,23 @@ public class LevelSlideshowUI : MonoBehaviour
             PlayerPrefs.SetInt("UnlockedLevel", 0);
             PlayerPrefs.Save();
         }
+
         if (levelSelectionTitle != null)
         {
-            levelSelectionTitle.SetActive(true);
+            levelSelectionTitle.enabled = true;
+            levelSelectionTitle.color = new Color32(255, 255, 255, 0); // Start transparent
 
-            levelSelectionTitle.SetActive(true);
+            // Fade in alpha
+            levelSelectionTitle.DOFade(1f, 0.5f).SetEase(Ease.InOutSine);
 
-            RectTransform titleRect = levelSelectionTitle.GetComponent<RectTransform>();
-            if (titleRect != null)
-            {
-                // Animate from below to desired position
-                titleRect.anchoredPosition = new Vector2(-163f, -130f); // Start lower
-                titleRect.DOAnchorPos(new Vector2(-163f, -96f), 0.4f).SetEase(Ease.OutBack);
-            }
-            var tmp = levelSelectionTitle.GetComponent<TextMeshProUGUI>();
-            if (tmp != null)
-            {
-                var color = tmp.color;
-                color.a = 1f;
-                tmp.color = color;
-            }
+            // Animate slight vertical slide for added polish
+            levelSelectionTitle.rectTransform.anchoredPosition = new Vector2(-163f, -130f);
+            levelSelectionTitle.rectTransform.DOAnchorPos(new Vector2(-163f, -96f), 0.4f).SetEase(Ease.OutBack);
         }
 
-        // Start hidden
+
         slideshowPanel.anchoredPosition = slideOutPosition;
 
-        // Fade in background
         if (backgroundFadePanel != null)
         {
             var bgColor = backgroundFadePanel.color;
@@ -86,7 +77,6 @@ public class LevelSlideshowUI : MonoBehaviour
             slideshowPanel.DOAnchorPos(slideInPosition, slideDuration).SetEase(Ease.OutExpo);
         }
 
-        // Set up listeners
         leftButton.onClick.AddListener(PreviousLevel);
         rightButton.onClick.AddListener(NextLevel);
         playButton.onClick.AddListener(PlayCurrentLevel);
@@ -112,24 +102,18 @@ public class LevelSlideshowUI : MonoBehaviour
         if (levels == null || levels.Count == 0)
             return;
 
-        //Ensure image and title show properly
         levelDisplayImage.DOFade(0f, 0.2f).OnComplete(() =>
         {
             levelDisplayImage.sprite = levels[currentIndex].levelPreview;
-
-            // Ensure sprite is shown
             levelDisplayImage.color = new Color(1, 1, 1, 0);
             levelDisplayImage.DOFade(1f, 0.4f).SetEase(Ease.InOutSine);
         });
 
-        // Title animation to new position
-        levelNameText.rectTransform.DOKill(); 
+        levelNameText.rectTransform.DOKill();
         levelNameText.text = levels[currentIndex].displayName;
         levelNameText.rectTransform.anchoredPosition = titleHiddenPos;
         levelNameText.rectTransform.DOAnchorPos(titleVisiblePos, 0.4f).SetEase(Ease.OutBack);
 
-
-        //Unlock logic
         int unlocked = PlayerPrefs.GetInt("UnlockedLevel", 0);
         playButton.interactable = currentIndex <= unlocked;
     }
@@ -198,8 +182,19 @@ public class LevelSlideshowUI : MonoBehaviour
 
                 if (levelIndicatorHint != null)
                     levelIndicatorHint.SetActive(true);
+
+                if (levelSelectionTitle != null)
+                {
+                    levelSelectionTitle.enabled = true;
+                    levelSelectionTitle.color = new Color32(255, 255, 255, 255);
+                    levelSelectionTitle.canvasRenderer.SetAlpha(1f);
+                    levelSelectionTitle.rectTransform.anchoredPosition = titleVisiblePos;
+                }
+
+                var button = MainMenuUI.instance?.startButton;
+                if (button != null)
+                    button.interactable = true;
             });
         });
     }
-
 }

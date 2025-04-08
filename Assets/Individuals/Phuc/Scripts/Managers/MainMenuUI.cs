@@ -45,8 +45,13 @@ public class MainMenuUI : MonoBehaviour
 
     [Header("Slideshow Data")]
     public List<SlideshowLevelData> slideshowLevels = new List<SlideshowLevelData>();
-    public Vector2 levelTitleHiddenPos = new Vector2(0, -100);
-    public Vector2 levelTitleVisiblePos = new Vector2(0, -200);
+    public TextMeshProUGUI levelSelectionTitleText;
+    public Vector2 levelTitleVisiblePos = new Vector2(0, 100);
+    public Vector2 levelTitleHiddenPos = new Vector2(0, -300); // animate up from below
+
+    public Vector2 levelSelectionTitleHiddenPos;
+    public Vector2 levelSelectionTitleVisiblePos;
+
 
     private int selectedIndex = 0;
     private List<Button> menuButtons = new List<Button>();
@@ -55,6 +60,7 @@ public class MainMenuUI : MonoBehaviour
     [Header("Fade Controls")]
     public CanvasGroup mainMenuGroup;
 
+    public static MainMenuUI instance;
     private void Awake()
     {
         Time.timeScale = 1f;
@@ -73,12 +79,8 @@ public class MainMenuUI : MonoBehaviour
         MoveIndicator(menuButtons[selectedIndex]);
 
         gameTitle.rectTransform.DOAnchorPosY(0, 0.7f).From(new Vector2(0, 300)).SetEase(Ease.OutBack);
-    }
 
-    private void Start()
-    {
-        Quit_Yes.onClick.AddListener(Application.Quit);
-        Quit_No.onClick.AddListener(() => ToggleConfirmationMenu(false));
+        instance = this;
     }
 
     private void Update()
@@ -165,21 +167,26 @@ public class MainMenuUI : MonoBehaviour
 
     private void AssignButtonListeners()
     {
-        startButton.onClick.AddListener(OnStartLevel);
+        // startButton.onClick.AddListener(OnStartLevel);
+        startButton.onClick.AddListener(ShowSlideshow);
+
         settingsButton.onClick.AddListener(() => Debug.Log("Open Settings"));
         quitButton.onClick.AddListener(() => ToggleConfirmationMenu(true));
+        
+        Quit_Yes.onClick.AddListener(Application.Quit);
+        Quit_No.onClick.AddListener(() => ToggleConfirmationMenu(false));
+
     }
 
     private void AssignHoverListeners()
     {
         foreach (Button button in menuButtons)
         {
-            EventTrigger trigger = button.gameObject.AddComponent<EventTrigger>();
-            var entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
-            entry.callback.AddListener((eventData) => MoveIndicator(button));
-            trigger.triggers.Add(entry);
+            if (button.GetComponent<EventTrigger>() == null)
+                AddHoverListener(button);
         }
     }
+
 
     private void ToggleConfirmationMenu(bool isActive, bool isMainMenu = false)
     {
@@ -192,7 +199,6 @@ public class MainMenuUI : MonoBehaviour
         {
             menuButtons.Add(Quit_Yes);
             menuButtons.Add(Quit_No);
-            selectedIndex = 0;
         }
         else
         {
@@ -201,7 +207,22 @@ public class MainMenuUI : MonoBehaviour
             menuButtons.Add(quitButton);
         }
 
+        selectedIndex = 0; //Fix: Ensure selectedIndex is always reset
         MoveIndicator(menuButtons[selectedIndex]);
+        
+        foreach (Button button in menuButtons)
+        {
+            if (button.GetComponent<EventTrigger>() == null)
+                AddHoverListener(button);
+        }
+
+    }
+    private void AddHoverListener(Button button)
+    {
+        EventTrigger trigger = button.gameObject.AddComponent<EventTrigger>();
+        var entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+        entry.callback.AddListener((eventData) => MoveIndicator(button));
+        trigger.triggers.Add(entry);
     }
 
     #endregion
@@ -216,11 +237,12 @@ public class MainMenuUI : MonoBehaviour
             mainMenuGroup.blocksRaycasts = false;
             mainMenuCanvas.SetActive(false);
 
+            //Setup slideshow BEFORE enabling it
+            SetupLevelSlideshow();
+
             levelSelectionCanvas.SetActive(true);
             levelSelectionPanel.anchoredPosition = offScreenPos;
             levelSelectionPanel.DOAnchorPos(onScreenPos, slideDuration).SetEase(Ease.OutExpo);
-
-            SetupLevelSlideshow(); //ensure this is called
         });
 
         gameTitle.DOFade(0f, 0.3f);
@@ -230,11 +252,12 @@ public class MainMenuUI : MonoBehaviour
     }
 
 
+
     public void OnBackToMainMenu()
     {
         levelSelectionPanel.DOAnchorPos(offScreenPos, slideDuration).SetEase(Ease.InExpo).OnComplete(() =>
         {
-            levelSelectionCanvas.SetActive(false); // ✅ make sure it's hidden
+            levelSelectionCanvas.SetActive(false);
             mainMenuCanvas.SetActive(true);
 
             // Reset main menu UI
@@ -250,6 +273,9 @@ public class MainMenuUI : MonoBehaviour
             {
                 mainMenuGroup.interactable = true;
                 mainMenuGroup.blocksRaycasts = true;
+
+                //Re-enable Start Button
+                startButton.interactable = true;
             });
 
             gameTitle.DOFade(1f, 0.4f);
@@ -260,11 +286,10 @@ public class MainMenuUI : MonoBehaviour
     }
 
 
+
     private void SetupLevelSlideshow()
     {
-        int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 0);
-
-        // Rebind buttons in case they were lost
+        // Avoid duplicate listeners
         leftArrowButton.onClick.RemoveAllListeners();
         rightArrowButton.onClick.RemoveAllListeners();
         playSelectedButton.onClick.RemoveAllListeners();
@@ -277,26 +302,71 @@ public class MainMenuUI : MonoBehaviour
 
         currentLevelIndex = 0;
 
-        //Reset alpha in case it's left at 0
-        levelPreviewImage.color = new Color(1f, 1f, 1f, 1f);
-        levelNameText.color = new Color(1f, 1f, 1f, 1f);
+        // Reset alpha
+        levelPreviewImage.color = Color.white;
+        levelNameText.color = Color.white;
 
-        UpdateSlideshow(); //refresh visual
+        UpdateSlideshow();
+
+        //Just in case it gets stuck as not interactable
+        playSelectedButton.interactable = true;
     }
+
 
 
     public void ShowSlideshow()
     {
-        mainMenuCanvas.SetActive(false);
-        levelSelectionCanvas.SetActive(true);
+        startButton.interactable = false;
 
-        mainMenuGroup.interactable = false;
-        mainMenuGroup.blocksRaycasts = false;
+        mainMenuGroup.DOFade(0f, 0.3f).SetEase(Ease.InOutSine).OnComplete(() =>
+        {
+            mainMenuGroup.interactable = false;
+            mainMenuGroup.blocksRaycasts = false;
+            mainMenuCanvas.SetActive(false);
 
-        levelSelectionPanel.anchoredPosition = offScreenPos;
-        levelSelectionPanel.DOAnchorPos(onScreenPos, slideDuration).SetEase(Ease.OutExpo);
+            levelSelectionCanvas.SetActive(true);
+            levelSelectionPanel.anchoredPosition = offScreenPos;
 
-        SetupLevelSlideshow();
+            //Reset UI first
+            ResetSlideshowUI();
+
+            //THEN slide in
+            levelSelectionPanel.DOAnchorPos(onScreenPos, slideDuration).SetEase(Ease.OutExpo);
+
+            //Setup slideshow now that canvas is active
+            SetupLevelSlideshow();
+        });
+
+        gameTitle.DOFade(0f, 0.3f);
+        indicator.DOScale(Vector3.one * 1.2f, 0.2f)
+            .SetEase(Ease.OutBack)
+            .OnComplete(() => indicator.DOScale(Vector3.one, 0.2f));
+    }
+    
+    private void ResetSlideshowUI()
+    {
+        // Reset level name text
+        levelNameText.text = "";
+        levelNameText.rectTransform.anchoredPosition = levelTitleHiddenPos;
+        levelNameText.color = new Color(1f, 1f, 1f, 1f); // Ensure full visible
+
+        // Reset preview image
+        levelPreviewImage.color = new Color(1f, 1f, 1f, 1f);
+
+        // Reset level selection title
+        if (levelSelectionTitleText != null)
+        {
+            levelSelectionTitleText.text = "LEVEL SELECTION";
+            
+            // Force correct alpha AND re-apply to avoid being overwritten
+            levelSelectionTitleText.color = new Color(1f, 1f, 1f, 1f);
+            levelSelectionTitleText.DOFade(1f, 0.3f);
+
+            // Animate title position
+            levelSelectionTitleText.rectTransform.anchoredPosition = levelSelectionTitleHiddenPos;
+            levelSelectionTitleText.rectTransform.DOAnchorPos(levelSelectionTitleVisiblePos, 0.4f).SetEase(Ease.OutBack);
+
+        }
     }
 
     private void ChangeSlide(int direction)
@@ -350,9 +420,10 @@ public class MainMenuUI : MonoBehaviour
         int currentUnlocked = PlayerPrefs.GetInt("UnlockedLevel", 0);
         if (levelIndex >= currentUnlocked && levelIndex < slideshowLevels.Count - 1)
         {
-            PlayerPrefs.SetInt("UnlockedLevel", levelIndex + 1);
+            PlayerPrefs.SetInt("UnlockedLevel", Mathf.Max(currentUnlocked, levelIndex + 1));
             PlayerPrefs.Save();
         }
+
 
         SceneManager.LoadScene(slideshowLevels[levelIndex].scene);
     }
