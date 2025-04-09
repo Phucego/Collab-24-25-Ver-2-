@@ -203,30 +203,39 @@ public class LevelSlideshowUI : MonoBehaviour
     private void BackToMainMenu()
     {
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
+
+        // Slide the slideshow out first
         slideshowPanel.DOAnchorPos(slideOutPosition, slideDuration).SetEase(Ease.InExpo).OnComplete(() =>
         {
+            // Then fade out the background
             backgroundFadePanel.DOFade(0f, backgroundFadeDuration).OnComplete(() =>
             {
-                gameObject.SetActive(false);
-
+                // Enable Main Menu panel BEFORE hiding this one
                 if (mainMenuPanel != null)
                     mainMenuPanel.SetActive(true);
+                else
+                    Debug.LogWarning("MainMenuPanel is not assigned!");
 
+                // Re-enable level indicator hint if needed
                 if (levelIndicatorHint != null)
                     levelIndicatorHint.SetActive(true);
 
+                // Reset title (optional polish)
                 if (levelSelectionTitle != null)
                 {
-                    levelSelectionTitle.enabled = true;
-                    levelSelectionTitle.color = new Color32(255, 255, 255, 255);
-                    levelSelectionTitle.canvasRenderer.SetAlpha(1f);
-                    levelSelectionTitle.rectTransform.anchoredPosition = titleVisiblePos;
+                    levelSelectionTitle.enabled = false;
+                    levelSelectionTitle.color = new Color32(255, 255, 255, 0);
+                    levelSelectionTitle.rectTransform.anchoredPosition = titleHiddenPos;
                 }
 
-                var button = MainMenuUI.instance?.startButton;
-                if (button != null)
-                    button.interactable = true;
+                // Reactivate start button if MainMenuUI exists
+                if (MainMenuUI.instance != null && MainMenuUI.instance.startButton != null)
+                    MainMenuUI.instance.startButton.interactable = true;
+
+                // Disable this panel last
+                gameObject.SetActive(false);
             });
         });
     }
+
 }

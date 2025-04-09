@@ -81,6 +81,8 @@ public class MainMenuUI : MonoBehaviour
         gameTitle.rectTransform.DOAnchorPosY(0, 0.7f).From(new Vector2(0, 300)).SetEase(Ease.OutBack);
 
         instance = this;
+        
+       
     }
 
     private void Update()
@@ -172,6 +174,7 @@ public class MainMenuUI : MonoBehaviour
 
         settingsButton.onClick.AddListener(() => Debug.Log("Open Settings"));
         quitButton.onClick.AddListener(() => ToggleConfirmationMenu(true));
+        backButton.onClick.AddListener(OnBackToMainMenu);
         
         Quit_Yes.onClick.AddListener(Application.Quit);
         Quit_No.onClick.AddListener(() => ToggleConfirmationMenu(false));
@@ -257,32 +260,40 @@ public class MainMenuUI : MonoBehaviour
     {
         levelSelectionPanel.DOAnchorPos(offScreenPos, slideDuration).SetEase(Ease.InExpo).OnComplete(() =>
         {
-            levelSelectionCanvas.SetActive(false);
+            // FIRST: Reactivate main menu
             mainMenuCanvas.SetActive(true);
+            mainMenuGroup.alpha = 0f;
 
-            AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
-            // Reset main menu UI
+            // Reset visual positions before animating
             RectTransform menuRect = mainMenuCanvas.GetComponent<RectTransform>();
             menuRect.anchoredPosition = new Vector2(-500, 0);
             mainMenuCanvas.transform.localScale = Vector3.one * 0.8f;
 
-            menuRect.DOAnchorPos(Vector2.zero, 0.4f).SetEase(Ease.OutCubic);
-            mainMenuCanvas.transform.DOScale(1f, 0.4f).SetEase(Ease.OutBack);
-
-            mainMenuGroup.alpha = 0f;
+            // Fade in canvas group AFTER it’s active
             mainMenuGroup.DOFade(1f, 0.4f).SetEase(Ease.OutSine).OnComplete(() =>
             {
                 mainMenuGroup.interactable = true;
                 mainMenuGroup.blocksRaycasts = true;
 
-                //Re-enable Start Button
+                // Re-enable Start Button
                 startButton.interactable = true;
             });
 
+            // Animate title + scaling
             gameTitle.DOFade(1f, 0.4f);
             indicator.DOScale(Vector3.one * 1.2f, 0.2f)
                 .SetEase(Ease.OutBack)
                 .OnComplete(() => indicator.DOScale(Vector3.one, 0.2f));
+
+            // Animate position/scale of menu
+            menuRect.DOAnchorPos(Vector2.zero, 0.4f).SetEase(Ease.OutCubic);
+            mainMenuCanvas.transform.DOScale(1f, 0.4f).SetEase(Ease.OutBack);
+
+            // Hide the level selection canvas AFTER main menu is ready
+            levelSelectionCanvas.SetActive(false);
+
+            // Play audio
+            AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         });
     }
 
@@ -290,27 +301,16 @@ public class MainMenuUI : MonoBehaviour
 
     private void SetupLevelSlideshow()
     {
-        // Avoid duplicate listeners
-        leftArrowButton.onClick.RemoveAllListeners();
-        rightArrowButton.onClick.RemoveAllListeners();
-        playSelectedButton.onClick.RemoveAllListeners();
-        backToMainButton.onClick.RemoveAllListeners();
-
-        leftArrowButton.onClick.AddListener(() => ChangeSlide(-1));
-        rightArrowButton.onClick.AddListener(() => ChangeSlide(1));
-        playSelectedButton.onClick.AddListener(PlaySelectedLevel);
-        backToMainButton.onClick.AddListener(OnBackToMainMenu);
+        if (slideshowLevels == null || slideshowLevels.Count == 0)
+        {
+            Debug.LogError("No slideshow levels assigned.");
+            return;
+        }
 
         currentLevelIndex = 0;
-
-        // Reset alpha
-        levelPreviewImage.color = Color.white;
-        levelNameText.color = Color.white;
+        playSelectedButton.interactable = true;
 
         UpdateSlideshow();
-
-        //Just in case it gets stuck as not interactable
-        playSelectedButton.interactable = true;
     }
 
 
@@ -347,34 +347,32 @@ public class MainMenuUI : MonoBehaviour
     
     private void ResetSlideshowUI()
     {
-        // Reset level name text
+        levelPreviewImage.color = new Color(1f, 1f, 1f, 1f); // full opacity
         levelNameText.text = "";
         levelNameText.rectTransform.anchoredPosition = levelTitleHiddenPos;
-        levelNameText.color = new Color(1f, 1f, 1f, 1f); // Ensure full visible
 
-        // Reset preview image
-        levelPreviewImage.color = new Color(1f, 1f, 1f, 1f);
-
-        // Reset level selection title
+        // Title fade in
         if (levelSelectionTitleText != null)
         {
             levelSelectionTitleText.text = "LEVEL SELECTION";
-            
-            // Force correct alpha AND re-apply to avoid being overwritten
-            levelSelectionTitleText.color = new Color(1f, 1f, 1f, 1f);
-            levelSelectionTitleText.DOFade(1f, 0.3f);
-
-            // Animate title position
+            levelSelectionTitleText.color = Color.white;
             levelSelectionTitleText.rectTransform.anchoredPosition = levelSelectionTitleHiddenPos;
             levelSelectionTitleText.rectTransform.DOAnchorPos(levelSelectionTitleVisiblePos, 0.4f).SetEase(Ease.OutBack);
-
         }
     }
 
     private void ChangeSlide(int direction)
     {
+        if (slideshowLevels == null || slideshowLevels.Count == 0) return;
+
         int total = slideshowLevels.Count;
         currentLevelIndex = (currentLevelIndex + direction + total) % total;
+
+        if (slideshowLevels[currentLevelIndex].levelPreview == null)
+        {
+            Debug.LogWarning("Missing level preview sprite.");
+            return;
+        }
 
         levelPreviewImage.DOFade(0f, 0.2f).OnComplete(() =>
         {
@@ -391,6 +389,7 @@ public class MainMenuUI : MonoBehaviour
         int unlockedLevel = PlayerPrefs.GetInt("UnlockedLevel", 0);
         playSelectedButton.interactable = currentLevelIndex <= unlockedLevel;
     }
+
 
     private void UpdateSlideshow()
     {
