@@ -37,6 +37,11 @@ public class LevelSlideshowUI : MonoBehaviour
     public SceneField mainMenuScene;
     [SerializeField] private GameObject levelIndicatorHint;
 
+
+    [Header("Transition Effects")]
+    [SerializeField] private Image fadeToBlackPanel;
+    [SerializeField] private float fadeToBlackDuration = 1f;
+
     private void Start()
     {
         if (!PlayerPrefs.HasKey("UnlockedLevel"))
@@ -56,6 +61,9 @@ public class LevelSlideshowUI : MonoBehaviour
             // Animate slight vertical slide for added polish
             levelSelectionTitle.rectTransform.anchoredPosition = new Vector2(-163f, -130f);
             levelSelectionTitle.rectTransform.DOAnchorPos(new Vector2(-163f, -96f), 0.4f).SetEase(Ease.OutBack);
+
+            if (fadeToBlackPanel != null)
+                fadeToBlackPanel.gameObject.SetActive(false); // Start disabled
         }
 
 
@@ -150,7 +158,8 @@ public class LevelSlideshowUI : MonoBehaviour
             PlayerPrefs.Save();
         }
 
-        StartCoroutine(LoadSceneAsync(selectedLevel.scene.SceneName));
+        StartCoroutine(FadeAndLoadScene(selectedLevel.scene.SceneName));
+
     }
 
     private IEnumerator LoadSceneAsync(string sceneName)
@@ -160,17 +169,40 @@ public class LevelSlideshowUI : MonoBehaviour
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
         asyncLoad.allowSceneActivation = false;
 
+        // Wait until scene is mostly loaded
+        while (asyncLoad.progress < 0.9f)
+        {
+            yield return null;
+        }
+
+        //wait a short moment before switching scenes for smoother transition
+        yield return new WaitForSeconds(0.5f);
+
+        asyncLoad.allowSceneActivation = true;
+
+        //yield until it fully loads if needed
         while (!asyncLoad.isDone)
         {
-            if (asyncLoad.progress >= 0.9f)
-                asyncLoad.allowSceneActivation = true;
-
             yield return null;
         }
     }
 
+    private IEnumerator FadeAndLoadScene(string sceneName)
+    {
+        if (fadeToBlackPanel != null)
+        {
+            fadeToBlackPanel.gameObject.SetActive(true);
+            fadeToBlackPanel.color = new Color(0, 0, 0, 0); // Start fully transparent
+            yield return fadeToBlackPanel.DOFade(1f, fadeToBlackDuration).SetEase(Ease.InOutSine).WaitForCompletion();
+        }
+
+        yield return LoadSceneAsync(sceneName);
+    }
+
+
     private void BackToMainMenu()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         slideshowPanel.DOAnchorPos(slideOutPosition, slideDuration).SetEase(Ease.InExpo).OnComplete(() =>
         {
             backgroundFadePanel.DOFade(0f, backgroundFadeDuration).OnComplete(() =>

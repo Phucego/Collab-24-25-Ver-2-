@@ -260,6 +260,7 @@ public class MainMenuUI : MonoBehaviour
             levelSelectionCanvas.SetActive(false);
             mainMenuCanvas.SetActive(true);
 
+            AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
             // Reset main menu UI
             RectTransform menuRect = mainMenuCanvas.GetComponent<RectTransform>();
             menuRect.anchoredPosition = new Vector2(-500, 0);
@@ -318,6 +319,7 @@ public class MainMenuUI : MonoBehaviour
     {
         startButton.interactable = false;
 
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         mainMenuGroup.DOFade(0f, 0.3f).SetEase(Ease.InOutSine).OnComplete(() =>
         {
             mainMenuGroup.interactable = false;
@@ -380,6 +382,7 @@ public class MainMenuUI : MonoBehaviour
             levelPreviewImage.DOFade(1f, 0.3f);
         });
 
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         levelNameText.text = "";
         levelNameText.rectTransform.anchoredPosition = levelTitleHiddenPos;
         levelNameText.text = slideshowLevels[currentLevelIndex].displayName;
