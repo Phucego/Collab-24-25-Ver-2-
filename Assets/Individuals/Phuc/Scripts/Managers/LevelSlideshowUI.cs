@@ -14,6 +14,7 @@ public class LevelSlideshowUI : MonoBehaviour
     public TextMeshProUGUI levelNameText;
     public Button leftButton, rightButton, playButton, backButton;
     [SerializeField] private TextMeshProUGUI levelSelectionTitle;
+    private Vector2 levelIndicatorOriginalPos;
 
     [Header("Slideshow Data")]
     public List<SlideshowLevelData> levels = new List<SlideshowLevelData>();
@@ -67,6 +68,15 @@ public class LevelSlideshowUI : MonoBehaviour
                 slideshowPanel.DOAnchorPos(slideInPosition, slideDuration).SetEase(Ease.OutExpo);
             });
         }
+        if (levelIndicatorHint != null)
+        {
+            RectTransform hintRect = levelIndicatorHint.GetComponent<RectTransform>();
+            if (hintRect != null)
+            {
+                levelIndicatorOriginalPos = hintRect.anchoredPosition;
+            }
+        }
+
         else
         {
             slideshowPanel.DOAnchorPos(slideInPosition, slideDuration).SetEase(Ease.OutExpo);
@@ -115,12 +125,14 @@ public class LevelSlideshowUI : MonoBehaviour
 
     private void PreviousLevel()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         currentIndex = (currentIndex - 1 + levels.Count) % levels.Count;
         UpdateSlideshow();
     }
 
     private void NextLevel()
     {
+        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         currentIndex = (currentIndex + 1) % levels.Count;
         UpdateSlideshow();
     }
@@ -196,7 +208,8 @@ public class LevelSlideshowUI : MonoBehaviour
                     Debug.LogWarning("MainMenuPanel is not assigned!");
 
                 if (levelIndicatorHint != null)
-                    levelIndicatorHint.SetActive(true);
+                    AnimateLevelIndicator(); 
+
 
                 if (levelSelectionTitle != null)
                 {
@@ -210,6 +223,39 @@ public class LevelSlideshowUI : MonoBehaviour
                 gameObject.SetActive(false);
             });
         });
+    }
+    private void AnimateLevelIndicator()
+    {
+        if (levelIndicatorHint == null) return;
+
+        levelIndicatorHint.SetActive(true);
+        levelIndicatorHint.transform.SetAsLastSibling(); // Bring it above other UI elements
+
+        RectTransform hintRect = levelIndicatorHint.GetComponent<RectTransform>();
+        if (hintRect != null)
+        {
+            // Anchor and pivot setup
+            hintRect.anchorMin = new Vector2(0.5f, 0.5f);
+            hintRect.anchorMax = new Vector2(0.5f, 0.5f);
+            hintRect.pivot = new Vector2(0.5f, 0.5f);
+
+            // Restore original scale (from your screenshot)
+            hintRect.localScale = new Vector3(182.03f, 94.78234f, 1f);
+            hintRect.localRotation = Quaternion.identity;
+
+            // Animate from slightly below
+            Vector2 finalPosition = new Vector2(-558f, 203f);
+            hintRect.anchoredPosition = finalPosition + new Vector2(0, -40f);
+            hintRect.DOAnchorPos(finalPosition, 0.4f).SetEase(Ease.OutBack);
+        }
+
+        // Optional fade-in
+        CanvasGroup cg = levelIndicatorHint.GetComponent<CanvasGroup>();
+        if (cg != null)
+        {
+            cg.alpha = 0f;
+            cg.DOFade(1f, 0.3f);
+        }
     }
 
     //Reusable animation method for the level selection title

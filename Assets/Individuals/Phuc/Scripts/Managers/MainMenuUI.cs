@@ -276,7 +276,7 @@ public class MainMenuUI : MonoBehaviour
             gameTitle.rectTransform.DOAnchorPosY(0, 0.7f).SetEase(Ease.OutBack);
 
             // Play audio
-            AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
+            // AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         });
         if (levelSelectionTitleText != null)
         {

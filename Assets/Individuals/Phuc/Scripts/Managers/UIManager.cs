@@ -31,6 +31,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI lightningNotificationText;
     public TutorialGuidance dialogueManager;
     public SceneField mainMenuScene;
+    public GameObject vineEntangleNotificationPanel; 
 
     [Header("Wave Start UI")]
     public Button startWaveButton;
@@ -361,13 +362,31 @@ public class UIManager : MonoBehaviour
             StartCoroutine(FadeOutLightningNotification());
         });
     }
-
-    public void ShowLightningStrikeUI()
+    public void ShowVineEntangleUI()
     {
-        lightningNotificationText.text = "⚡ Lightning Strike Active!";
-        lightningNotificationText.DOFade(1f, 0.3f);
+        if (vineEntangleNotificationPanel == null) return;
+
+        vineEntangleNotificationPanel.SetActive(true);
+        vineEntangleNotificationPanel.transform.localScale = Vector3.zero;
+
+        vineEntangleNotificationPanel.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+
+        StartCoroutine(HideVineEntangleAfterDelay());
     }
 
+    public void HideVineEntangleUI()
+    {
+        if (vineEntangleNotificationPanel == null) return;
+
+        vineEntangleNotificationPanel.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack)
+            .OnComplete(() => vineEntangleNotificationPanel.SetActive(false));
+    }
+
+    private IEnumerator HideVineEntangleAfterDelay()
+    {
+        yield return new WaitForSeconds(3f);
+        HideVineEntangleUI();
+    }
     public void HideLightningStrikeUI()
     {
         StartCoroutine(FadeOutLightningNotification());
