@@ -4242,7 +4242,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: This is a text to test the length of the tip, don't worry hehe
+  m_text: 'Tip: Use   <sprite name="Return_Button">   if you made a mistake and want
+    to restart'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7a39610e9937e8c47a5263e64efcfdee, type: 2}
   m_sharedMaterial: {fileID: 220090195982973356, guid: 7a39610e9937e8c47a5263e64efcfdee, type: 2}
@@ -19234,7 +19235,7 @@ GameObject:
   - component: {fileID: 1549417073}
   - component: {fileID: 1549417074}
   m_Layer: 12
-  m_Name: Effects/Audio Manager
+  m_Name: LevelManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19283,6 +19284,8 @@ MonoBehaviour:
   - 'Tip: Use camera controls to scout the battlefield!'
   - 'Tip: Early placement of towers can prevent major damage later.'
   - 'Tip: Placement of your wizard tower is very important! Place it wisely.'
+  - 'Tip: Use   <sprite name="Return_Button">   if you made a mistake and want to
+    restart'
   _volume: {fileID: 0}
   _vignette: {fileID: 0}
   effectTime: 1
@@ -26691,7 +26694,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1704700755972363133, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
       propertyPath: m_Padding.m_Bottom
-      value: 171
+      value: 318
       objectReference: {fileID: 0}
     - target: {fileID: 1911959696474379781, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
       propertyPath: m_AnchorMax.y

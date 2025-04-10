@@ -239,7 +239,7 @@ public class BuildingManager : MonoBehaviour
 
             // Adjust the size of the Image
             RectTransform imageRect = buttonImage.GetComponent<RectTransform>();
-            imageRect.sizeDelta = new Vector2(40f ,40f); // Set width to 80 and height to 80
+            imageRect.sizeDelta = new Vector2(28f ,44f); 
 
             go.GetComponent<Button>().onClick.AddListener(() =>
             {
