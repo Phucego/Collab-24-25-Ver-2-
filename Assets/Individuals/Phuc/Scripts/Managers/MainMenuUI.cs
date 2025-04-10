@@ -361,7 +361,7 @@ public class MainMenuUI : MonoBehaviour
         // Title fade in
         if (levelSelectionTitleText != null)
         {
-            levelSelectionTitleText.gameObject.SetActive(true); // ← this line is essential
+            levelSelectionTitleText.gameObject.SetActive(true); 
             levelSelectionTitleText.text = "LEVEL SELECTION";
             levelSelectionTitleText.color = new Color(1f, 1f, 1f, 0f); // reset alpha
             levelSelectionTitleText.rectTransform.anchoredPosition = levelSelectionTitleHiddenPos;

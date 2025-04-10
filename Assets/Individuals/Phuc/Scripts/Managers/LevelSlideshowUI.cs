@@ -212,7 +212,7 @@ public class LevelSlideshowUI : MonoBehaviour
         });
     }
 
-    // 🔁 Reusable animation method for the level selection title
+    //Reusable animation method for the level selection title
     private void AnimateLevelSelectionTitle()
     {
         if (levelSelectionTitle == null) return;
