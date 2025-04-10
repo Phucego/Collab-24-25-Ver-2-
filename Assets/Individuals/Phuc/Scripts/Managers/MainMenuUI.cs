@@ -231,31 +231,7 @@ public class MainMenuUI : MonoBehaviour
     #endregion
 
     #region Level Slideshow
-
-    public void OnStartLevel()
-    {
-        mainMenuGroup.DOFade(0f, 0.3f).SetEase(Ease.InOutSine).OnComplete(() =>
-        {
-            mainMenuGroup.interactable = false;
-            mainMenuGroup.blocksRaycasts = false;
-            mainMenuCanvas.SetActive(false);
-
-            //Setup slideshow BEFORE enabling it
-            SetupLevelSlideshow();
-
-            levelSelectionCanvas.SetActive(true);
-            levelSelectionPanel.anchoredPosition = offScreenPos;
-            levelSelectionPanel.DOAnchorPos(onScreenPos, slideDuration).SetEase(Ease.OutExpo);
-        });
-
-        gameTitle.DOFade(0f, 0.3f);
-        indicator.DOScale(Vector3.one * 1.2f, 0.2f)
-            .SetEase(Ease.OutBack)
-            .OnComplete(() => indicator.DOScale(Vector3.one, 0.2f));
-    }
-
-
-
+    
     public void OnBackToMainMenu()
     {
         levelSelectionPanel.DOAnchorPos(offScreenPos, slideDuration).SetEase(Ease.InExpo).OnComplete(() =>
@@ -292,13 +268,45 @@ public class MainMenuUI : MonoBehaviour
             // Hide the level selection canvas AFTER main menu is ready
             levelSelectionCanvas.SetActive(false);
 
+            // Fade and animate title
+            gameTitle.gameObject.SetActive(true);
+            gameTitle.color = new Color(gameTitle.color.r, gameTitle.color.g, gameTitle.color.b, 0f);
+            gameTitle.DOFade(1f, 0.4f);
+            gameTitle.rectTransform.anchoredPosition = new Vector2(0, 300);
+            gameTitle.rectTransform.DOAnchorPosY(0, 0.7f).SetEase(Ease.OutBack);
+
             // Play audio
             AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         });
+        if (levelSelectionTitleText != null)
+        {
+            levelSelectionTitleText.DOFade(0f, 0.3f).SetEase(Ease.InOutSine);
+            levelSelectionTitleText.rectTransform.DOAnchorPos(levelSelectionTitleHiddenPos, 0.3f).SetEase(Ease.InBack);
+        }
+
+
     }
+    private void FadeInLevelSelectionTitle()
+    {
+        if (levelSelectionTitleText != null)
+        {
+            // Make sure the GameObject is active
+            levelSelectionTitleText.gameObject.SetActive(true);
 
+            // Reset alpha and position
+            Color color = levelSelectionTitleText.color;
+            color.a = 0f;
+            levelSelectionTitleText.color = color;
 
+            levelSelectionTitleText.text = "LEVEL SELECTION";
+            levelSelectionTitleText.rectTransform.anchoredPosition = levelSelectionTitleHiddenPos;
 
+            // Animate position and fade
+            levelSelectionTitleText.rectTransform.DOAnchorPos(levelSelectionTitleVisiblePos, 0.4f).SetEase(Ease.OutBack);
+            levelSelectionTitleText.DOFade(1f, 0.4f).SetEase(Ease.InOutSine);
+        }
+    }
+    
     private void SetupLevelSlideshow()
     {
         if (slideshowLevels == null || slideshowLevels.Count == 0)
@@ -329,14 +337,13 @@ public class MainMenuUI : MonoBehaviour
             levelSelectionCanvas.SetActive(true);
             levelSelectionPanel.anchoredPosition = offScreenPos;
 
-            //Reset UI first
             ResetSlideshowUI();
 
-            //THEN slide in
-            levelSelectionPanel.DOAnchorPos(onScreenPos, slideDuration).SetEase(Ease.OutExpo);
-
-            //Setup slideshow now that canvas is active
-            SetupLevelSlideshow();
+            levelSelectionPanel.DOAnchorPos(onScreenPos, slideDuration).SetEase(Ease.OutExpo).OnComplete(() =>
+            {
+                SetupLevelSlideshow();
+                FadeInLevelSelectionTitle(); //Fade in title after setup
+            });
         });
 
         gameTitle.DOFade(0f, 0.3f);
@@ -344,7 +351,7 @@ public class MainMenuUI : MonoBehaviour
             .SetEase(Ease.OutBack)
             .OnComplete(() => indicator.DOScale(Vector3.one, 0.2f));
     }
-    
+
     private void ResetSlideshowUI()
     {
         levelPreviewImage.color = new Color(1f, 1f, 1f, 1f); // full opacity
@@ -354,12 +361,15 @@ public class MainMenuUI : MonoBehaviour
         // Title fade in
         if (levelSelectionTitleText != null)
         {
+            levelSelectionTitleText.gameObject.SetActive(true); // ← this line is essential
             levelSelectionTitleText.text = "LEVEL SELECTION";
-            levelSelectionTitleText.color = Color.white;
+            levelSelectionTitleText.color = new Color(1f, 1f, 1f, 0f); // reset alpha
             levelSelectionTitleText.rectTransform.anchoredPosition = levelSelectionTitleHiddenPos;
             levelSelectionTitleText.rectTransform.DOAnchorPos(levelSelectionTitleVisiblePos, 0.4f).SetEase(Ease.OutBack);
+            levelSelectionTitleText.DOFade(1f, 0.4f).SetEase(Ease.InOutSine);
         }
     }
+
 
     private void ChangeSlide(int direction)
     {

@@ -37,7 +37,6 @@ public class LevelSlideshowUI : MonoBehaviour
     public SceneField mainMenuScene;
     [SerializeField] private GameObject levelIndicatorHint;
 
-
     [Header("Transition Effects")]
     [SerializeField] private Image fadeToBlackPanel;
     [SerializeField] private float fadeToBlackDuration = 1f;
@@ -50,22 +49,10 @@ public class LevelSlideshowUI : MonoBehaviour
             PlayerPrefs.Save();
         }
 
-        if (levelSelectionTitle != null)
-        {
-            levelSelectionTitle.enabled = true;
-            levelSelectionTitle.color = new Color32(255, 255, 255, 0); // Start transparent
+        AnimateLevelSelectionTitle();
 
-            // Fade in alpha
-            levelSelectionTitle.DOFade(1f, 0.5f).SetEase(Ease.InOutSine);
-
-            // Animate slight vertical slide for added polish
-            levelSelectionTitle.rectTransform.anchoredPosition = new Vector2(-163f, -130f);
-            levelSelectionTitle.rectTransform.DOAnchorPos(new Vector2(-163f, -96f), 0.4f).SetEase(Ease.OutBack);
-
-            if (fadeToBlackPanel != null)
-                fadeToBlackPanel.gameObject.SetActive(false); // Start disabled
-        }
-
+        if (fadeToBlackPanel != null)
+            fadeToBlackPanel.gameObject.SetActive(false); // Start disabled
 
         slideshowPanel.anchoredPosition = slideOutPosition;
 
@@ -159,7 +146,6 @@ public class LevelSlideshowUI : MonoBehaviour
         }
 
         StartCoroutine(FadeAndLoadScene(selectedLevel.scene.SceneName));
-
     }
 
     private IEnumerator LoadSceneAsync(string sceneName)
@@ -169,18 +155,15 @@ public class LevelSlideshowUI : MonoBehaviour
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
         asyncLoad.allowSceneActivation = false;
 
-        // Wait until scene is mostly loaded
         while (asyncLoad.progress < 0.9f)
         {
             yield return null;
         }
 
-        //wait a short moment before switching scenes for smoother transition
         yield return new WaitForSeconds(0.5f);
 
         asyncLoad.allowSceneActivation = true;
 
-        //yield until it fully loads if needed
         while (!asyncLoad.isDone)
         {
             yield return null;
@@ -192,50 +175,52 @@ public class LevelSlideshowUI : MonoBehaviour
         if (fadeToBlackPanel != null)
         {
             fadeToBlackPanel.gameObject.SetActive(true);
-            fadeToBlackPanel.color = new Color(0, 0, 0, 0); // Start fully transparent
+            fadeToBlackPanel.color = new Color(0, 0, 0, 0);
             yield return fadeToBlackPanel.DOFade(1f, fadeToBlackDuration).SetEase(Ease.InOutSine).WaitForCompletion();
         }
 
         yield return LoadSceneAsync(sceneName);
     }
 
-
     private void BackToMainMenu()
     {
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
 
-        // Slide the slideshow out first
         slideshowPanel.DOAnchorPos(slideOutPosition, slideDuration).SetEase(Ease.InExpo).OnComplete(() =>
         {
-            // Then fade out the background
             backgroundFadePanel.DOFade(0f, backgroundFadeDuration).OnComplete(() =>
             {
-                // Enable Main Menu panel BEFORE hiding this one
                 if (mainMenuPanel != null)
                     mainMenuPanel.SetActive(true);
                 else
                     Debug.LogWarning("MainMenuPanel is not assigned!");
 
-                // Re-enable level indicator hint if needed
                 if (levelIndicatorHint != null)
                     levelIndicatorHint.SetActive(true);
 
-                // Reset title (optional polish)
                 if (levelSelectionTitle != null)
                 {
-                    levelSelectionTitle.enabled = false;
-                    levelSelectionTitle.color = new Color32(255, 255, 255, 0);
-                    levelSelectionTitle.rectTransform.anchoredPosition = titleHiddenPos;
+                    levelSelectionTitle.DOFade(0f, 0.3f).SetEase(Ease.InOutSine);
+                    levelSelectionTitle.rectTransform.DOAnchorPos(titleHiddenPos, 0.3f).SetEase(Ease.InBack);
                 }
 
-                // Reactivate start button if MainMenuUI exists
                 if (MainMenuUI.instance != null && MainMenuUI.instance.startButton != null)
                     MainMenuUI.instance.startButton.interactable = true;
 
-                // Disable this panel last
                 gameObject.SetActive(false);
             });
         });
     }
 
+    // 🔁 Reusable animation method for the level selection title
+    private void AnimateLevelSelectionTitle()
+    {
+        if (levelSelectionTitle == null) return;
+
+        levelSelectionTitle.enabled = true;
+        levelSelectionTitle.color = new Color32(255, 255, 255, 0);
+        levelSelectionTitle.rectTransform.anchoredPosition = new Vector2(-163f, -130f);
+        levelSelectionTitle.DOFade(1f, 0.5f).SetEase(Ease.InOutSine);
+        levelSelectionTitle.rectTransform.DOAnchorPos(new Vector2(-163f, -96f), 0.4f).SetEase(Ease.OutBack);
+    }
 }
