@@ -8375,6 +8375,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3a9e9abd95c263344bb4437a5d3c221c, type: 2}
   - {fileID: 11400000, guid: 656a5b517f03bb644ad79fe098795fa5, type: 2}
   - {fileID: 11400000, guid: 939431112354c314daed205c4b3a3333, type: 2}
+  - {fileID: 11400000, guid: 9089b78d7d61f4645b1c1d9a6d89b3db, type: 2}
   anim: {fileID: 1676139304}
   OnIntroCompleted:
     m_PersistentCalls:
@@ -16065,6 +16066,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: VineEntanglementEvent
       objectReference: {fileID: 0}
+    - target: {fileID: 6352842665351540840, guid: a4979723c25ff0146a5b3e2891a6418e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16092,7 +16097,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1275795050
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18644,7 +18649,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1346.5004, y: -51.593872}
+  m_AnchoredPosition: {x: 1346.5004, y: -48}
   m_SizeDelta: {x: 373.3466, y: 58.8122}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1487527916
