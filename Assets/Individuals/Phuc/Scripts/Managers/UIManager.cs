@@ -145,12 +145,37 @@ public class UIManager : MonoBehaviour
     }
     private void InitializeWaveFlags(int totalWaves)
     {
+        // Clear previous flags
+        foreach (Transform child in waveFlagContainer)
+        {
+            Destroy(child.gameObject);
+        }
+        waveFlags.Clear();
+
+        if (waveProgressSlider == null || waveFlagPrefab == null || waveFlagContainer == null)
+            return;
+
+        RectTransform sliderRect = waveProgressSlider.GetComponent<RectTransform>();
+        float sliderWidth = sliderRect.rect.width;
+
         for (int i = 0; i < totalWaves; i++)
         {
             GameObject flag = Instantiate(waveFlagPrefab, waveFlagContainer);
             waveFlags.Add(flag);
 
-            // Optional: ensure the initial visual is dimmed
+            RectTransform flagRect = flag.GetComponent<RectTransform>();
+
+            // Place the flag based on its wave completion percent (e.g., 1/3, 2/3, 3/3)
+            float normalizedPos = totalWaves == 1 ? 1f : (float)(i + 1) / totalWaves;
+            float xPos = Mathf.Lerp(0, sliderWidth, normalizedPos);
+
+            flagRect.anchorMin = new Vector2(0f, 0.5f);
+            flagRect.anchorMax = new Vector2(0f, 0.5f);
+            flagRect.pivot = new Vector2(0.5f, 0.5f);
+            flagRect.anchoredPosition = new Vector2(xPos, 0f); // y = 0 aligns with slider
+            flagRect.localScale = Vector3.one;
+
+            // Dim by default
             Image img = flag.GetComponent<Image>();
             if (img != null)
             {
@@ -160,6 +185,8 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+
+
 
     private void Update()
     {
@@ -354,6 +381,16 @@ public class UIManager : MonoBehaviour
     }
     private void UpdateWaveProgress()
     {
+        //Update the slider fill
+        if (waveProgressSlider != null && WaveManager.Instance != null)
+        {
+            int totalWaves = WaveManager.Instance._curData[0].Waves.Count;
+            float progress = Mathf.Clamp01((float)(currentWave - 1) / totalWaves);
+            waveProgressSlider.DOValue(progress, 0.5f).SetEase(Ease.OutQuad);
+
+        }
+
+        //Update the flags’ visual state
         for (int i = 0; i < waveFlags.Count; i++)
         {
             Image img = waveFlags[i].GetComponent<Image>();
