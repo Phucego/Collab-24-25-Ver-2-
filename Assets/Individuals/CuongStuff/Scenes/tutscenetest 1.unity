@@ -611,7 +611,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c462d59e20df83c43b263efce056ca36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainTower: {fileID: 0}
   damageAmount: 10
 --- !u!1 &119620653
 GameObject:
@@ -1679,7 +1678,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c462d59e20df83c43b263efce056ca36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainTower: {fileID: 550120991}
   damageAmount: 10
 --- !u!1 &332178176
 GameObject:
@@ -4930,6 +4928,16 @@ MonoBehaviour:
   maxTime: 5
   minPauseTime: 5
   maxPauseTime: 10
+  minTipTime: 20
+  maxTipTime: 40
+  gameplayTips:
+  - 'Tip: Build towers near choke points to maximize their impact.'
+  - 'Tip: Keep an eye on your tower''s health bar!'
+  - "Tip: Use your resources wisely\u2014upgrade before it's too late."
+  - 'Tip: Different enemies have different weaknesses.'
+  - "Tip: Corrupted areas can be dangerous\u2014prepare accordingly."
+  - 'Tip: Use camera controls to scout the battlefield!'
+  - 'Tip: Early placement of towers can prevent major damage later.'
   _volume: {fileID: 0}
   _vignette: {fileID: 0}
   effectTime: 1
@@ -5376,6 +5384,7 @@ MonoBehaviour:
   speedUpButton: {fileID: 0}
   pauseButton: {fileID: 9090227092309201282}
   muteButton: {fileID: 0}
+  restartButton: {fileID: 0}
   optionsContainer: {fileID: 0}
   coinCounterText: {fileID: 1130766934}
   lightningNotificationText: {fileID: 0}
@@ -5383,6 +5392,16 @@ MonoBehaviour:
   mainMenuScene:
     m_SceneAsset: {fileID: 102900000, guid: 5ab70225f46419e44b0924c46a99e266, type: 3}
     m_SceneName: '[Main] MainMenuScene'
+  vineEntangleNotificationPanel: {fileID: 0}
+  startWaveButton: {fileID: 0}
+  startWaveRect: {fileID: 0}
+  nextWaveCountdownText: {fileID: 0}
+  currentWave: 0
+  waveProgressSlider: {fileID: 0}
+  waveProgressText: {fileID: 0}
+  minibossNotificationText: {fileID: 0}
+  currentLevelName: Level 1
+  miniBossWaves: 030000000600000009000000
 --- !u!95 &1676139304
 Animator:
   serializedVersion: 5
@@ -6523,6 +6542,12 @@ MonoBehaviour:
   unplaceableLayer:
     serializedVersion: 2
     m_Bits: 1024
+  OnTowerPlaced:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTowerRemoved:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2142580912
 GameObject:
   m_ObjectHideFlags: 0
