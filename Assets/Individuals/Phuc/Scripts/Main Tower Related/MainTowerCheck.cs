@@ -16,7 +16,8 @@ public class MainTowerCheck : MonoBehaviour
 
                 if (MainTowerStateManager.Instance != null)
                 {
-                    MainTowerHealthUI.Instance.ApplyDamage(other.gameObject, damageAmount);
+                    MainTowerHealthUI.Instance.ApplyDamage(other.gameObject, 10f);
+
                 }
 
                 if (LevelManager.instance != null)

@@ -8589,7 +8589,6 @@ GameObject:
   m_Component:
   - component: {fileID: 614608894}
   - component: {fileID: 614608895}
-  - component: {fileID: 614608898}
   - component: {fileID: 614608897}
   - component: {fileID: 614608896}
   m_Layer: 5
@@ -8660,7 +8659,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 614608896}
   m_FillRect: {fileID: 1444621257}
   m_HandleRect: {fileID: 0}
@@ -8710,18 +8709,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 614608893}
   m_CullTransparentMesh: 1
---- !u!114 &614608898
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 614608893}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adb30198aa32dd140b5750692dd48104, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &615491818
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13870,6 +13857,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 3637134996410565414, guid: 9c6178fe943216540b276b975dafae16, type: 3}
   m_PrefabInstance: {fileID: 1070643801}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1072513722 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4006410004592111474, guid: 182e2ff6ff5a4da4090d807036636051, type: 3}
+  m_PrefabInstance: {fileID: 1073526368}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1073526368
 PrefabInstance:
@@ -19168,8 +19160,9 @@ GameObject:
   - component: {fileID: 1549417072}
   - component: {fileID: 1549417073}
   - component: {fileID: 1549417074}
+  - component: {fileID: 1549417075}
   m_Layer: 12
-  m_Name: Effects/Audio Manager
+  m_Name: LevelManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19238,6 +19231,22 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   priority: 1
+--- !u!114 &1549417075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549417071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a73e5c560c9b6fb4da8a80e089331d3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  towerHealth: {fileID: 550120991}
+  fireEffect50: {fileID: 1072513722}
+  fireEffect30: {fileID: 0}
+  destroyedEffect: {fileID: 0}
 --- !u!1 &1551579151
 GameObject:
   m_ObjectHideFlags: 0
@@ -19813,7 +19822,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 1340239034}
   m_HandleRect: {fileID: 0}
@@ -20840,6 +20849,8 @@ MonoBehaviour:
   minibossNotificationText: {fileID: 67165265}
   currentLevelName: Tutorial
   miniBossWaves: 03000000
+  waveFlagPrefab: {fileID: 0}
+  waveFlagContainer: {fileID: 0}
 --- !u!95 &1676139304
 Animator:
   serializedVersion: 5

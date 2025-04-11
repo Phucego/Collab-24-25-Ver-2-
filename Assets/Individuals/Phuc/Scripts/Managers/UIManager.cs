@@ -70,6 +70,11 @@ public class UIManager : MonoBehaviour
     private GameStates previousState;
 
     public static UIManager Instance;
+    
+    [Header("Wave Flag Tracker")]
+    public GameObject waveFlagPrefab;
+    public Transform waveFlagContainer;
+    private List<GameObject> waveFlags = new List<GameObject>();
 
     private void Awake() => Instance = this;
 
@@ -128,6 +133,31 @@ public class UIManager : MonoBehaviour
             waveProgressSlider.minValue = 0f;
             waveProgressSlider.maxValue = 1f;
             waveProgressSlider.value = 0f;
+        }
+        
+        if (WaveManager.Instance != null)
+        {
+            int totalWaves = WaveManager.Instance._curData[0].Waves.Count;
+            InitializeWaveFlags(totalWaves);
+            WaveManager.Instance.OnWaveComplete += StartNextWaveCountdown;
+        }
+
+    }
+    private void InitializeWaveFlags(int totalWaves)
+    {
+        for (int i = 0; i < totalWaves; i++)
+        {
+            GameObject flag = Instantiate(waveFlagPrefab, waveFlagContainer);
+            waveFlags.Add(flag);
+
+            // Optional: ensure the initial visual is dimmed
+            Image img = flag.GetComponent<Image>();
+            if (img != null)
+            {
+                Color c = img.color;
+                c.a = 0.3f;
+                img.color = c;
+            }
         }
     }
 
@@ -268,7 +298,7 @@ public class UIManager : MonoBehaviour
             Debug.Log("All waves completed. No countdown needed.");
             return; // No next wave
         }
-       // Debug.Log(currentWave);
+
         if (countdownCoroutine != null) 
             StopCoroutine(countdownCoroutine);
 
@@ -324,14 +354,18 @@ public class UIManager : MonoBehaviour
     }
     private void UpdateWaveProgress()
     {
-        if (WaveManager.Instance == null || waveProgressSlider == null) return;
+        for (int i = 0; i < waveFlags.Count; i++)
+        {
+            Image img = waveFlags[i].GetComponent<Image>();
+            if (img == null) continue;
 
-        int totalWaves = WaveManager.Instance._curData[0].Waves.Count;
-        float progress = Mathf.Clamp01((float)(currentWave - 1) / totalWaves); // Subtract 1 to track "completed" waves
+            bool isCompleted = i < currentWave - 1;
+            img.color = isCompleted ? new Color(1f, 1f, 1f, 1f) : new Color(1f, 1f, 1f, 0.3f);
+        }
 
-        waveProgressSlider.value = progress;
-        waveProgressText.text = $"{currentLevelName} - {Mathf.RoundToInt(progress * 100f)}%";
+        waveProgressText.text = $"{currentLevelName} - Wave {currentWave}/{waveFlags.Count}";
     }
+
 
 
     private void ShowMiniBossNotification(string message)
