@@ -125,7 +125,7 @@ public class WaveManager : MonoBehaviour
             StartWave();
         else if (Input.GetKeyDown(KeyCode.F2))
             SkipToNextWave();
-        else if (Input.GetKeyDown(KeyCode.Keypad1))
+        else if (Input.GetKeyDown(KeyCode.Keypad1) || Input.GetKeyDown(KeyCode.Alpha0))
             SpawnEnemy("DEMON", "TUT_PATH1");
         else if (Input.GetKeyDown(KeyCode.Keypad2))
             SpawnEnemy("BIRD", "TUT_PATH1");

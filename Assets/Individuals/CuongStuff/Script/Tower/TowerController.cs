@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using static Cinemachine.DocumentationSortingAttribute;
 
-public class TowerController : MonoBehaviour, I_TowerInfo
+public class TowerController : MonoBehaviour, I_TowerInfo, I_Damagable
 {
     // Start is called before the first frame update
     [Header("Tower Set Up")]
@@ -140,7 +140,7 @@ public class TowerController : MonoBehaviour, I_TowerInfo
     {
         float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
         Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
-        TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.25f);
+        TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.5f);
         Head.transform.LookAt(TargetPos);
 
         StartCoroutine(FireProjectile(TargetPos - AimPoint.transform.position));
@@ -180,7 +180,7 @@ public class TowerController : MonoBehaviour, I_TowerInfo
     {
         foreach (var enemy in _EnemyList)
         {  
-            if (enemy != null && enemy.activeSelf)
+            if (enemy != null && enemy.activeSelf && Vector3.Distance(transform.position, enemy.transform.position) <= Radius * 3f)
             {
                 int point = 0;
                 List<eType> enemyType = enemy.GetComponent<I_GetType>().GetTargetType();
@@ -423,4 +423,62 @@ public class TowerController : MonoBehaviour, I_TowerInfo
         return false;
     }
 
+    // Apply debuff into the towers
+    protected IEnumerator AddDebuff(int type, float duration, float value)
+    {
+        // NOTE: This is not applicable as the same method for enemies
+        // Determine which sort of debuff will be applied
+        switch (type)
+        {
+            case 1: // Reduce atk spd
+                FireRate += FireRate * value;
+                break;
+            case 2: // Reduce damage
+                Damage -= Damage * value;
+                break;
+            case 3:
+                break;
+
+        }
+
+        // If duration is set to 0 or below, the debuff is considered to be permanent 
+        if (duration > 0)
+        {
+            yield return new WaitForSeconds(duration);
+            // After debuff duration ended
+            SetBaseStat(type);
+        }
+    }
+
+    // ========== DAMAGABLE INTERFACE ========== \\
+    // Apply damage
+    public void TakeDamage(float damage)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    // Apply debuffs
+    public void ApplyDebuff(int type, float duration, float value)
+    {
+        StartCoroutine(AddDebuff(type, duration, value));
+    }
+
+    // Reset stats to base
+    public void SetBaseStat(int type)
+    {
+        // Set stats to the base
+        switch (type)
+        {
+            case 1: // Fire Rate
+                FireRate = _DeepCopyTowerData.FireRate;
+                break;
+            case 2: // Damage
+                Damage = _DeepCopyTowerData.Damage;
+                break;
+            case 3:
+                break;
+
+        }
+    }
+    // ========== END ========== \\
 }

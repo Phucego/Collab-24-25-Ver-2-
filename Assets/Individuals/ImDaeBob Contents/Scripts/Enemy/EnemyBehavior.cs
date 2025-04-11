@@ -69,7 +69,7 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
             LevelEditor_Handler.Instance._coinTest += _reward;
 
         WaveManager.Instance.ReturnToPool(gameObject, data.name);
-        transform.position = new Vector3(0, 0, 0);
+        transform.position = new Vector3(100, 100, 100);
     }
 
     public void TakeDamage(float dmg)
@@ -79,12 +79,17 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
 
     public float GetSpeed()
     {
-        return _speed;
+        return _velocity.normalized.magnitude * _acceleration;
     }
 
-    public void ApplyDebuff(float smth)
+    public void ApplyDebuff(int type, float duration, float value)
     {
+        throw new System.NotImplementedException();
+    }
 
+    public void SetBaseStat(int type)
+    {
+        throw new System.NotImplementedException();
     }
 
     public List<eType> GetTargetType()
