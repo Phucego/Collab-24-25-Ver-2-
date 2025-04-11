@@ -24,4 +24,6 @@ MonoBehaviour:
     dialogueText: Where our enemies spawn from and it is the only route for them
       to follow and attack our tower.
   - characterName: 'General:'
-    dialogueText: There is another path in this map, feel free to explore!
+    dialogueText: Now, let's see how your cannons fight them!
+  - characterName: 'General:'
+    dialogueText: Press "Start Wave".

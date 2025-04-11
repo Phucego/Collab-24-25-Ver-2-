@@ -1,10 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
-
-//LEVEL MANAGER IS FOR MANAGING A SINGLE LEVEL, DIFFERS FROM THE GAME MANAGER
-//WHICH MANAGES THE GAME STATES.
-
 
 public class LevelManager : MonoBehaviour
 {
@@ -20,30 +17,44 @@ public class LevelManager : MonoBehaviour
     public float minPauseTime = 5f;
     public float maxPauseTime = 10f;
 
+    [Header("Gameplay Tip Settings")]
+    public float minTipTime = 20f;
+    public float maxTipTime = 40f;
+   
+    public List<string> gameplayTips = new List<string>()
+    {
+        "Tip: Build towers near choke points to maximize their impact.",
+        "Tip: Keep an eye on your tower's health bar!",
+        "Tip: Use your resources wisely—upgrade before it's too late.",
+        "Tip: Different enemies have different weaknesses.",
+        "Tip: Corrupted areas can be dangerous—prepare accordingly.",
+        "Tip: Use camera controls to scout the battlefield!",
+        "Tip: Early placement of towers can prevent major damage later.",
+    };
+
     [Header("Post-Processing Effect")]
     [SerializeField] private PostProcessVolume _volume;
     public Vignette _vignette;
     public float effectTime = 1f;
-    private float intensity = 0f;
 
     private void Awake()
     {
         instance = this;
         _volume = GetComponent<PostProcessVolume>();
-    
+
         if (_volume.profile.TryGetSettings(out _vignette) == false || _vignette == null)
         {
             Debug.LogError("Vignette effect not found in PostProcessVolume!");
             return;
         }
-    
+
         _vignette.enabled.Override(false);
     }
-
 
     void Start()
     {
         StartCoroutine(PlaySoundAtRandomIntervals());
+        StartCoroutine(DisplayRandomTips());
     }
 
     private IEnumerator PlaySoundAtRandomIntervals()
@@ -62,6 +73,23 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    private IEnumerator DisplayRandomTips()
+    {
+        while (true)
+        {
+            float waitTime = Random.Range(minTipTime, maxTipTime);
+            yield return new WaitForSeconds(waitTime);
+
+            if (QuickTipManager.Instance != null && gameplayTips.Count > 0)
+            {
+                int index = Random.Range(0, gameplayTips.Count);
+                QuickTipManager.Instance.ShowTip(gameplayTips[index]);
+            }
+        }
+        
+        
+    }
+
     public void TriggerVignetteEffect()
     {
         StartCoroutine(VignetteEffect());
@@ -76,7 +104,7 @@ public class LevelManager : MonoBehaviour
 
         yield return new WaitForSeconds(effectTime);
 
-        float duration = 1f; // Adjust fade duration
+        float duration = 1f;
         float elapsedTime = 0f;
 
         while (elapsedTime < duration)
@@ -86,8 +114,7 @@ public class LevelManager : MonoBehaviour
             _vignette.intensity.Override(newIntensity);
             yield return null;
         }
-       
+
         _vignette.enabled.Override(false);
     }
-
 }

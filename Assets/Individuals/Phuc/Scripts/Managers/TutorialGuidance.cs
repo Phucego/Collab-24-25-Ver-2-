@@ -51,8 +51,12 @@ public class TutorialGuidance : MonoBehaviour
     private bool hasReachedCorruptedZone = false;
     private bool firstTimeTowerDamaged = false;
     private bool isTowerPlacementChecked = false;
+    private bool hasShownPostFirstWaveDialogue = false;
     [SerializeField] private BuildingManager buildingManager;
     
+    
+   
+
     public static TutorialGuidance _instance;
 
     private void Awake()
@@ -71,6 +75,9 @@ public class TutorialGuidance : MonoBehaviour
 
         _freeFlyCamera = FindObjectOfType<FreeFlyCamera>();
         buildingManager = FindObjectOfType<BuildingManager>();
+        
+        //When the first wave complete, start tutorial build ballista
+        WaveManager.Instance.OnWaveComplete += HandleWaveCompleted;
 
         StartIntro();
     }
@@ -108,7 +115,7 @@ public class TutorialGuidance : MonoBehaviour
         SetDialogueSection("Introduction", OnIntroCompleted.Invoke);
     }
 
-    private void SetDialogueSection(string sectionName, UnityAction onComplete)
+    public void SetDialogueSection(string sectionName, UnityAction onComplete)
     {
         Dialogue dialogue = dialogueScriptables.Find(d => d.sectionName == sectionName);
         if (dialogue == null || dialogue.dialogueLines.Count == 0)
@@ -188,9 +195,9 @@ public class TutorialGuidance : MonoBehaviour
             }
         }
     }
+    //CHECKPOINTS CHECKS
     private void OnTriggerEnter(Collider other)
     {
-       
         switch (other.gameObject)
         {
                 case GameObject obj when obj == targetDestination && !hasReachedTargetDestination:
@@ -212,7 +219,6 @@ public class TutorialGuidance : MonoBehaviour
                     hasReachedCorruptedZone = true;
                     StartCorruptedIntro(); 
                     DisableMovements();
-                    
                     Destroy(corruptedIntroDestination);
                     break;
         }
@@ -241,17 +247,23 @@ public class TutorialGuidance : MonoBehaviour
         anim.SetTrigger("hideUI");  
         corruptedIntroDestination.SetActive(true);   
     }
-
-    public void OnTowerDamageIntro()
+    
+    private void HandleWaveCompleted()
     {
-        SetDialogueSection("Tower Health Intro", OnTowerDamaged.Invoke);
-        anim.SetTrigger("hideUI");  
-        corruptedIntroDestination.SetActive(true);      
-        
+        if (!hasShownPostFirstWaveDialogue && WaveManager.Instance != null)
+        {
+            hasShownPostFirstWaveDialogue = true;
+            DisableMovements();
+            anim.SetTrigger("hideUI");
+            // Trigger the tutorial dialogue section
+            SetDialogueSection("Post First Wave", null);
+        }
     }
+
     #endregion
-    
-    
+
+
+
     private void EnableMovements()
     {
         _freeFlyCamera._enableRotation = true;

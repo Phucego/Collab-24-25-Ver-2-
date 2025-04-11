@@ -22,7 +22,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] private string _selectedLevel;
     private List<string> _lvList = new List<string>();
     private string _jsonDirectory;
-    private List<LevelData> _curData = new List<LevelData>();
+    public List<LevelData> _curData = new List<LevelData>();
 
     [Header("Wave Control")]
     [SerializeField] private int _timerBetweenWave = 30;

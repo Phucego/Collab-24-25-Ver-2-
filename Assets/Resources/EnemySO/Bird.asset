@@ -16,7 +16,7 @@ MonoBehaviour:
   name: Bird
   description: Da baloon
   typing: 01000000
-  reward: 0
+  reward: 15
   maxHealth: 100
   maxSpeed: 9
   acceleration: 5

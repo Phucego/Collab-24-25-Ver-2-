@@ -101,15 +101,6 @@ public class LevelEditor_Handler : MonoBehaviour
         SearchFiles();
     }
 
-    private void TestFinished()
-    {
-        if (_testDebugger)
-        {
-            _testDebugger = false;
-            Debug.Log($"Wave {_wave.value} testing finished");
-        }
-    }
-
     void Start()
     {
         RectTransform rt = _testingPanel.GetComponent<RectTransform>();
@@ -119,8 +110,6 @@ public class LevelEditor_Handler : MonoBehaviour
         _inputFieldList.Add(_gDelay);
         _inputFieldList.Add(_eAmount);
         _inputFieldList.Add(_eInterval);
-
-        WaveManager.Instance.OnWaveComplete += TestFinished;
     }
 
     private float _elapsedTime = 0f;

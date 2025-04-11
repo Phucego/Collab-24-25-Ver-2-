@@ -35,7 +35,9 @@ public class BuildingManager : MonoBehaviour
     private Vector3 towerPos;
 
 
- 
+    public UnityEvent<GameObject> OnTowerPlaced = new UnityEvent<GameObject>();
+    public UnityEvent<GameObject> OnTowerRemoved = new UnityEvent<GameObject>();
+
     private void Awake()
     {
         Instance = this;
@@ -154,6 +156,7 @@ public class BuildingManager : MonoBehaviour
             return;
         }
 
+        // Now deduct and proceed with placement
         CurrencyManager.Instance.DeductCurrency(towerCost);
         pendingObj.GetComponent<MeshRenderer>().material = greenMaterial;
 
@@ -162,18 +165,19 @@ public class BuildingManager : MonoBehaviour
             placementIndicator.SetActive(false);
         }
 
-        pendingObj.GetComponent<TowerController>().TowerPlaced = true;
+        towerController.TowerPlaced = true;
         pendingObj.GetComponent<TowerInteract>().isPlaced = true;
         AudioManager.Instance.PlaySoundEffect("BuildTower_SFX");
-        placedTowers.Add(pendingObj);
+
+        placedTowers.Add(pendingObj); //Only add after all checks pass
+        OnTowerPlaced?.Invoke(pendingObj); // trigger event here if using vine system
 
         // Tutorial Integration
         if (!hasPlacedFirstTower)
         {
             hasPlacedFirstTower = true;
             OnFirstTowerPlaced?.Invoke();
-            
-            //NEED TO CHANGE THIS DIALOGUE AFTER REMEMBER PLS
+
             if (tutorialGuidance != null)
             {
                 tutorialGuidance.corruptedIntroDestination.SetActive(true);
@@ -183,7 +187,7 @@ public class BuildingManager : MonoBehaviour
         pendingObj = null;
         Debug.Log("Tower placed successfully and currency deducted.");
     }
-    
+
     
     // Method to check if player has placed their first tower
     public bool HasPlacedFirstTower()
@@ -239,7 +243,7 @@ public class BuildingManager : MonoBehaviour
 
             // Adjust the size of the Image
             RectTransform imageRect = buttonImage.GetComponent<RectTransform>();
-            imageRect.sizeDelta = new Vector2(40f ,40f); // Set width to 80 and height to 80
+            imageRect.sizeDelta = new Vector2(28f ,44f); 
 
             go.GetComponent<Button>().onClick.AddListener(() =>
             {
@@ -255,6 +259,8 @@ public class BuildingManager : MonoBehaviour
         if (placedTowers.Contains(tower))
         {
             placedTowers.Remove(tower);
+            OnTowerRemoved?.Invoke(tower);
+
         }
     }
 

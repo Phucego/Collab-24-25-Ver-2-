@@ -8,7 +8,6 @@ using System.IO;
 using Unity.VisualScripting;
 using System.Linq;
 using static PathEditor_Handler;
-using System.Net.NetworkInformation;
 
 public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
 {
