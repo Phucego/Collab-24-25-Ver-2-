@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using static Cinemachine.DocumentationSortingAttribute;
 
-public class TowerController : MonoBehaviour, I_TowerInfo
+public class TowerController : MonoBehaviour, I_TowerInfo, I_Damagable
 {
     // Start is called before the first frame update
     [Header("Tower Set Up")]
@@ -423,4 +423,47 @@ public class TowerController : MonoBehaviour, I_TowerInfo
         return false;
     }
 
+    // Apply damage
+    public void TakeDamage(float damage)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    // Apply debuffs
+    public void ApplyDebuff(int type, float duration, float value)
+    {
+        StartCoroutine(AddDebuff(type, duration, value));
+    }
+
+    protected IEnumerator AddDebuff(int type, float duration, float value)
+    {
+        // NOTE: This is not applicable as the same method for enemies
+        // Determine which sort of debuff will be applied
+        switch (type)
+        {
+            case 1: // Reduce atk spd
+                FireRate += FireRate * value;
+                break;
+            case 2: // Reduce damage
+                Damage -= Damage * value;
+                break;
+            case 3:
+                break;
+
+        }
+        yield return new WaitForSeconds(duration);
+        // After debuff ended
+        switch (type)
+        {
+            case 1: // Reduce atk spd
+                FireRate = _DeepCopyTowerData.FireRate;
+                break;
+            case 2: // Reduce damage
+                Damage = _DeepCopyTowerData.Damage;
+                break;
+            case 3:
+                break;
+
+        }
+    }
 }

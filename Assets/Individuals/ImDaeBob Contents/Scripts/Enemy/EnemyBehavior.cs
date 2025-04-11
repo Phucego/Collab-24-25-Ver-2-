@@ -83,9 +83,9 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         return _velocity.normalized.magnitude * _acceleration;
     }
 
-    public void ApplyDebuff(float smth)
+    public void ApplyDebuff(int type, float duration, float value)
     {
-
+        throw new System.NotImplementedException();
     }
 
     public List<eType> GetTargetType()
