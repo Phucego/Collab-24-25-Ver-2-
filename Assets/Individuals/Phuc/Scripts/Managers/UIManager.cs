@@ -268,8 +268,8 @@ public class UIManager : MonoBehaviour
             Debug.Log("All waves completed. No countdown needed.");
             return; // No next wave
         }
-
-        if (countdownCoroutine != null)
+       // Debug.Log(currentWave);
+        if (countdownCoroutine != null) 
             StopCoroutine(countdownCoroutine);
 
         countdownCoroutine = StartCoroutine(NextWaveCountdownRoutine());

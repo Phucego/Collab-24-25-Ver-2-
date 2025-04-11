@@ -51,7 +51,10 @@ public class TutorialGuidance : MonoBehaviour
     private bool hasReachedCorruptedZone = false;
     private bool firstTimeTowerDamaged = false;
     private bool isTowerPlacementChecked = false;
+ 
     private bool hasShownPostFirstWaveDialogue = false;
+    private bool hasShownPostSecondWaveDialogue = false;
+
     [SerializeField] private BuildingManager buildingManager;
     
     
@@ -250,18 +253,37 @@ public class TutorialGuidance : MonoBehaviour
     
     private void HandleWaveCompleted()
     {
-        if (!hasShownPostFirstWaveDialogue && WaveManager.Instance != null)
+        if (WaveManager.Instance == null || UIManager.Instance == null)
+            return;
+
+        int waveIndex = UIManager.Instance.currentWave; // This reflects the just-completed wave + 1
+
+        // First wave just finished
+        if (!hasShownPostFirstWaveDialogue && waveIndex == 1)
         {
             hasShownPostFirstWaveDialogue = true;
             DisableMovements();
             anim.SetTrigger("hideUI");
-            // Trigger the tutorial dialogue section
             SetDialogueSection("Post First Wave", null);
+        }
+
+        // Second wave just finished
+        else if (!hasShownPostSecondWaveDialogue && waveIndex == 3)
+        {
+            hasShownPostSecondWaveDialogue = true;
+            DisableMovements();
+            anim.SetTrigger("hideUI");
+            SetDialogueSection("Post Second Wave", null);
         }
     }
 
     #endregion
 
+    private void OnDestroy()
+    {
+        if (WaveManager.Instance != null)
+            WaveManager.Instance.OnWaveComplete -= HandleWaveCompleted;
+    }
 
 
     private void EnableMovements()
