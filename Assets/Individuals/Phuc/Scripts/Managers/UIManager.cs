@@ -317,21 +317,22 @@ public class UIManager : MonoBehaviour
 
         if (miniBossWaves.Contains(currentWave))
         {
-            ShowMiniBossNotification($"⚠️ Mini Boss Incoming at Wave {currentWave}!");
+            ShowMiniBossNotification($"Mini Boss Incoming at Wave {currentWave}!");
         }
  
 
     }
-
     private void UpdateWaveProgress()
     {
-      //   if (WaveManager.Instance == null || waveProgressSlider == null) return;
-      //
-      //   //int totalWaves = WaveManager.Instance.totalWaves;
-      // //  float progress = Mathf.Clamp01((float)currentWave / totalWaves);
-      //   waveProgressSlider.value = progress;
-      //   waveProgressText.text = $"{currentLevelName} - {Mathf.RoundToInt(progress * 100f)}%";
+        if (WaveManager.Instance == null || waveProgressSlider == null) return;
+
+        int totalWaves = WaveManager.Instance._curData[0].Waves.Count;
+        float progress = Mathf.Clamp01((float)(currentWave - 1) / totalWaves); // Subtract 1 to track "completed" waves
+
+        waveProgressSlider.value = progress;
+        waveProgressText.text = $"{currentLevelName} - {Mathf.RoundToInt(progress * 100f)}%";
     }
+
 
     private void ShowMiniBossNotification(string message)
     {
