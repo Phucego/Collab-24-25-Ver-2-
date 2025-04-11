@@ -423,18 +423,7 @@ public class TowerController : MonoBehaviour, I_TowerInfo, I_Damagable
         return false;
     }
 
-    // Apply damage
-    public void TakeDamage(float damage)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    // Apply debuffs
-    public void ApplyDebuff(int type, float duration, float value)
-    {
-        StartCoroutine(AddDebuff(type, duration, value));
-    }
-
+    // Apply debuff into the towers
     protected IEnumerator AddDebuff(int type, float duration, float value)
     {
         // NOTE: This is not applicable as the same method for enemies
@@ -451,14 +440,39 @@ public class TowerController : MonoBehaviour, I_TowerInfo, I_Damagable
                 break;
 
         }
-        yield return new WaitForSeconds(duration);
-        // After debuff ended
+
+        // If duration is set to 0 or below, the debuff is considered to be permanent 
+        if (duration > 0)
+        {
+            yield return new WaitForSeconds(duration);
+            // After debuff duration ended
+            SetBaseStat(type);
+        }
+    }
+
+    // ========== DAMAGABLE INTERFACE ========== \\
+    // Apply damage
+    public void TakeDamage(float damage)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    // Apply debuffs
+    public void ApplyDebuff(int type, float duration, float value)
+    {
+        StartCoroutine(AddDebuff(type, duration, value));
+    }
+
+    // Reset stats to base
+    public void SetBaseStat(int type)
+    {
+        // Set stats to the base
         switch (type)
         {
-            case 1: // Reduce atk spd
+            case 1: // Fire Rate
                 FireRate = _DeepCopyTowerData.FireRate;
                 break;
-            case 2: // Reduce damage
+            case 2: // Damage
                 Damage = _DeepCopyTowerData.Damage;
                 break;
             case 3:
@@ -466,4 +480,5 @@ public class TowerController : MonoBehaviour, I_TowerInfo, I_Damagable
 
         }
     }
+    // ========== END ========== \\
 }

@@ -88,6 +88,11 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         throw new System.NotImplementedException();
     }
 
+    public void SetBaseStat(int type)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public List<eType> GetTargetType()
     {
         return data.typing ?? new List<eType> { eType.Normal };
