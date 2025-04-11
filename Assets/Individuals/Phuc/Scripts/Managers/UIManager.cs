@@ -9,9 +9,14 @@ using DG.Tweening;
 
 public class UIManager : MonoBehaviour
 {
-    [Header("Game Objects")]
-    public GameObject coinCounterParent, waveProgressParent, mainUI;
-    public GameObject pauseMenu, towerSelectMenu, confirmationMenu, confirmationMenu_MainMenu;
+    [Header("Game Objects")] 
+    public GameObject coinCounterParent;
+    public GameObject waveProgressParent;
+    public GameObject mainUI;
+    public GameObject pauseMenu;
+    public GameObject towerSelectMenu;
+    public GameObject confirmationMenu;
+    public GameObject confirmationMenu_MainMenu;
 
     [Header("Main UI Elements")]
     public Button toggleTowerSelectButton;
@@ -19,11 +24,19 @@ public class UIManager : MonoBehaviour
     public Button quitButton;
     public Button mainMenuButton;
 
-    [Header("Confirmation UI Elements")]
-    public Button Quit_Yes, Quit_No, MainMenu_No, MainMenu_Yes;
+    [Header("Confirmation UI Elements")] 
+    public Button Quit_Yes; 
+    public Button Quit_No;
+    public Button MainMenu_No;
+    public Button MainMenu_Yes;
 
     [Header("Choose Options UI Elements")]
-    public Button chooseOptions, speedUpButton, pauseButton, muteButton, restartButton;
+    public Button chooseOptions;
+    public Button speedUpButton;
+    public Button pauseButton;    
+    public Button muteButton;
+    public Button restartButton;
+    
     public GameObject optionsContainer;
 
     [Header("Other References")]
@@ -32,6 +45,7 @@ public class UIManager : MonoBehaviour
     public TutorialGuidance dialogueManager;
     public SceneField mainMenuScene;
     public GameObject vineEntangleNotificationPanel; 
+    
 
     [Header("Wave Start UI")]
     public Button startWaveButton;
@@ -247,10 +261,12 @@ public class UIManager : MonoBehaviour
 
     public void StartNextWaveCountdown()
     {
-        if (currentWave == 1)
+        currentWave++; // Always increment
+
+        if (currentWave > WaveManager.Instance._curData[0].Waves.Count)
         {
-            currentWave++;
-            return;
+            Debug.Log("All waves completed. No countdown needed.");
+            return; // No next wave
         }
 
         if (countdownCoroutine != null)
@@ -258,6 +274,7 @@ public class UIManager : MonoBehaviour
 
         countdownCoroutine = StartCoroutine(NextWaveCountdownRoutine());
     }
+
 
     private IEnumerator NextWaveCountdownRoutine()
     {
@@ -349,7 +366,7 @@ public class UIManager : MonoBehaviour
         anim.SetTrigger("isSpeedChange");
         Time.timeScale = isSpeedUp ? 4f : 1f;
 
-        AudioManager.Instance.PlaySoundEffect(isSpeedUp ? "SpeedUp_SFX" : "SpeedDown_SFX");
+        AudioManager.Instance.PlaySoundEffect(isSpeedUp ? "SpeedUp_SFX" : "SlowDown_SFX");
     }
 
     private void UpdateLightningNotification(string placeholderName, int pathID)

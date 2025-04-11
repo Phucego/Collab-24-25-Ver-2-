@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using DG.Tweening; // Required for DoTween
 
 public class VineEntangleEvent : MonoBehaviour
 {
@@ -15,13 +16,21 @@ public class VineEntangleEvent : MonoBehaviour
     [SerializeField] private List<GameObject> placeableSpots = new List<GameObject>();
     private Dictionary<GameObject, GameObject> activeVines = new Dictionary<GameObject, GameObject>();
     public List<GameObject> towerSpots;
+
     [Header("Events")]
     public UnityEvent<string, int> OnVineEntangle;
-    
+
     private bool hasPlayedVineSound = false;
 
     private void Start()
     {
+        // Hide the notification panel at the beginning
+        if (UIManager.Instance?.vineEntangleNotificationPanel != null)
+        {
+            UIManager.Instance.vineEntangleNotificationPanel.SetActive(false);
+            UIManager.Instance.vineEntangleNotificationPanel.transform.localScale = Vector3.zero;
+        }
+
         if (WaveManager.Instance != null)
             StartCoroutine(EntangleRoutine());
         else
@@ -43,6 +52,7 @@ public class VineEntangleEvent : MonoBehaviour
 
         StartCoroutine(EntangleRoutine());
     }
+
     private void HandleTowerPlaced(GameObject towerSpot)
     {
         if (!towerSpots.Contains(towerSpot))
@@ -54,7 +64,6 @@ public class VineEntangleEvent : MonoBehaviour
         if (towerSpots.Contains(towerSpot))
             towerSpots.Remove(towerSpot);
 
-        // Also remove any vines on it
         if (activeVines.ContainsKey(towerSpot))
         {
             Destroy(activeVines[towerSpot]);
@@ -65,7 +74,6 @@ public class VineEntangleEvent : MonoBehaviour
             UIManager.Instance?.HideVineEntangleUI();
     }
 
-    // Continuously updates the list of placeable spots
     private IEnumerator UpdatePlaceableSpotsRoutine()
     {
         while (true)
@@ -73,8 +81,7 @@ public class VineEntangleEvent : MonoBehaviour
             GameObject[] placeholders = GameObject.FindGameObjectsWithTag("Placeable");
             placeableSpots.Clear();
             placeableSpots.AddRange(placeholders);
-
-            yield return new WaitForSeconds(2f); // Refresh interval
+            yield return new WaitForSeconds(2f);
         }
     }
 
@@ -82,47 +89,37 @@ public class VineEntangleEvent : MonoBehaviour
     {
         while (true)
         {
-            // Only proceed if 3 or more towers are placed
             if (towerSpots.Count < 3)
             {
                 yield return new WaitForSeconds(entangleInterval);
                 continue;
             }
 
-            EntangleTowers(towerSpots);
+            EntangleOneTower(towerSpots); // MODIFIED
             yield return new WaitForSeconds(entangleInterval);
         }
     }
 
-
-    // Dynamically gets all active tower spots
-    private List<GameObject> GetCurrentTowerSpots()
+    private void EntangleOneTower(List<GameObject> towerSpots) // MODIFIED
     {
-        List<GameObject> currentTowerSpots = new List<GameObject>();
+        hasPlayedVineSound = false;
 
-        foreach (var spot in placeableSpots)
-        {
-            if (spot != null && spot.GetComponent<TowerController>() != null)
-                currentTowerSpots.Add(spot);
-        }
-
-        return currentTowerSpots;
-    }
-
-    private void EntangleTowers(List<GameObject> towerSpots)
-    {
-        ShuffleList(towerSpots);
-        hasPlayedVineSound = false; // Reset flag for this entangle round
-
-        foreach (GameObject spot in towerSpots)
+        List<GameObject> validSpots = new List<GameObject>();
+        foreach (var spot in towerSpots)
         {
             if (!activeVines.ContainsKey(spot))
-            {
-                StartEntangle(spot);
-            }
+                validSpots.Add(spot);
         }
+
+        if (validSpots.Count == 0)
+            return;
+
+        int randomIndex = Random.Range(0, validSpots.Count);
+        GameObject targetSpot = validSpots[randomIndex];
+
+        StartEntangle(targetSpot);
     }
-    
+
     private void StartEntangle(GameObject targetSpot)
     {
         if (targetSpot == null) return;
@@ -143,6 +140,9 @@ public class VineEntangleEvent : MonoBehaviour
             OnVineEntangle?.Invoke(targetSpot.name, pathInfo.placeholderID);
 
         UIManager.Instance?.ShowVineEntangleUI();
+
+        // ✅ DOTWEEN ANIMATION CALL HERE
+        AnimateVineNotification(); // NEW LINE
 
         StartCoroutine(RemoveVineAfterDuration(targetSpot, entangleDuration));
     }
@@ -187,5 +187,27 @@ public class VineEntangleEvent : MonoBehaviour
             list[i] = list[rnd];
             list[rnd] = temp;
         }
+    }
+    
+    private void AnimateVineNotification()
+    {
+        var notificationUI = UIManager.Instance?.vineEntangleNotificationPanel;
+        if (notificationUI == null) return;
+
+        // Reset and pop scale
+        notificationUI.transform.localScale = Vector3.zero;
+        notificationUI.SetActive(true);
+
+        notificationUI.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack).OnComplete(() =>
+        {
+            // Optional: shrink after a delay
+            DOVirtual.DelayedCall(2f, () =>
+            {
+                notificationUI.transform.DOScale(0f, 0.3f).SetEase(Ease.InBack).OnComplete(() =>
+                {
+                    notificationUI.SetActive(false);
+                });
+            });
+        });
     }
 }
