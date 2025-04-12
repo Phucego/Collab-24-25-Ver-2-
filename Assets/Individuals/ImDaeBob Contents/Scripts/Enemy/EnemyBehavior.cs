@@ -42,6 +42,8 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         #else
             _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData"); // Works in Final Build
         #endif
+        
+        UIManager.Instance.RegisterWaveEnemy();
     }
 
     void OnDisable()
@@ -67,8 +69,10 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
             CurrencyManager.Instance.currentCurrency += _reward;
         if (LevelEditor_Handler.Instance != null)
             LevelEditor_Handler.Instance._coinTest += _reward;
-
+        
         WaveManager.Instance.ReturnToPool(gameObject, data.name);
+        
+        UIManager.Instance.NotifyEnemyKilled();
         transform.position = new Vector3(100, 100, 100);
     }
 

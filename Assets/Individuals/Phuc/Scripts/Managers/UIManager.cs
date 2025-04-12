@@ -54,6 +54,7 @@ public class UIManager : MonoBehaviour
     private bool hasStartedFirstWave = false;
     private Coroutine countdownCoroutine;
     public int currentWave = 0;
+   
 
     [Header("Wave Progress Tracker")]
     public Slider waveProgressSlider;
@@ -75,6 +76,8 @@ public class UIManager : MonoBehaviour
     public GameObject waveFlagPrefab;
     public Transform waveFlagContainer;
     private List<GameObject> waveFlags = new List<GameObject>();
+    public int enemiesKilledThisWave = 0;
+    public int enemiesTotalThisWave = 0;
 
     private void Awake() => Instance = this;
 
@@ -302,7 +305,9 @@ public class UIManager : MonoBehaviour
     private void OnStartWaveClicked()
     {
         if (hasStartedFirstWave) return;
-
+        WaveManager.Instance.StartWave();
+        currentWave = 0;
+        UpdateWaveProgress();
         hasStartedFirstWave = true;
         AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
 
@@ -311,32 +316,38 @@ public class UIManager : MonoBehaviour
         waveButtonSeq.Join(startWaveButton.image.DOFade(0f, 0.5f));
         waveButtonSeq.OnComplete(() => startWaveButton.gameObject.SetActive(false));
 
-        WaveManager.Instance.StartWave();
-        currentWave = 1;
-        UpdateWaveProgress();
     }
 
     public void StartNextWaveCountdown()
     {
-        currentWave++; // Always increment
+        // Increment currentWave here
+        currentWave++;
 
         if (currentWave > WaveManager.Instance._curData[0].Waves.Count)
         {
             Debug.Log("All waves completed. No countdown needed.");
-            return; // No next wave
+            return;
         }
 
-        if (countdownCoroutine != null) 
-            StopCoroutine(countdownCoroutine);
+        // Update wave progress after each wave
+        UpdateWaveProgress();
 
-        countdownCoroutine = StartCoroutine(NextWaveCountdownRoutine());
+        // Trigger the countdown for the next wave
+        StartCoroutine(NextWaveCountdownRoutine());
     }
+
 
 
     private IEnumerator NextWaveCountdownRoutine()
     {
         float duration = 30f;
         float timer = duration;
+        currentWave++;
+        UpdateWaveProgress();
+        if (miniBossWaves.Contains(currentWave))
+            {
+                ShowMiniBossNotification($"Mini Boss Incoming at Wave {currentWave}!");
+            }
 
         nextWaveCountdownText.gameObject.SetActive(true);
         nextWaveCountdownText.transform.localScale = Vector3.zero;
@@ -361,46 +372,42 @@ public class UIManager : MonoBehaviour
         endSeq.Join(nextWaveCountdownText.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack));
         endSeq.OnComplete(() => nextWaveCountdownText.gameObject.SetActive(false));
 
-        LightningStrikeEvent lightningEvent = FindObjectOfType<LightningStrikeEvent>();
-        if (lightningEvent != null)
-        {
-            lightningEvent.StrikeRandomSpots(currentWave);
-        }
-
+        // Start the wave
         WaveManager.Instance.StartWave();
-        currentWave++;
 
-        UpdateWaveProgress();
-
-        if (miniBossWaves.Contains(currentWave))
-        {
-            ShowMiniBossNotification($"Mini Boss Incoming at Wave {currentWave}!");
-        }
- 
-
+     
     }
+
     private void UpdateWaveProgress()
     {
-        //Update the slider fill
         if (waveProgressSlider != null && WaveManager.Instance != null)
         {
-            int totalWaves = WaveManager.Instance._curData[0].Waves.Count;
-            float progress = Mathf.Clamp01((float)(currentWave - 1) / totalWaves);
+            // Ensure the wave progress is only updated when there are enemies in the wave
+            if (enemiesTotalThisWave == 0) return;
+
+            // Calculate the progress based on the enemies defeated vs total enemies in the wave
+            float progress = Mathf.Clamp01((float)(enemiesKilledThisWave) / enemiesTotalThisWave);
+
+            // Update the slider smoothly
             waveProgressSlider.DOValue(progress, 0.5f).SetEase(Ease.OutQuad);
 
+            // Update the wave progress text (shows current wave out of total waves)
+            waveProgressText.text = $"{currentLevelName} - Wave {Mathf.Min(currentWave, waveFlags.Count)}/{waveFlags.Count}";
         }
+    }
 
-        //Update the flags’ visual state
-        for (int i = 0; i < waveFlags.Count; i++)
-        {
-            Image img = waveFlags[i].GetComponent<Image>();
-            if (img == null) continue;
+    public void UpdateCurrentWaveProgress()
+    {
+        if (waveProgressSlider == null || enemiesTotalThisWave == 0) return;
 
-            bool isCompleted = i < currentWave - 1;
-            img.color = isCompleted ? new Color(1f, 1f, 1f, 1f) : new Color(1f, 1f, 1f, 0.3f);
-        }
+        // Calculate the progress based on the enemies defeated vs total enemies in the wave
+        float progress = Mathf.Clamp01((float)(currentWave) / enemiesTotalThisWave);
+    
+        // Update the slider smoothly
+        waveProgressSlider.DOValue(progress, 0.5f).SetEase(Ease.OutQuad);
 
-        waveProgressText.text = $"{currentLevelName} - Wave {currentWave}/{waveFlags.Count}";
+        // Update the wave progress text (shows current wave out of total waves)
+        waveProgressText.text = $"{currentLevelName} - Wave {Mathf.Min(currentWave, waveFlags.Count)}/{waveFlags.Count}";
     }
 
 
@@ -430,6 +437,18 @@ public class UIManager : MonoBehaviour
         {
             minibossNotificationText.gameObject.SetActive(false);
         });
+    }
+    public void RegisterWaveEnemy()
+    {
+        enemiesTotalThisWave++;
+        UpdateWaveProgress();  
+    }
+
+
+    public void NotifyEnemyKilled()
+    {
+        enemiesKilledThisWave++;
+        UpdateWaveProgress();  
     }
 
     private void ToggleSpeed()
