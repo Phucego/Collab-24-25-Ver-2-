@@ -20,45 +20,43 @@ public class TutorialGuidance : MonoBehaviour
     [Header("Animation Controller")]
     public Animator anim;
 
-    //EVENTS
+    // EVENTS
     public UnityEvent OnIntroCompleted;
-    public UnityEvent OnMovementPracticeCompleted;  
+    public UnityEvent OnMovementPracticeCompleted;
     public UnityEvent OnBuildingCompleted;
     public UnityEvent OnCorruptedIntroCompleted;
     public UnityEvent OnTowerDamaged;
-    
-    
+
     private List<Dialogue.DialogueLine> currentDialogueLines;
     private int currentLineIndex = 0;
     private bool isTutorialActive = false;
 
-    [SerializeField]
-    private bool movementDetected = false;
-
+    [SerializeField] private bool movementDetected = false;
     private Coroutine typingCoroutine;
     private bool isTyping = false;
 
     private FreeFlyCamera _freeFlyCamera;
 
-    //TUTORIAL GAME OBJECTS
+    // Tutorial checkpoints
     public GameObject buildingDestination;
     public GameObject targetDestination;
     public GameObject corruptedIntroDestination;
-    
-    //CHECK CONDITIONS 
+
+    // Progress tracking
     private bool hasReachedTargetDestination = false;
     private bool hasReachedBuildingDestination = false;
     private bool hasReachedCorruptedZone = false;
     private bool firstTimeTowerDamaged = false;
     private bool isTowerPlacementChecked = false;
- 
+
     private bool hasShownPostFirstWaveDialogue = false;
     private bool hasShownPostSecondWaveDialogue = false;
+    private bool corruptedIntroCompleted = false;
 
     [SerializeField] private BuildingManager buildingManager;
-    
-    
-   
+
+    // Lock wave start until corruption tutorial is done
+    private bool startWaveLocked = true;
 
     public static TutorialGuidance _instance;
 
@@ -70,17 +68,20 @@ public class TutorialGuidance : MonoBehaviour
     void Start()
     {
         dialogueUI.SetActive(false);
-        
-        buildingDestination.SetActive(false);   
-        corruptedIntroDestination.SetActive(false);     
-        
+
+        buildingDestination.SetActive(false);
+        corruptedIntroDestination.SetActive(false);
+
         nextButton.onClick.AddListener(OnNextButtonClicked);
 
         _freeFlyCamera = FindObjectOfType<FreeFlyCamera>();
         buildingManager = FindObjectOfType<BuildingManager>();
-        
-        //When the first wave complete, start tutorial build ballista
+
         WaveManager.Instance.OnWaveComplete += HandleWaveCompleted;
+
+        // Disable start wave until corrupted tutorial is complete
+        if (UIManager.Instance != null)
+            UIManager.Instance.startWaveButton.interactable = false;
 
         StartIntro();
     }
@@ -89,7 +90,6 @@ public class TutorialGuidance : MonoBehaviour
     {
         if (isTutorialActive && currentDialogueLines != null && currentDialogueLines.Count > 0)
         {
-            // Check if we're in the tower placement section and haven't placed a tower yet
             if (currentDialogueLines[currentLineIndex].characterName == "Introduction" && !isTowerPlacementChecked)
             {
                 if (buildingManager != null && buildingManager.HasPlacedFirstTower())
@@ -97,18 +97,15 @@ public class TutorialGuidance : MonoBehaviour
                     isTowerPlacementChecked = true;
                     currentLineIndex++;
                     if (isTutorialActive)
-                    {
                         ShowCurrentLine(null);
-                    }
                 }
             }
+
             if (currentDialogueLines[currentLineIndex].characterName == "Introduction")
             {
                 movementDetected = true;
             }
         }
-
-
     }
 
     private void StartIntro()
@@ -155,9 +152,7 @@ public class TutorialGuidance : MonoBehaviour
     private void DisplayLine(Dialogue.DialogueLine line)
     {
         if (typingCoroutine != null)
-        {
             StopCoroutine(typingCoroutine);
-        }
 
         isTyping = true;
         characterNameText.text = line.characterName;
@@ -178,13 +173,10 @@ public class TutorialGuidance : MonoBehaviour
 
     private void OnNextButtonClicked()
     {
-        // Ensure the player cannot press "Next" while the game is paused
-        if (isTyping && !UIManager.Instance.pauseMenu.activeSelf) 
+        if (isTyping && !UIManager.Instance.pauseMenu.activeSelf)
         {
             if (typingCoroutine != null)
-            {
                 StopCoroutine(typingCoroutine);
-            }
 
             dialogueText.text = currentDialogueLines[currentLineIndex].dialogueText;
             isTyping = false;
@@ -193,50 +185,46 @@ public class TutorialGuidance : MonoBehaviour
         {
             currentLineIndex++;
             if (isTutorialActive)
-            {
                 ShowCurrentLine(null);
-            }
         }
     }
-    //CHECKPOINTS CHECKS
+
     private void OnTriggerEnter(Collider other)
     {
         switch (other.gameObject)
         {
-                case GameObject obj when obj == targetDestination && !hasReachedTargetDestination:
-                    hasReachedTargetDestination = true;
-                    Debug.Log("Camera reached destination.");
-                    DisableMovements();
-                    StartMovementPractice();
-                    Destroy(targetDestination);
-                    break;
+            case GameObject obj when obj == targetDestination && !hasReachedTargetDestination:
+                hasReachedTargetDestination = true;
+                DisableMovements();
+                StartMovementPractice();
+                Destroy(targetDestination);
+                break;
 
-                case GameObject obj when obj == buildingDestination && !hasReachedBuildingDestination:
-                    hasReachedBuildingDestination = true;
-                    DisableMovements();
-                    StartBuildingTutorial();
-                    Destroy(buildingDestination);
-                    break;
+            case GameObject obj when obj == buildingDestination && !hasReachedBuildingDestination:
+                hasReachedBuildingDestination = true;
+                DisableMovements();
+                StartBuildingTutorial();
+                Destroy(buildingDestination);
+                break;
 
-                case GameObject obj when obj == corruptedIntroDestination && !hasReachedCorruptedZone:
-                    hasReachedCorruptedZone = true;
-                    StartCorruptedIntro(); 
-                    DisableMovements();
-                    Destroy(corruptedIntroDestination);
-                    break;
+            case GameObject obj when obj == corruptedIntroDestination && !hasReachedCorruptedZone:
+                hasReachedCorruptedZone = true;
+                StartCorruptedIntro();
+                DisableMovements();
+                Destroy(corruptedIntroDestination);
+                break;
         }
     }
 
-    #region Start Tutorial Functions
+    #region Tutorial Sections
 
     public void StartMovementPractice()
     {
         SetDialogueSection("Camera Practice", OnIntroCompleted.Invoke);
         anim.SetTrigger("hideUI");
-        
-        buildingDestination.SetActive(true); 
-
+        buildingDestination.SetActive(true);
     }
+
     public void StartBuildingTutorial()
     {
         SetDialogueSection("Building", OnBuildingCompleted.Invoke);
@@ -246,19 +234,33 @@ public class TutorialGuidance : MonoBehaviour
 
     public void StartCorruptedIntro()
     {
-        SetDialogueSection("Corrupted Zone Intro", OnCorruptedIntroCompleted.Invoke);
-        anim.SetTrigger("hideUI");  
-        corruptedIntroDestination.SetActive(true);   
+        EnableStartWave();
+        SetDialogueSection("Corrupted Zone Intro", () =>
+        {
+            OnCorruptedIntroCompleted?.Invoke();
+        
+        });
+
+        anim.SetTrigger("hideUI");
     }
-    
+
+    private void EnableStartWave()
+    {
+        startWaveLocked = false;
+        corruptedIntroCompleted = true;
+
+        if (UIManager.Instance != null && UIManager.Instance.startWaveButton != null)
+            UIManager.Instance.startWaveButton.interactable = true;
+    }
+
     private void HandleWaveCompleted()
     {
         if (WaveManager.Instance == null || UIManager.Instance == null)
             return;
 
-        int waveIndex = UIManager.Instance.currentWave; // This reflects the just-completed wave + 1
+        int waveIndex = UIManager.Instance.currentWave;
 
-        // First wave just finished
+        // First wave completed (index 0)
         if (!hasShownPostFirstWaveDialogue && waveIndex == 0)
         {
             hasShownPostFirstWaveDialogue = true;
@@ -267,7 +269,7 @@ public class TutorialGuidance : MonoBehaviour
             SetDialogueSection("Post First Wave", null);
         }
 
-        // Second wave just finished
+        // Second wave completed (index 1)
         else if (!hasShownPostSecondWaveDialogue && waveIndex == 1)
         {
             hasShownPostSecondWaveDialogue = true;
@@ -284,7 +286,6 @@ public class TutorialGuidance : MonoBehaviour
         if (WaveManager.Instance != null)
             WaveManager.Instance.OnWaveComplete -= HandleWaveCompleted;
     }
-
 
     private void EnableMovements()
     {
