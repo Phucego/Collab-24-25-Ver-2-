@@ -94,11 +94,7 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         return _speed;
     }
 
-    public void ApplyDebuff(int type, float duration, float value)
-    { }
 
-    public void SetBaseStat(int type)
-    { }
 
     public List<eType> GetTargetType()
     {
