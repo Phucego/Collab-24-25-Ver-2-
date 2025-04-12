@@ -84,10 +84,11 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         return _speed;
     }
 
-    public void ApplyDebuff(float smth)
-    {
+    public void ApplyDebuff(int type, float duration, float value)
+    { }
 
-    }
+    public void SetBaseStat(int type)
+    { }
 
     public List<eType> GetTargetType()
     {
@@ -165,7 +166,7 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         if (_health > 0 && data != null)
             _bar.setHealth(_health, data.maxHealth);
         else
-            Death();
+            Death(true);
     }
 
     void FixedUpdate()
