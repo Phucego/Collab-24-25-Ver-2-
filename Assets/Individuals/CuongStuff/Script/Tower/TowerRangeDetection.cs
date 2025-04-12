@@ -22,7 +22,8 @@ public class TowerRangeDetection : MonoBehaviour
 
     private void OnTriggerExit(Collider target)
     {
-        towerController._EnemyList.RemoveAll(gameobject => gameobject == null);
+        towerController._EnemyList.RemoveAll(gameobject =>  gameobject == null);
+        towerController._EnemyList.RemoveAll(gameobject => !gameobject.activeSelf);
         if (target.gameObject.CompareTag("Enemy"))
         {
             towerController._EnemyList.Remove(target.gameObject);

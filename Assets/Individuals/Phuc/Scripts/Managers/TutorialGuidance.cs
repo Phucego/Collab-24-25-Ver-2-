@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,7 @@ public class TutorialGuidance : MonoBehaviour
     public UnityEvent OnMovementPracticeCompleted;  
     public UnityEvent OnBuildingCompleted;
     public UnityEvent OnCorruptedIntroCompleted;
+    public UnityEvent OnTowerDamaged;
     
     
     private List<Dialogue.DialogueLine> currentDialogueLines;
@@ -47,10 +49,24 @@ public class TutorialGuidance : MonoBehaviour
     private bool hasReachedTargetDestination = false;
     private bool hasReachedBuildingDestination = false;
     private bool hasReachedCorruptedZone = false;
-
+    private bool firstTimeTowerDamaged = false;
+    private bool isTowerPlacementChecked = false;
+ 
+    private bool hasShownPostFirstWaveDialogue = false;
+    private bool hasShownPostSecondWaveDialogue = false;
 
     [SerializeField] private BuildingManager buildingManager;
-    private bool isTowerPlacementChecked = false;
+    
+    
+   
+
+    public static TutorialGuidance _instance;
+
+    private void Awake()
+    {
+        _instance = this;
+    }
+
     void Start()
     {
         dialogueUI.SetActive(false);
@@ -62,6 +78,9 @@ public class TutorialGuidance : MonoBehaviour
 
         _freeFlyCamera = FindObjectOfType<FreeFlyCamera>();
         buildingManager = FindObjectOfType<BuildingManager>();
+        
+        //When the first wave complete, start tutorial build ballista
+        WaveManager.Instance.OnWaveComplete += HandleWaveCompleted;
 
         StartIntro();
     }
@@ -88,6 +107,8 @@ public class TutorialGuidance : MonoBehaviour
                 movementDetected = true;
             }
         }
+
+
     }
 
     private void StartIntro()
@@ -97,7 +118,7 @@ public class TutorialGuidance : MonoBehaviour
         SetDialogueSection("Introduction", OnIntroCompleted.Invoke);
     }
 
-    private void SetDialogueSection(string sectionName, UnityAction onComplete)
+    public void SetDialogueSection(string sectionName, UnityAction onComplete)
     {
         Dialogue dialogue = dialogueScriptables.Find(d => d.sectionName == sectionName);
         if (dialogue == null || dialogue.dialogueLines.Count == 0)
@@ -177,9 +198,9 @@ public class TutorialGuidance : MonoBehaviour
             }
         }
     }
+    //CHECKPOINTS CHECKS
     private void OnTriggerEnter(Collider other)
     {
-       
         switch (other.gameObject)
         {
                 case GameObject obj when obj == targetDestination && !hasReachedTargetDestination:
@@ -201,7 +222,6 @@ public class TutorialGuidance : MonoBehaviour
                     hasReachedCorruptedZone = true;
                     StartCorruptedIntro(); 
                     DisableMovements();
-                    
                     Destroy(corruptedIntroDestination);
                     break;
         }
@@ -229,11 +249,43 @@ public class TutorialGuidance : MonoBehaviour
         SetDialogueSection("Corrupted Zone Intro", OnCorruptedIntroCompleted.Invoke);
         anim.SetTrigger("hideUI");  
         corruptedIntroDestination.SetActive(true);   
-    } 
+    }
     
+    private void HandleWaveCompleted()
+    {
+        if (WaveManager.Instance == null || UIManager.Instance == null)
+            return;
+
+        int waveIndex = UIManager.Instance.currentWave; // This reflects the just-completed wave + 1
+
+        // First wave just finished
+        if (!hasShownPostFirstWaveDialogue && waveIndex == 1)
+        {
+            hasShownPostFirstWaveDialogue = true;
+            DisableMovements();
+            anim.SetTrigger("hideUI");
+            SetDialogueSection("Post First Wave", null);
+        }
+
+        // Second wave just finished
+        else if (!hasShownPostSecondWaveDialogue && waveIndex == 3)
+        {
+            hasShownPostSecondWaveDialogue = true;
+            DisableMovements();
+            anim.SetTrigger("hideUI");
+            SetDialogueSection("Post Second Wave", null);
+        }
+    }
+
     #endregion
-    
-    
+
+    private void OnDestroy()
+    {
+        if (WaveManager.Instance != null)
+            WaveManager.Instance.OnWaveComplete -= HandleWaveCompleted;
+    }
+
+
     private void EnableMovements()
     {
         _freeFlyCamera._enableRotation = true;

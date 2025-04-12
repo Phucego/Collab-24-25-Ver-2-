@@ -35,7 +35,9 @@ public class BuildingManager : MonoBehaviour
     private Vector3 towerPos;
 
 
- 
+    public UnityEvent<GameObject> OnTowerPlaced = new UnityEvent<GameObject>();
+    public UnityEvent<GameObject> OnTowerRemoved = new UnityEvent<GameObject>();
+
     private void Awake()
     {
         Instance = this;
@@ -125,13 +127,14 @@ public class BuildingManager : MonoBehaviour
     {
         foreach (GameObject tower in placedTowers)
         {
-            if (Vector3.Distance(position, tower.transform.position) < minimumPlacementDistance)
+            if (tower != null && Vector3.Distance(position, tower.transform.position) < minimumPlacementDistance)
             {
                 return false;
             }
         }
         return true;
     }
+
 
     public void PlaceObject()
     {
@@ -153,6 +156,7 @@ public class BuildingManager : MonoBehaviour
             return;
         }
 
+        // Now deduct and proceed with placement
         CurrencyManager.Instance.DeductCurrency(towerCost);
         pendingObj.GetComponent<MeshRenderer>().material = greenMaterial;
 
@@ -161,18 +165,19 @@ public class BuildingManager : MonoBehaviour
             placementIndicator.SetActive(false);
         }
 
-        pendingObj.GetComponent<TowerController>().TowerPlaced = true;
+        towerController.TowerPlaced = true;
         pendingObj.GetComponent<TowerInteract>().isPlaced = true;
         AudioManager.Instance.PlaySoundEffect("BuildTower_SFX");
-        placedTowers.Add(pendingObj);
+
+        placedTowers.Add(pendingObj); //Only add after all checks pass
+        OnTowerPlaced?.Invoke(pendingObj); // trigger event here if using vine system
 
         // Tutorial Integration
         if (!hasPlacedFirstTower)
         {
             hasPlacedFirstTower = true;
             OnFirstTowerPlaced?.Invoke();
-            
-            //NEED TO CHANGE THIS DIALOGUE AFTER REMEMBER PLS
+
             if (tutorialGuidance != null)
             {
                 tutorialGuidance.corruptedIntroDestination.SetActive(true);
@@ -182,7 +187,7 @@ public class BuildingManager : MonoBehaviour
         pendingObj = null;
         Debug.Log("Tower placed successfully and currency deducted.");
     }
-    
+
     
     // Method to check if player has placed their first tower
     public bool HasPlacedFirstTower()
@@ -232,17 +237,13 @@ public class BuildingManager : MonoBehaviour
             go.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = sortedTowerData[count].towerPrefab.name;
             go.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"Cost: {sortedTowerData[count].Cost}";
 
+            // Get the Image component
             Image buttonImage = go.transform.GetChild(2).GetComponent<Image>();
             buttonImage.sprite = sortedTowerData[count].towerSprite;
 
-            // Ensure proper scaling
-            RectTransform imageRectTransform = buttonImage.GetComponent<RectTransform>();
-            imageRectTransform.anchorMin = new Vector2(0, 0);
-            imageRectTransform.anchorMax = new Vector2(1, 1);
-            imageRectTransform.pivot = new Vector2(0.5f, 0.5f);
-            imageRectTransform.offsetMin = Vector2.zero;
-            imageRectTransform.offsetMax = Vector2.zero;
-            imageRectTransform.localScale = Vector3.one;
+            // Adjust the size of the Image
+            RectTransform imageRect = buttonImage.GetComponent<RectTransform>();
+            imageRect.sizeDelta = new Vector2(28f ,44f); 
 
             go.GetComponent<Button>().onClick.AddListener(() =>
             {
@@ -252,7 +253,16 @@ public class BuildingManager : MonoBehaviour
             });
         }
     }
+    //USE THIS IN CUONG'S TOWER CONTROLLER
+    public void RemoveTowerFromList(GameObject tower)
+    {
+        if (placedTowers.Contains(tower))
+        {
+            placedTowers.Remove(tower);
+            OnTowerRemoved?.Invoke(tower);
 
+        }
+    }
 
     public void SelectObject(GameObject prefab)
     {

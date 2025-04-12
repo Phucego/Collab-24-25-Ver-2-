@@ -9,6 +9,7 @@ public class TowerInteract : MonoBehaviour, I_Interactable
 {
     public InputActionAsset towerAction;
     public UnityEvent UpgradeTower;
+    public UnityEvent SellTower;
 
     private GameObject _RadiusSphere;
     private GameObject _CanvasInfo;
@@ -23,6 +24,7 @@ public class TowerInteract : MonoBehaviour, I_Interactable
     {
         mapAction = towerAction.FindActionMap("Tower");
         upgradeAction = mapAction.FindAction("UpgradeTower");
+        sellAction = mapAction.FindAction("SellTower");
         _RadiusSphere = gameObject.transform.GetChild(3).gameObject;
         _CanvasInfo = gameObject.transform.GetChild(4).gameObject;
     }
@@ -30,13 +32,17 @@ public class TowerInteract : MonoBehaviour, I_Interactable
     void OnEnable()
     {   
         upgradeAction.Enable();
+        sellAction.Enable();
+        sellAction.performed += Sell;
         upgradeAction.performed += Upgrade;
     }
 
     void OnDisable()
     {
         upgradeAction.Disable();
+        sellAction.Disable();
         upgradeAction.performed -= Upgrade;
+        sellAction.performed -= Sell;
     }
 
     public void Upgrade(InputAction.CallbackContext input)
@@ -51,7 +57,21 @@ public class TowerInteract : MonoBehaviour, I_Interactable
     {
         UpgradeTower.Invoke();
         _CanvasInfo.GetComponent<TowerCanvasHandler>().Upgrade();
-   
+    }
+
+    public void Sell(InputAction.CallbackContext input)
+    {
+        if (_CanvasInfo.activeInHierarchy)
+        {
+            SellSelected();
+        }
+    }
+
+    public void SellSelected()
+    {
+        MainCam.GetComponent<InteractController>().DeleteInteractedObject();
+        Deselect();
+        SellTower.Invoke();
     }
 
     void LateUpdate()
@@ -91,6 +111,7 @@ public class TowerInteract : MonoBehaviour, I_Interactable
         MainCam = null; 
         _RadiusSphere.SetActive(false);
         _CanvasInfo.SetActive(false);
+       
     }
 
     public void TowerInfo(bool enable)

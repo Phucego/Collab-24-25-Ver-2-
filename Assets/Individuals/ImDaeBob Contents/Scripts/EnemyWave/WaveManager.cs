@@ -22,7 +22,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] private string _selectedLevel;
     private List<string> _lvList = new List<string>();
     private string _jsonDirectory;
-    private List<LevelData> _curData = new List<LevelData>();
+    public List<LevelData> _curData = new List<LevelData>();
 
     [Header("Wave Control")]
     [SerializeField] private int _timerBetweenWave = 30;
@@ -30,7 +30,7 @@ public class WaveManager : MonoBehaviour
     private bool _waitingForNextWave = false;
 
     private int _curWave = 0;
-    private int _allEnemies = 0, _summoned = 0, _despawned = 0;
+    public int _allEnemies = 0, _summoned = 0, _despawned = 0;
     [HideInInspector] public int _allEnemiesInWave = 0, _summonedInWave = 0, _despawnedInWave = 0;
     private bool _isSpawning = false, _waveFinished = false;
 
@@ -125,7 +125,7 @@ public class WaveManager : MonoBehaviour
             StartWave();
         else if (Input.GetKeyDown(KeyCode.F2))
             SkipToNextWave();
-        else if (Input.GetKeyDown(KeyCode.Keypad1))
+        else if (Input.GetKeyDown(KeyCode.Keypad1) || Input.GetKeyDown(KeyCode.Alpha0))
             SpawnEnemy("DEMON", "TUT_PATH1");
         else if (Input.GetKeyDown(KeyCode.Keypad2))
             SpawnEnemy("BIRD", "TUT_PATH1");

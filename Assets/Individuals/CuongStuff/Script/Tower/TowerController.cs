@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static Cinemachine.DocumentationSortingAttribute;
 
-public class TowerController : MonoBehaviour
+public class TowerController : MonoBehaviour, I_TowerInfo, I_Damagable
 {
     // Start is called before the first frame update
     [Header("Tower Set Up")]
@@ -29,6 +30,7 @@ public class TowerController : MonoBehaviour
     protected GameObject[] _HeadModel = new GameObject[] { };
     protected GameObject[] _BodyModel = new GameObject[] { };
     protected List<GameObject> _ProjectileList = new List<GameObject>();
+    protected int moneyValue = 0;
     //protected List<GameObject> ProjectileList = new List<GameObject>();
 
     
@@ -55,22 +57,19 @@ public class TowerController : MonoBehaviour
         layerMask = LayerMask.GetMask("Enemy"); 
         _HeadModel = new GameObject[TowerData.listUpgrades.Count + 1];
         _BodyModel = new GameObject[TowerData.listUpgrades.Count + 1];
-        
-        
     }
 
     private void OnEnable()
     {
         //TowerPlaced = true;
         DeepCopyData();
-        RadiusDetector.radius = Radius;
-        RadiusDetector.height = Radius*3;
-        CallChangeStat.Invoke(UpgradeType.Radius, Radius);
         GetAllModels(HeadParent, 1);
         GetAllModels(BodyParent, 2);
         CurrentHead = _HeadModel[0];
         CurrentBody = _BodyModel[0];
-
+        RadiusDetector.radius = Radius;
+        RadiusDetector.height = Radius * 3;
+        CallChangeStat.Invoke(UpgradeType.Radius, Radius);
     }
 
     protected virtual void GetAllModels(GameObject parent, int index)
@@ -103,7 +102,8 @@ public class TowerController : MonoBehaviour
         ProjectileSpeed = _DeepCopyTowerData.ProjectileSpeed;
         CritChance = _DeepCopyTowerData.CritChance;
         CritAmp = _DeepCopyTowerData.CritAmplifier;
-        
+
+        moneyValue = _DeepCopyTowerData.Cost;
     }
 
     // Update is called once per frame
@@ -114,8 +114,19 @@ public class TowerController : MonoBehaviour
 
         if (Target != null && TimeBeforeFire <= 0)
         {
-            StartCoroutine(LOSCheck());
-            TimeBeforeFire = FireRate;
+            if (Target.activeSelf)
+            {
+                StartCoroutine(LOSCheck());
+                TimeBeforeFire = FireRate;
+            }
+            else
+            {
+                _EnemyList.Remove(Target);
+                Target = null;
+                TargetPos = new Vector3(0, 0, 0);
+            }
+            
+
         }
         else if (TimeBeforeFire > 0)
         {
@@ -129,7 +140,7 @@ public class TowerController : MonoBehaviour
     {
         float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
         Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
-        TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.25f);
+        TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.5f);
         Head.transform.LookAt(TargetPos);
 
         StartCoroutine(FireProjectile(TargetPos - AimPoint.transform.position));
@@ -163,30 +174,13 @@ public class TowerController : MonoBehaviour
         projectile.GetComponent<I_TowerProjectile>().SetDamage(Damage);
     }
 
-    // Pooling objects
-    protected virtual GameObject GetPooledObject()
-    {
-        for (int i = 0; i < _ProjectileList.Count; i++) {
-            if (!_ProjectileList[i].activeInHierarchy)
-            {
-                return _ProjectileList[i];
-            }
-        }
-
-        // Create more projectiles if no more pooled objects are available
-        GameObject NewProjectile = Instantiate(PrefabProjectile[0], AimPoint.transform.position, Quaternion.identity, GameObject.Find("_Projectiles").transform);
-        _ProjectileList.Add(NewProjectile);
-        SetStat(NewProjectile);
-        return NewProjectile;
-    }
-
     // This function determine how the turret will target enemy, currently it target the first enemy in the line / nearest to the MAIN center
     // Will plan on expanding this if the first semester goes well
     public virtual void FindNearestEnemy()
     {
         foreach (var enemy in _EnemyList)
         {  
-            if (enemy != null)
+            if (enemy != null && enemy.activeSelf && Vector3.Distance(transform.position, enemy.transform.position) <= Radius * 3f)
             {
                 int point = 0;
                 List<eType> enemyType = enemy.GetComponent<I_GetType>().GetTargetType();
@@ -233,6 +227,17 @@ public class TowerController : MonoBehaviour
         }
     }
 
+    public virtual void SellTower()
+    {
+        int realValue = moneyValue / 2;
+        CurrencyManager.Instance.DeductCurrency(-realValue);
+        
+        //Remove the tower from the placed list (I think)
+        BuildingManager.Instance.RemoveTowerFromList(gameObject);
+        AudioManager.Instance.PlaySoundEffect("DestroyTower_SFX");
+        Destroy(gameObject);
+    }
+
     public virtual void UpgradeTower()
     {
         if (Level >= TowerData.listUpgrades.Count)
@@ -251,6 +256,7 @@ public class TowerController : MonoBehaviour
 
         // Deduct the cost from the player's currency
         CurrencyManager.Instance.DeductCurrency(upgradeCost);
+        moneyValue += upgradeCost;
 
         // Proceed with the upgrade
         Level += 1;
@@ -319,6 +325,27 @@ public class TowerController : MonoBehaviour
     public virtual int GetLevelInt()
     {
         return Level;
+    }
+
+    public virtual string GetCost()
+    {
+        string costText = "";
+        if (Level < TowerData.listUpgrades.Count)
+        {
+            int upgradeCost = TowerData.listUpgrades[Level].Cost;
+            costText = "Cost: " + upgradeCost.ToString();
+        } 
+        else if (Level >= TowerData.listUpgrades.Count)
+            costText = "MAXED";
+        
+        return costText;
+    }
+
+    public virtual string GetSellValue()
+    {
+        int realValue = moneyValue / 2;
+        string sellText = "Value: " + realValue.ToString();
+        return sellText;
     }
 
     public virtual string GetUpgradeStats()
@@ -396,4 +423,62 @@ public class TowerController : MonoBehaviour
         return false;
     }
 
+    // Apply debuff into the towers
+    protected IEnumerator AddDebuff(int type, float duration, float value)
+    {
+        // NOTE: This is not applicable as the same method for enemies
+        // Determine which sort of debuff will be applied
+        switch (type)
+        {
+            case 1: // Reduce atk spd
+                FireRate += FireRate * value;
+                break;
+            case 2: // Reduce damage
+                Damage -= Damage * value;
+                break;
+            case 3:
+                break;
+
+        }
+
+        // If duration is set to 0 or below, the debuff is considered to be permanent 
+        if (duration > 0)
+        {
+            yield return new WaitForSeconds(duration);
+            // After debuff duration ended
+            SetBaseStat(type);
+        }
+    }
+
+    // ========== DAMAGABLE INTERFACE ========== \\
+    // Apply damage
+    public void TakeDamage(float damage)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    // Apply debuffs
+    public void ApplyDebuff(int type, float duration, float value)
+    {
+        StartCoroutine(AddDebuff(type, duration, value));
+    }
+
+    // Reset stats to base
+    public void SetBaseStat(int type)
+    {
+        // Set stats to the base
+        switch (type)
+        {
+            case 1: // Fire Rate
+                FireRate = _DeepCopyTowerData.FireRate;
+                break;
+            case 2: // Damage
+                Damage = _DeepCopyTowerData.Damage;
+                break;
+            case 3:
+                break;
+
+        }
+    }
+    // ========== END ========== \\
 }

@@ -53,7 +53,7 @@ public class WizardController : TowerController
 
     protected override IEnumerator FireProjectile(Vector3 direction)
     {
-        GameObject Projectile = GetPooledObject();
+        GameObject Projectile = GetPooledObjectWizard();
         Projectile.transform.position = AimPoint.transform.position;
         Projectile.transform.rotation = AimPoint.transform.rotation;
         Projectile.GetComponent<HitscanController>().SetTarget(Target);
@@ -65,9 +65,27 @@ public class WizardController : TowerController
     }
 
     // Pooling objects
-    protected override GameObject GetPooledObject()
+    protected virtual GameObject GetPooledObject()
     {
-        GameObject projectile = base.GetPooledObject();
+        for (int i = 0; i < _ProjectileList.Count; i++)
+        {
+            if (!_ProjectileList[i].activeInHierarchy)
+            {
+                return _ProjectileList[i];
+            }
+        }
+
+        // Create more projectiles if no more pooled objects are available
+        GameObject NewProjectile = Instantiate(PrefabProjectile[0], AimPoint.transform.position, Quaternion.identity, GameObject.Find("_Projectiles").transform);
+        _ProjectileList.Add(NewProjectile);
+        SetStat(NewProjectile);
+        return NewProjectile;
+    }
+
+    // Pooling objects
+    protected virtual GameObject GetPooledObjectWizard()
+    {
+        GameObject projectile = GetPooledObject();
         for (int i = 0; i < _ProjectileList.Count; i++)
         {
             if (!_ProjectileList[i].activeInHierarchy)

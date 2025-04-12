@@ -1,0 +1,58 @@
+[
+  {
+    "Waves": [
+      {
+        "Groups": [
+          {
+            "Name": "DEMONS",
+            "Enemies": [
+              {
+                "Name": "DEMON",
+                "Amount": 4,
+                "SpawnInterval": 3.0
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 0.0
+          }
+        ],
+        "IsBossWave": false
+      },
+      {
+        "Groups": [
+          {
+            "Name": "FLY",
+            "Enemies": [
+              {
+                "Name": "BIRD",
+                "Amount": 3,
+                "SpawnInterval": 5.0
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 0.0
+          },
+          {
+            "Name": "GROUND",
+            "Enemies": [
+              {
+                "Name": "DEMON",
+                "Amount": 3,
+                "SpawnInterval": 4.0
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 0.0
+          }
+        ],
+        "IsBossWave": false
+      }
+    ]
+  }
+]
