@@ -5372,6 +5372,7 @@ MonoBehaviour:
   towerSelectMenu: {fileID: 1583933394}
   confirmationMenu: {fileID: 1688421069}
   confirmationMenu_MainMenu: {fileID: 1132735161}
+  victoryPanel: {fileID: 0}
   toggleTowerSelectButton: {fileID: 1570777478}
   resumeButton: {fileID: 859379811}
   quitButton: {fileID: 1002851599}
@@ -5402,6 +5403,8 @@ MonoBehaviour:
   minibossNotificationText: {fileID: 0}
   currentLevelName: Level 1
   miniBossWaves: 030000000600000009000000
+  waveFlagPrefab: {fileID: 0}
+  waveFlagContainer: {fileID: 0}
 --- !u!95 &1676139304
 Animator:
   serializedVersion: 5
