@@ -108,6 +108,7 @@ public class TowerInteract : MonoBehaviour, I_Interactable
 
     public void Deselect()
     {
+        if (!isPlaced) return;
         MainCam = null; 
         _RadiusSphere.SetActive(false);
         _CanvasInfo.SetActive(false);

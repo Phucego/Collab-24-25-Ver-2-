@@ -17,6 +17,7 @@ public class BallistaProjectileController : ProjectileController
         trailRenderer.Clear();
         Moving = false;
         meshRenderer.enabled = false;
+        trailRenderer.enabled = false;
         rb.isKinematic = true;
     }
 
@@ -32,6 +33,7 @@ public class BallistaProjectileController : ProjectileController
         trailRenderer.Clear();
         Moving = true;
         meshRenderer.enabled = true;
+        trailRenderer.enabled = true;
         rb.isKinematic = false;
         rb.velocity = Vector3.zero;
     }

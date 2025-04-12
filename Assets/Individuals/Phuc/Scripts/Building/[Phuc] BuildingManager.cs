@@ -199,6 +199,7 @@ public class BuildingManager : MonoBehaviour
     {
         if (pendingObj != null)
         {
+            pendingObj.GetComponent<I_Interactable>().Deselect();
             Destroy(pendingObj);
             pendingObj = null;
 
