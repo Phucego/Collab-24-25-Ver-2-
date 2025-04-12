@@ -129,7 +129,7 @@ public class UIManager : MonoBehaviour
             WaveManager.Instance.OnLevelComplete += ShowVictoryPanel;
 
             totalWaves = WaveManager.Instance._curData[0].Waves.Count;
-            InitializeWaveFlags(totalWaves);
+            //InitializeWaveFlags(totalWaves);
         }
 
         Color c = nextWaveCountdownText.color;
@@ -154,49 +154,49 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void InitializeWaveFlags(int totalWaves)
-    {
-        foreach (Transform child in waveFlagContainer)
-        {
-            Destroy(child.gameObject);
-        }
-        waveFlags.Clear();
-
-        if (waveProgressSlider == null || waveFlagPrefab == null || waveFlagContainer == null)
-            return;
-
-        RectTransform sliderRect = waveProgressSlider.GetComponent<RectTransform>();
-        float sliderWidth = sliderRect.rect.width;
-
-        for (int i = 0; i < totalWaves; i++)
-        {
-            GameObject flag = Instantiate(waveFlagPrefab, waveFlagContainer);
-            waveFlags.Add(flag);
-
-            RectTransform flagRect = flag.GetComponent<RectTransform>();
-
-            float normalizedPos = totalWaves == 1 ? 1f : (float)(i + 1) / totalWaves;
-            float xPos = Mathf.Lerp(0, sliderWidth, normalizedPos);
-
-            flagRect.anchorMin = new Vector2(0f, 0.5f);
-            flagRect.anchorMax = new Vector2(0f, 0.5f);
-            flagRect.pivot = new Vector2(0.5f, 0.5f);
-            flagRect.anchoredPosition = new Vector2(xPos, 0f);
-            flagRect.localScale = Vector3.one;
-
-            Image img = flag.GetComponent<Image>();
-            if (img != null)
-            {
-                Color c = img.color;
-                c.a = 0.3f;
-
-                if (miniBossWaves.Contains(i + 1))
-                    img.color = new Color(1f, 0.5f, 0.2f, c.a); // orange tint for boss waves
-                else
-                    img.color = c;
-            }
-        }
-    }
+    // private void InitializeWaveFlags(int totalWaves)
+    // {
+    //     foreach (Transform child in waveFlagContainer)
+    //     {
+    //         Destroy(child.gameObject);
+    //     }
+    //     waveFlags.Clear();
+    //
+    //     if (waveProgressSlider == null || waveFlagPrefab == null || waveFlagContainer == null)
+    //         return;
+    //
+    //     RectTransform sliderRect = waveProgressSlider.GetComponent<RectTransform>();
+    //     float sliderWidth = sliderRect.rect.width;
+    //
+    //     for (int i = 0; i < totalWaves; i++)
+    //     {
+    //         GameObject flag = Instantiate(waveFlagPrefab, waveFlagContainer);
+    //         waveFlags.Add(flag);
+    //
+    //         RectTransform flagRect = flag.GetComponent<RectTransform>();
+    //
+    //         float normalizedPos = totalWaves == 1 ? 1f : (float)(i + 1) / totalWaves;
+    //         float xPos = Mathf.Lerp(0, sliderWidth, normalizedPos);
+    //
+    //         flagRect.anchorMin = new Vector2(0f, 0.5f);
+    //         flagRect.anchorMax = new Vector2(0f, 0.5f);
+    //         flagRect.pivot = new Vector2(0.5f, 0.5f);
+    //         flagRect.anchoredPosition = new Vector2(xPos, 0f);
+    //         flagRect.localScale = Vector3.one;
+    //
+    //         Image img = flag.GetComponent<Image>();
+    //         if (img != null)
+    //         {
+    //             Color c = img.color;
+    //             c.a = 0.3f;
+    //
+    //             if (miniBossWaves.Contains(i + 1))
+    //                 img.color = new Color(1f, 0.5f, 0.2f, c.a); // orange tint for boss waves
+    //             else
+    //                 img.color = c;
+    //         }
+    //     }
+    // }
 
     private void Update()
     {

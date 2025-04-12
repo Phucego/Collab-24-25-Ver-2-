@@ -9475,7 +9475,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5711863935347397472, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -21027,6 +21027,7 @@ MonoBehaviour:
   towerSelectMenu: {fileID: 1583933394}
   confirmationMenu: {fileID: 1688421069}
   confirmationMenu_MainMenu: {fileID: 1132735161}
+  victoryPanel: {fileID: 0}
   toggleTowerSelectButton: {fileID: 1570777478}
   resumeButton: {fileID: 859379811}
   quitButton: {fileID: 1002851599}
@@ -21057,6 +21058,8 @@ MonoBehaviour:
   minibossNotificationText: {fileID: 0}
   currentLevelName: Level 1
   miniBossWaves: 030000000600000009000000
+  waveFlagPrefab: {fileID: 0}
+  waveFlagContainer: {fileID: 0}
 --- !u!95 &1676139304
 Animator:
   serializedVersion: 5
