@@ -259,7 +259,7 @@ public class TutorialGuidance : MonoBehaviour
         int waveIndex = UIManager.Instance.currentWave; // This reflects the just-completed wave + 1
 
         // First wave just finished
-        if (!hasShownPostFirstWaveDialogue && waveIndex == 1)
+        if (!hasShownPostFirstWaveDialogue && waveIndex == 0)
         {
             hasShownPostFirstWaveDialogue = true;
             DisableMovements();
@@ -268,7 +268,7 @@ public class TutorialGuidance : MonoBehaviour
         }
 
         // Second wave just finished
-        else if (!hasShownPostSecondWaveDialogue && waveIndex == 3)
+        else if (!hasShownPostSecondWaveDialogue && waveIndex == 1)
         {
             hasShownPostSecondWaveDialogue = true;
             DisableMovements();
