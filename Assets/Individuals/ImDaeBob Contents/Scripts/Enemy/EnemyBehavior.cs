@@ -61,12 +61,15 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
     }
     
     //-------------------------------------------------------------- < ACCESSORS > ---------------------------------------------------------------//
-    public void Death()
+    public void Death(bool isValid = true)
     {
-        if (CurrencyManager.Instance != null)
-            CurrencyManager.Instance.currentCurrency += _reward;
-        if (LevelEditor_Handler.Instance != null)
-            LevelEditor_Handler.Instance._coinTest += _reward;
+        if (isValid)
+        {
+            if (CurrencyManager.Instance != null)
+                CurrencyManager.Instance.currentCurrency += _reward;
+            if (LevelEditor_Handler.Instance != null)
+                LevelEditor_Handler.Instance._coinTest += _reward;
+        }
 
         WaveManager.Instance.ReturnToPool(gameObject, data.name);
     }
