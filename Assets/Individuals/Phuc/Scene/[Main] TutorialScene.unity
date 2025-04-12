@@ -5529,6 +5529,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c6178fe943216540b276b975dafae16, type: 3}
+--- !u!114 &381835702 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4138171813830668247, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+  m_PrefabInstance: {fileID: 9090227092309201277}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &384371320
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13627,6 +13638,17 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1049700027 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1049552478530945501, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+  m_PrefabInstance: {fileID: 9090227092309201277}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1049809104 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2035405497521351004, guid: d76f8cf6d6d23834d97c23574821f38e, type: 3}
@@ -21040,11 +21062,11 @@ MonoBehaviour:
   startWaveRect: {fileID: 1487527915}
   nextWaveCountdownText: {fileID: 1783490439}
   currentWave: 0
-  waveProgressSlider: {fileID: 0}
-  waveProgressText: {fileID: 0}
+  waveProgressSlider: {fileID: 381835702}
+  waveProgressText: {fileID: 1049700027}
   minibossNotificationText: {fileID: 0}
   currentLevelName: Level 1
-  miniBossWaves: 030000000600000009000000
+  miniBossWaves: 03000000
   waveFlagPrefab: {fileID: 0}
   waveFlagContainer: {fileID: 0}
 --- !u!95 &1676139304
@@ -21608,7 +21630,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1763728616
 RectTransform:
   m_ObjectHideFlags: 0
@@ -27057,7 +27079,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4138171813830668247, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4138171813830668247, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+      propertyPath: m_Interactable
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4194591847853872843, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
       propertyPath: m_AnchorMax.x
@@ -27133,6 +27159,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6108839747582067702, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6146828136217178530, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6146828136217178530, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+      propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6152542109251842080, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
@@ -27340,6 +27374,14 @@ PrefabInstance:
     - target: {fileID: 8101102548068600060, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8367337491017714319, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -9.8155
+      objectReference: {fileID: 0}
+    - target: {fileID: 8367337491017714319, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.092300415
       objectReference: {fileID: 0}
     - target: {fileID: 8368200507738233971, guid: 36faa4974e751434e81c3c1623a36b61, type: 3}
       propertyPath: m_Type
