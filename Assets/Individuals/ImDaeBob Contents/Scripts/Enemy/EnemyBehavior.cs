@@ -43,7 +43,7 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
             _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData"); // Works in Final Build
         #endif
         
-        UIManager.Instance.RegisterWaveEnemy();
+
     }
 
     void OnDisable()
@@ -72,7 +72,7 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         
         WaveManager.Instance.ReturnToPool(gameObject, data.name);
         
-        UIManager.Instance.NotifyEnemyKilled();
+       
         transform.position = new Vector3(100, 100, 100);
     }
 
