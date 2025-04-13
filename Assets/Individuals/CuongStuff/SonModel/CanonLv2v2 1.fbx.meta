@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b05a136e83944444f809722327fc35f8
+guid: 766ac473004e2d945860b489e3737ce6
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,28 +7,28 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Arcl1Mtl
-    second: {fileID: 2100000, guid: 8d7bc151989ada94f80e0e0132a78611, type: 2}
+      name: Bottom1Mtl
+    second: {fileID: 2100000, guid: ca71a19c650cc2a4ebc914e321a4a063, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Puller1Mtl
-    second: {fileID: 2100000, guid: 28626d159fa227d4b8cfc6e3c7fb2302, type: 2}
+      name: Fuse1Mtl.001
+    second: {fileID: 2100000, guid: c5caf590ce2685f4b916c5681889044e, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Rope1Mtl
-    second: {fileID: 2100000, guid: 70bcb78b978c928499974b3db31d2d22, type: 2}
+      name: Gold1Mtl
+    second: {fileID: 2100000, guid: 1bfea55fb49f08a4a92a3a24de965609, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Stonebottom1Mtl
-    second: {fileID: 2100000, guid: 9b8d63758d71aba468a2322bb0b938bc, type: 2}
+      name: Innerblacksnout1Mtl
+    second: {fileID: 2100000, guid: 5bf816f5bd38b8f448c9c8e7fee6bc92, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Woodtop1Mtl
-    second: {fileID: 2100000, guid: 8d7bc151989ada94f80e0e0132a78611, type: 2}
+      name: Union1Mtl.001
+    second: {fileID: 2100000, guid: e3c6be8678237f949a9eb41b5ff3386a, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
