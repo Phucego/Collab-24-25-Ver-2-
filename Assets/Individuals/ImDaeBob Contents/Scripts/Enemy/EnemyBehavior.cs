@@ -42,8 +42,6 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         #else
             _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData"); // Works in Final Build
         #endif
-        
-
     }
 
     void OnDisable()
@@ -63,27 +61,22 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
     }
     
     //-------------------------------------------------------------- < ACCESSORS > ---------------------------------------------------------------//
-    public void Death()
+    public void Death(bool isValid = true)
     {
-        if (CurrencyManager.Instance != null)
-            CurrencyManager.Instance.currentCurrency += _reward;
-        if (LevelEditor_Handler.Instance != null)
-            LevelEditor_Handler.Instance._coinTest += _reward;
-        
+        if (isValid)
+        {
+            if (CurrencyManager.Instance != null)
+                CurrencyManager.Instance.currentCurrency += _reward;
+            if (LevelEditor_Handler.Instance != null)
+                LevelEditor_Handler.Instance._coinTest += _reward;
+        }
+
         WaveManager.Instance.ReturnToPool(gameObject, data.name);
-        
-       
-        transform.position = new Vector3(100, 100, 100);
     }
 
     public void TakeDamage(float dmg)
     {
         _health -= dmg;
-    }
-
-    public float GetSpeed()
-    {
-        return _velocity.normalized.magnitude * _acceleration;
     }
 
     public void ApplyDebuff(int type, float duration, float value)
@@ -95,6 +88,13 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
     {
         throw new System.NotImplementedException();
     }
+
+    public float GetSpeed()
+    {
+        return _speed;
+    }
+
+
 
     public List<eType> GetTargetType()
     {
@@ -172,7 +172,7 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         if (_health > 0 && data != null)
             _bar.setHealth(_health, data.maxHealth);
         else
-            Death();
+            Death(true);
     }
 
     void FixedUpdate()

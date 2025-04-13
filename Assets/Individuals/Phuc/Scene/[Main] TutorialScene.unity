@@ -8508,7 +8508,6 @@ GameObject:
   m_Component:
   - component: {fileID: 614608894}
   - component: {fileID: 614608895}
-  - component: {fileID: 614608898}
   - component: {fileID: 614608897}
   - component: {fileID: 614608896}
   m_Layer: 5
@@ -8629,18 +8628,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 614608893}
   m_CullTransparentMesh: 1
---- !u!114 &614608898
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 614608893}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adb30198aa32dd140b5750692dd48104, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &615491818
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9475,7 +9462,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5711863935347397472, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -21027,6 +21014,7 @@ MonoBehaviour:
   towerSelectMenu: {fileID: 1583933394}
   confirmationMenu: {fileID: 1688421069}
   confirmationMenu_MainMenu: {fileID: 1132735161}
+  victoryPanel: {fileID: 0}
   toggleTowerSelectButton: {fileID: 1570777478}
   resumeButton: {fileID: 859379811}
   quitButton: {fileID: 1002851599}
@@ -21057,6 +21045,8 @@ MonoBehaviour:
   minibossNotificationText: {fileID: 0}
   currentLevelName: Level 1
   miniBossWaves: 030000000600000009000000
+  waveFlagPrefab: {fileID: 0}
+  waveFlagContainer: {fileID: 0}
 --- !u!95 &1676139304
 Animator:
   serializedVersion: 5

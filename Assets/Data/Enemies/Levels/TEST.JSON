@@ -7,29 +7,15 @@
             "Name": "GROUP 1",
             "Enemies": [
               {
-                "Name": "DEMON",
-                "Amount": 5,
-                "SpawnInterval": 0.3
+                "Name": "BIRD",
+                "Amount": 3,
+                "SpawnInterval": 1.0
               }
             ],
-            "Path": "TEST_PATH",
-            "IsLoop": true,
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
             "LoopAmount": 3,
             "Delay": 5.0
-          },
-          {
-            "Name": "Group 2",
-            "Enemies": [
-              {
-                "Name": "CLOAK",
-                "Amount": 1,
-                "SpawnInterval": 0.0
-              }
-            ],
-            "Path": "TEST_PATH",
-            "IsLoop": true,
-            "LoopAmount": 2,
-            "Delay": 3.0
           }
         ],
         "IsBossWave": false
