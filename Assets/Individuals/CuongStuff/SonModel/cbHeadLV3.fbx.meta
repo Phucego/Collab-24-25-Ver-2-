@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b05a136e83944444f809722327fc35f8
+guid: 54a6668f152ebaa49b3eb83dc036a608
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -8,12 +8,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Arcl1Mtl
-    second: {fileID: 2100000, guid: 8d7bc151989ada94f80e0e0132a78611, type: 2}
+    second: {fileID: 2100000, guid: 8af731c734c59174bb2abb0a752e1e2a, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Puller1Mtl
-    second: {fileID: 2100000, guid: 28626d159fa227d4b8cfc6e3c7fb2302, type: 2}
+    second: {fileID: 2100000, guid: 50b04bb7baed2a046aab4e3c54bf3341, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
