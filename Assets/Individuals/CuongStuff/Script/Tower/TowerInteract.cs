@@ -28,7 +28,7 @@ public class TowerInteract : MonoBehaviour, I_Interactable
         _RadiusSphere = gameObject.transform.GetChild(3).gameObject;
         _CanvasInfo = gameObject.transform.GetChild(4).gameObject;
     }
-
+ 
     void OnEnable()
     {   
         upgradeAction.Enable();
@@ -99,7 +99,7 @@ public class TowerInteract : MonoBehaviour, I_Interactable
     public void Interact(Camera camera)
     {
         if (!isPlaced) return; // Prevent interaction if the tower is not placed
-
+       
         MainCam = camera;
         _RadiusSphere.transform.localScale = new Vector3(Radius * 2, Radius * 2, Radius * 2);
         _RadiusSphere.SetActive(true);
