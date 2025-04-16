@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d848d119cef2d05478e47e5986df311c, type: 3}
   m_Name: Bird
   m_EditorClassIdentifier: 
+  model: {fileID: 919132149155446097, guid: d362e6e8ff565b5409b2e35ae66a341f, type: 3}
   color: {r: 0.4669811, g: 0.9338727, b: 1, a: 1}
   name: Bird
   description: Da baloon

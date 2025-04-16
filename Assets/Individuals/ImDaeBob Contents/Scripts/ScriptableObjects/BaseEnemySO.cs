@@ -15,9 +15,11 @@ public enum eType
 [CreateAssetMenu(fileName = "Enemy_Type", menuName = "Data/EnemyDataSO")]
 public class BaseEnemySO : ScriptableObject
 {
-    [Tooltip("Temporary Decor")]
+    [Tooltip("Model")]
+    public GameObject model;
     public Color color = Color.white;
 
+    [Header("")]
     [Tooltip("Name")]
     public new string name;
     [Tooltip("Description")]
