@@ -17,7 +17,7 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
     private string _pathDirectory;
 
     // [ ENEMY'S UI ] //
-    private Enemy_HPBar _bar;
+    [SerializeField] private Enemy_HPBar _bar;
 
     // [ ENEMY'S DATA ] //
     private int _reward;
@@ -26,6 +26,10 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
     // [ Rigidbody & CharacterController ] //
     private Rigidbody _rb; //For external forces like knockbacks and explosion forces
     private CharacterController _ctrl; //For moving basically
+
+    // [ MODEL ] //
+    private GameObject _model;
+    private bool _modelled = false;
 
     private int _dataIndex = 1;
     private List<dataStruct> _dataList = new List<dataStruct>();
@@ -54,14 +58,12 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
 
     void Start()
     {
-        _bar = GetComponentInChildren<Enemy_HPBar>();
-
         _rb = GetComponent<Rigidbody>();
         _rb.useGravity = false;
     }
     
     //-------------------------------------------------------------- < ACCESSORS > ---------------------------------------------------------------//
-    public void Death(bool isValid = true)
+    public void Death(bool isValid = false)
     {
         if (isValid)
         {
@@ -94,8 +96,6 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         return _speed;
     }
 
-
-
     public List<eType> GetTargetType()
     {
         return data.typing ?? new List<eType> { eType.Normal };
@@ -106,14 +106,36 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
     {
         data = type;
 
+        if (!_modelled)
+        {
+            _modelled = true;
+            _model = Instantiate(type.model, transform);
+            if (type.animation != null)
+            {
+                var anim = _model.AddComponent<Animator>();
+                anim.runtimeAnimatorController = type.animation;
+                anim.speed = type.animationSpeedMult;
+            }
+        }
+        _model.transform.localPosition = new Vector3(_model.transform.localPosition.x, type.feetOffset, _model.transform.localPosition.z);
+        foreach (Transform child in _model.transform)
+            child.localPosition = Vector3.zero;
+        _model.transform.localScale = Vector3.one * type.scale;
+        _model.transform.localRotation = Quaternion.Euler(0, type.directionOffset, 0);
+
+        GetComponent<CapsuleCollider>().radius = type.hitbox.x;
+        GetComponent<CapsuleCollider>().height = type.hitbox.y;
+        GetComponent<CharacterController>().radius = type.hitbox.x;
+        GetComponent<CharacterController>().height = type.hitbox.y;
+
+        _bar._offset = new Vector3(0, type.healthbarDistance, 0);
+
         _health = type.maxHealth;
         _reward = type.reward;
         _speed = type.maxSpeed;
         _acceleration = type.acceleration;
         _gravity = type.gravity * -1;
         _heightAboveGround = type.levitation;
-
-        GetComponent<Renderer>().material.color = type.color;
 
         SetPath(path);
     }

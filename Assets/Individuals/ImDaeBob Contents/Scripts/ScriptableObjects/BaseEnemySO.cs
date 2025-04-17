@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
 public enum eType
@@ -17,7 +18,16 @@ public class BaseEnemySO : ScriptableObject
 {
     [Tooltip("Model")]
     public GameObject model;
-    public Color color = Color.white;
+    [Header("")]
+    public float scale = 1;
+    [Tooltip("Radius - Height")]
+    public Vector2 hitbox = Vector2.one;
+    public float directionOffset = 0;
+    public float feetOffset = 0; 
+    public float healthbarDistance = 1;
+    [Header("")]
+    public UnityEditor.Animations.AnimatorController animation = null;
+    public float animationSpeedMult = 1;
 
     [Header("")]
     [Tooltip("Name")]
