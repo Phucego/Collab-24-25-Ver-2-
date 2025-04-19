@@ -10,20 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d848d119cef2d05478e47e5986df311c, type: 3}
-  m_Name: Boss
+  m_Name: Golem
   m_EditorClassIdentifier: 
   model: {fileID: 919132149155446097, guid: 262f9454d57df6a4c915f73d4d1d6138, type: 3}
-  scale: 1
-  hitbox: {x: 1, y: 1}
-  directionOffset: -90
-  healthbarDistance: 1
+  scale: 0.13
+  hitbox: {x: 0.7, y: 1}
+  directionOffset: 0
+  feetOffset: -0.75
+  healthbarDistance: 4
+  animation: {fileID: 9100000, guid: 4b3fefc560c25254b8186c1ff4bd2384, type: 2}
   animationSpeedMult: 1
-  name: Boss
-  description: 
-  typing: 05000000
-  reward: 0
-  maxHealth: 0
-  maxSpeed: 0
-  acceleration: 0
-  gravity: 0
-  levitation: 0
+  name: Golem
+  description: Just your generic enemy, walk on ground
+  typing: 00000000
+  reward: 10
+  maxHealth: 50
+  maxSpeed: 6
+  acceleration: 4
+  gravity: 7
+  levitation: 0.5
