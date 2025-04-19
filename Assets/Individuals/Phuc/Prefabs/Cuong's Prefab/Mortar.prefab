@@ -500,6 +500,7 @@ MonoBehaviour:
   _EnemyList: []
   Target: {fileID: 0}
   TargetPos: {x: 0, y: 0, z: 0}
+  sellTowerFX: {fileID: 7943392753671835489, guid: 1a5f62d10990e7d4b9e64ad1177e9798, type: 3}
   ProjectileRadius: 5
 --- !u!114 &2129850197692208823
 MonoBehaviour:

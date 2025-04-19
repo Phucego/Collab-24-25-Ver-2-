@@ -24,8 +24,8 @@ MonoBehaviour:
   description: Da baloon
   typing: 01000000
   reward: 15
-  maxHealth: 100
-  maxSpeed: 9
+  maxHealth: 80
+  maxSpeed: 7
   acceleration: 5
   gravity: 1
   levitation: 10

@@ -16,7 +16,8 @@ public class LightningStrikeEvent : MonoBehaviour
     [Header("Events")]
     public UnityEvent<string, int> OnLightningStrike;
     
-    private bool hasPlayedLightningSound = false;  // Flag to track sound play status
+    private bool hasPlayedLightningSound = false;
+
     private void Start()
     {
         StartCoroutine(InitializeLightningStrike());
@@ -29,18 +30,42 @@ public class LightningStrikeEvent : MonoBehaviour
         {
             StartCoroutine(WaitForWaveManager());
         }
+
+        if (BuildingManager.Instance != null)
+        {
+            BuildingManager.Instance.OnTowerPlaced.AddListener(HandleTowerPlaced);
+            BuildingManager.Instance.OnTowerRemoved.AddListener(HandleTowerRemoved);
+        }
     }
 
     private void OnDestroy()
     {
         if (WaveManager.Instance != null)
             WaveManager.Instance.OnWaveComplete -= StopLightning;
+
+        if (BuildingManager.Instance != null)
+        {
+            BuildingManager.Instance.OnTowerPlaced.RemoveListener(HandleTowerPlaced);
+            BuildingManager.Instance.OnTowerRemoved.RemoveListener(HandleTowerRemoved);
+        }
     }
 
     private IEnumerator WaitForWaveManager()
     {
-        while (WaveManager.Instance == null)
+        float timeout = 5f;
+        float elapsed = 0f;
+        while (WaveManager.Instance == null && elapsed < timeout)
+        {
+            Debug.LogWarning("WaveManager.Instance is null. Waiting for initialization.");
+            elapsed += Time.deltaTime;
             yield return null;
+        }
+
+        if (WaveManager.Instance == null)
+        {
+            Debug.LogError($"WaveManager.Instance not found after {timeout}s. Lightning strikes may not trigger.");
+            yield break;
+        }
 
         HookWaveEvents();
     }
@@ -55,10 +80,56 @@ public class LightningStrikeEvent : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
 
-        if (SceneManager.GetActiveScene().name != targetScene) yield break;
+        if (SceneManager.GetActiveScene().name != targetScene)
+        {
+            Debug.LogWarning($"Scene {SceneManager.GetActiveScene().name} does not match targetScene {targetScene}. Lightning strikes disabled.");
+            yield break;
+        }
 
+        UpdatePlaceableSpots();
+    }
+
+    private void UpdatePlaceableSpots()
+    {
+        placeableSpots.Clear();
         GameObject[] placeholders = GameObject.FindGameObjectsWithTag("Placeable");
-        placeableSpots.AddRange(placeholders);
+        foreach (var spot in placeholders)
+        {
+            if (spot.GetComponent<TowerController>() == null)
+            {
+                placeableSpots.Add(spot);
+            }
+        }
+        Debug.Log($"Initialized placeableSpots: {placeableSpots.Count} empty placeholders found.");
+    }
+
+    private void HandleTowerPlaced(GameObject placeholder)
+    {
+        if (placeholder == null || !placeholder.CompareTag("Placeable"))
+        {
+            Debug.LogWarning($"HandleTowerPlaced: Invalid placeholder {placeholder?.name}. Expected Placeable tag.");
+            return;
+        }
+
+        if (placeableSpots.Contains(placeholder))
+        {
+            placeableSpots.Remove(placeholder);
+            Debug.Log($"Tower placed on placeholder {placeholder.name}. Removed from placeableSpots. Count: {placeableSpots.Count}");
+        }
+        else
+        {
+            Debug.Log($"Tower placed on {placeholder.name}, but it was not in placeableSpots.");
+        }
+    }
+
+    private void HandleTowerRemoved(GameObject tower)
+    {
+        GameObject placeholder = tower;
+        if (!placeableSpots.Contains(placeholder) && placeholder.CompareTag("Placeable") && placeholder.GetComponent<TowerController>() == null)
+        {
+            placeableSpots.Add(placeholder);
+            Debug.Log($"Tower removed from {placeholder.name}. Added to placeableSpots. Count: {placeableSpots.Count}");
+        }
     }
 
     private IEnumerator WatchForWaveStart()
@@ -69,39 +140,26 @@ public class LightningStrikeEvent : MonoBehaviour
         {
             if (WaveManager.Instance != null)
             {
-                bool isSpawning = typeof(WaveManager).GetField("_isSpawning", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(WaveManager.Instance) as bool? ?? false;
-
+                bool isSpawning = false;
+                try
+                {
+                    isSpawning = (bool)typeof(WaveManager).GetField("_isSpawning", System.Reflection.BindingFlags.NonPublic 
+                        | System.Reflection.BindingFlags.Instance).GetValue(WaveManager.Instance);
+                }
+                catch (System.Exception e)
+                {
+                    isSpawning = false;
+                }
+                int currentWave = WaveManager.Instance != null ? (int)typeof(WaveManager).GetField("_curWave", System.Reflection.BindingFlags.NonPublic 
+                    | System.Reflection.BindingFlags.Instance).GetValue(WaveManager.Instance) + 1 : 1;
+                
                 if (isSpawning && !wasSpawning)
                 {
-                    int currentWave = UIManager.Instance != null ? UIManager.Instance.currentWave : 1;
-
-                    // Filter out placeholders that already have towers
-                    List<GameObject> availableSpots = new List<GameObject>();
-                    foreach (var spot in placeableSpots)
-                    {
-                        // Assuming PlaceholderID or another component can help identify if a tower is present
-                        if (spot.GetComponent<TowerController>() == null) // No tower on this spot
-                        {
-                            availableSpots.Add(spot);
-                        }
-                    }
-
-                    // Ensure we don't try to pick more unique spots than available
-                    int strikes = Mathf.Min(currentWave, availableSpots.Count);
-
-                    List<GameObject> shuffled = new List<GameObject>(availableSpots);
-                    ShuffleList(shuffled);
-
-                    for (int i = 0; i < strikes; i++)
-                    {
-                        StartLightning(shuffled[i]);
-                    }
+                    StrikeRandomSpots(Mathf.Max(1, currentWave));
                 }
-
                 wasSpawning = isSpawning;
             }
-
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
@@ -116,8 +174,6 @@ public class LightningStrikeEvent : MonoBehaviour
         }
     }
 
-
-
     private void StartLightning(GameObject targetSpot)
     {
         if (targetSpot == null) return;
@@ -127,7 +183,6 @@ public class LightningStrikeEvent : MonoBehaviour
 
         GameObject lightningEffect = Instantiate(lightningEffectPrefab, targetSpot.transform.position + Vector3.up * 1.5f, Quaternion.Euler(-90f, 0f, 0f));
 
-        // Play lightning sound only once per strike event
         if (!hasPlayedLightningSound)
         {
             AudioManager.Instance.PlaySoundEffect("LightningStrike_SFX");
@@ -139,28 +194,32 @@ public class LightningStrikeEvent : MonoBehaviour
 
         activeEffects[targetSpot] = lightningEffect;
 
-        UIManager.Instance.StartNextWaveCountdown();
+        //UIManager.Instance.StartNextWaveCountdown();
     }
 
     public void StrikeRandomSpots(int strikeCount)
     {
-        // Reset the sound flag before striking
         hasPlayedLightningSound = false;
 
-        if (placeableSpots.Count == 0) return;
+        if (placeableSpots.Count == 0)
+        {
+            Debug.LogWarning("No empty placeholders available for lightning strikes.");
+            return;
+        }
 
-        // Filter out placeholders that already have towers
         List<GameObject> availableSpots = new List<GameObject>();
         foreach (var spot in placeableSpots)
         {
-            // Assuming PlaceholderID or another component can help identify if a tower is present
-            if (spot.GetComponent<TowerController>() == null) // No tower on this spot
+            if (spot.GetComponent<TowerController>() == null)
             {
                 availableSpots.Add(spot);
             }
+            else
+            {
+                Debug.Log($"Skipped {spot.name}: Has TowerController (tower present).");
+            }
         }
 
-        // Ensure we don't strike more places than available
         int actualStrikeCount = Mathf.Min(strikeCount, availableSpots.Count);
 
         List<GameObject> shuffled = new List<GameObject>(availableSpots);
@@ -169,15 +228,16 @@ public class LightningStrikeEvent : MonoBehaviour
         for (int i = 0; i < actualStrikeCount; i++)
         {
             StartLightning(shuffled[i]);
+            Debug.Log($"Lightning struck empty placeholder: {shuffled[i].name}");
         }
 
-        // If there are not enough valid spots, place the remaining strikes on the available spots
         if (actualStrikeCount < strikeCount)
         {
             int remainingStrikes = strikeCount - actualStrikeCount;
             for (int i = 0; i < remainingStrikes; i++)
             {
-                StartLightning(shuffled[i % shuffled.Count]); // Repeating strikes if not enough spots
+                StartLightning(shuffled[i % shuffled.Count]);
+                Debug.Log($"Lightning struck repeated empty placeholder: {shuffled[i % shuffled.Count].name}");
             }
         }
     }

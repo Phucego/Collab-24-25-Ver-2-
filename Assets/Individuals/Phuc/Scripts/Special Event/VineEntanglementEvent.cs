@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
-using DG.Tweening; // Required for DoTween
+using DG.Tweening;
+using TMPro;
 
 public class VineEntangleEvent : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class VineEntangleEvent : MonoBehaviour
 
     [SerializeField] private List<GameObject> placeableSpots = new List<GameObject>();
     private Dictionary<GameObject, GameObject> activeVines = new Dictionary<GameObject, GameObject>();
+    private Dictionary<GameObject, int> debuffTypes = new Dictionary<GameObject, int>();
     public List<GameObject> towerSpots;
 
     [Header("Events")]
@@ -24,7 +26,6 @@ public class VineEntangleEvent : MonoBehaviour
 
     private void Start()
     {
-        // Hide the notification panel at the beginning
         if (UIManager.Instance?.vineEntangleNotificationPanel != null)
         {
             UIManager.Instance.vineEntangleNotificationPanel.SetActive(false);
@@ -68,6 +69,7 @@ public class VineEntangleEvent : MonoBehaviour
         {
             Destroy(activeVines[towerSpot]);
             activeVines.Remove(towerSpot);
+            debuffTypes.Remove(towerSpot);
         }
 
         if (activeVines.Count == 0)
@@ -95,12 +97,12 @@ public class VineEntangleEvent : MonoBehaviour
                 continue;
             }
 
-            EntangleOneTower(towerSpots); // MODIFIED
+            EntangleOneTower(towerSpots);
             yield return new WaitForSeconds(entangleInterval);
         }
     }
 
-    private void EntangleOneTower(List<GameObject> towerSpots) // MODIFIED
+    private void EntangleOneTower(List<GameObject> towerSpots)
     {
         hasPlayedVineSound = false;
 
@@ -124,8 +126,13 @@ public class VineEntangleEvent : MonoBehaviour
     {
         if (targetSpot == null) return;
 
+        int debuffType = Random.Range(1, 3); // Randomly choose 1 (FireRate) or 2 (Damage)
         if (targetSpot.TryGetComponent(out TowerController tower))
-            tower.enabled = false;
+        {
+            float debuffValue = debuffType == 1 ? 0.6667f : 0.25f; // 40% attack speed reduction or 25% damage reduction
+            tower.ApplyDebuff(debuffType, entangleDuration, debuffValue);
+            debuffTypes[targetSpot] = debuffType;
+        }
 
         GameObject vineEffect = Instantiate(vineEffectPrefab, targetSpot.transform.position + Vector3.up * 1.2f, Quaternion.identity);
         activeVines[targetSpot] = vineEffect;
@@ -141,10 +148,7 @@ public class VineEntangleEvent : MonoBehaviour
 
         UIManager.Instance?.ShowVineEntangleUI();
 
-        // ✅ DOTWEEN ANIMATION CALL HERE
-        AnimateVineNotification(); // NEW LINE
-
-        StartCoroutine(RemoveVineAfterDuration(targetSpot, entangleDuration));
+        AnimateVineNotification(targetSpot);
     }
 
     private IEnumerator RemoveVineAfterDuration(GameObject targetSpot, float duration)
@@ -153,11 +157,14 @@ public class VineEntangleEvent : MonoBehaviour
 
         if (targetSpot != null && activeVines.TryGetValue(targetSpot, out GameObject vineEffect))
         {
-            if (targetSpot.TryGetComponent(out TowerController tower))
-                tower.enabled = true;
+            if (targetSpot.TryGetComponent(out TowerController tower) && debuffTypes.TryGetValue(targetSpot, out int debuffType))
+            {
+                tower.SetBaseStat(debuffType);
+            }
 
             Destroy(vineEffect);
             activeVines.Remove(targetSpot);
+            debuffTypes.Remove(targetSpot);
 
             if (activeVines.Count == 0)
                 UIManager.Instance?.HideVineEntangleUI();
@@ -168,13 +175,16 @@ public class VineEntangleEvent : MonoBehaviour
     {
         foreach (var pair in activeVines)
         {
-            if (pair.Key.TryGetComponent(out TowerController tower))
-                tower.enabled = true;
+            if (pair.Key.TryGetComponent(out TowerController tower) && debuffTypes.TryGetValue(pair.Key, out int debuffType))
+            {
+                tower.SetBaseStat(debuffType);
+            }
 
             Destroy(pair.Value);
         }
 
         activeVines.Clear();
+        debuffTypes.Clear();
         UIManager.Instance?.HideVineEntangleUI();
     }
 
@@ -189,18 +199,26 @@ public class VineEntangleEvent : MonoBehaviour
         }
     }
     
-    private void AnimateVineNotification()
+    private void AnimateVineNotification(GameObject targetSpot)
     {
         var notificationUI = UIManager.Instance?.vineEntangleNotificationPanel;
         if (notificationUI == null) return;
 
-        // Reset and pop scale
+        TextMeshProUGUI notificationText = notificationUI.GetComponentInChildren<TextMeshProUGUI>();
+        if (notificationText != null && debuffTypes.TryGetValue(targetSpot, out int debuffType))
+        {
+            notificationText.text = debuffType == 1 ? "Tower Entangled: Attack Speed Debuffed!" : "Tower Entangled: Damage Debuffed!";
+        }
+        else
+        {
+            Debug.LogWarning("No TextMeshProUGUI found in vineEntangleNotificationPanel or debuff type not found for tower.");
+        }
+
         notificationUI.transform.localScale = Vector3.zero;
         notificationUI.SetActive(true);
 
         notificationUI.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack).OnComplete(() =>
         {
-            // Optional: shrink after a delay
             DOVirtual.DelayedCall(2f, () =>
             {
                 notificationUI.transform.DOScale(0f, 0.3f).SetEase(Ease.InBack).OnComplete(() =>

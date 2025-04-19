@@ -24,7 +24,7 @@ MonoBehaviour:
   description: Just your generic enemy, walk on ground
   typing: 00000000
   reward: 10
-  maxHealth: 50
+  maxHealth: 60
   maxSpeed: 6
   acceleration: 4
   gravity: 7

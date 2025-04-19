@@ -17,4 +17,9 @@ MonoBehaviour:
   - characterName: 'General: '
     dialogueText: You have finished the second wave.
   - characterName: 'General: '
-    dialogueText: Have fun with the level.
+    dialogueText: 'Upgrade your existing towers or build more towers, it is all up
+      to you.
+
+'
+  - characterName: 'General: '
+    dialogueText: Have fun.

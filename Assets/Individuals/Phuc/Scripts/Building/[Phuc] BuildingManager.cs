@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using DG.Tweening;
+using UnityEngine.EventSystems;
 
 public class BuildingManager : MonoBehaviour
 {
@@ -33,7 +35,7 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private LayerMask unplaceableLayer;
 
     private Vector3 towerPos;
-
+    private GameObject lastHitPlaceholder; // New: Store the last hit placeholder
 
     public UnityEvent<GameObject> OnTowerPlaced = new UnityEvent<GameObject>();
     public UnityEvent<GameObject> OnTowerRemoved = new UnityEvent<GameObject>();
@@ -49,7 +51,6 @@ public class BuildingManager : MonoBehaviour
     private void Start()
     {
         ButtonSpawner();
-
     }
 
     void Update()
@@ -58,7 +59,6 @@ public class BuildingManager : MonoBehaviour
         {
             HandlePlacement();
             
-           
             if (Input.GetMouseButtonDown(0) && canPlace)
             {
                 PlaceObject();
@@ -71,7 +71,6 @@ public class BuildingManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 DeletePendingObject();
-            
             }
 
             MaterialUpdate();
@@ -90,6 +89,7 @@ public class BuildingManager : MonoBehaviour
             PlacementCheck placementCheck = hitObject.GetComponent<PlacementCheck>();
             if (placementCheck != null)
             {
+                lastHitPlaceholder = hitObject; // Store placeholder
                 float snapValue = 1.0f;
                 float snappedX = Mathf.Round(hit.point.x / snapValue) * snapValue;
                 float snappedZ = Mathf.Round(hit.point.z / snapValue) * snapValue;
@@ -101,6 +101,7 @@ public class BuildingManager : MonoBehaviour
             }
             else if ((placeableLayer & (1 << hitObject.layer)) != 0)
             {
+                lastHitPlaceholder = hitObject; // Store placeholder
                 float snapValue = 1.0f;
                 float snappedX = Mathf.Round(hit.point.x / snapValue) * snapValue;
                 float snappedZ = Mathf.Round(hit.point.z / snapValue) * snapValue;
@@ -112,6 +113,7 @@ public class BuildingManager : MonoBehaviour
             }
             else
             {
+                lastHitPlaceholder = null; // Clear if not a valid placeholder
                 towerPos = hit.point + Vector3.up * snapHeight;
                 pendingObj.transform.position = towerPos;
                 canPlace = false;
@@ -119,6 +121,7 @@ public class BuildingManager : MonoBehaviour
         }
         else
         {
+            lastHitPlaceholder = null; // Clear if no hit
             canPlace = false;
         }
     }
@@ -135,10 +138,9 @@ public class BuildingManager : MonoBehaviour
         return true;
     }
 
-
     public void PlaceObject()
     {
-        if (pendingObj == null || !canPlace) return;
+        if (pendingObj == null || !canPlace || lastHitPlaceholder == null) return;
 
         TowerController towerController = pendingObj.GetComponent<TowerController>();
         if (towerController == null)
@@ -156,7 +158,6 @@ public class BuildingManager : MonoBehaviour
             return;
         }
 
-        // Now deduct and proceed with placement
         CurrencyManager.Instance.DeductCurrency(towerCost);
         pendingObj.GetComponent<MeshRenderer>().material = greenMaterial;
 
@@ -169,10 +170,9 @@ public class BuildingManager : MonoBehaviour
         pendingObj.GetComponent<TowerInteract>().isPlaced = true;
         AudioManager.Instance.PlaySoundEffect("BuildTower_SFX");
 
-        placedTowers.Add(pendingObj); //Only add after all checks pass
-        OnTowerPlaced?.Invoke(pendingObj); // trigger event here if using vine system
+        placedTowers.Add(pendingObj);
+        OnTowerPlaced?.Invoke(lastHitPlaceholder); // Pass placeholder instead of pendingObj
 
-        // Tutorial Integration
         if (!hasPlacedFirstTower)
         {
             hasPlacedFirstTower = true;
@@ -185,16 +185,15 @@ public class BuildingManager : MonoBehaviour
         }
 
         pendingObj = null;
+        lastHitPlaceholder = null; // Clear after placement
         Debug.Log("Tower placed successfully and currency deducted.");
     }
 
-    
-    // Method to check if player has placed their first tower
     public bool HasPlacedFirstTower()
     {
         return hasPlacedFirstTower;
     }
-    
+
     void DeletePendingObject()
     {
         if (pendingObj != null)
@@ -208,6 +207,7 @@ public class BuildingManager : MonoBehaviour
                 placementIndicator.SetActive(false);
             }
         }
+        lastHitPlaceholder = null; // Clear on cancel
     }
 
     void MaterialUpdate()
@@ -235,16 +235,47 @@ public class BuildingManager : MonoBehaviour
             int count = i;
             GameObject go = Instantiate(m_SpawnTowerButtonPrefab, m_SpawnTowerButtonParent);
 
-            go.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = sortedTowerData[count].towerPrefab.name;
-            go.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"Cost: {sortedTowerData[count].Cost}";
+            TextMeshProUGUI nameText = go.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI costText = go.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            nameText.text = sortedTowerData[count].towerPrefab.name;
+            costText.text = $"Cost: {sortedTowerData[count].Cost}";
 
-            // Get the Image component
             Image buttonImage = go.transform.GetChild(2).GetComponent<Image>();
             buttonImage.sprite = sortedTowerData[count].towerSprite;
 
-            // Adjust the size of the Image
             RectTransform imageRect = buttonImage.GetComponent<RectTransform>();
-            imageRect.sizeDelta = new Vector2(28f ,44f); 
+            imageRect.sizeDelta = new Vector2(28f, 44f);
+
+            RectTransform nameRect = nameText.GetComponent<RectTransform>();
+            RectTransform costRect = costText.GetComponent<RectTransform>();
+            Vector2 imagePos = imageRect.anchoredPosition;
+
+            nameRect.anchoredPosition = imagePos;
+            costRect.anchoredPosition = imagePos + new Vector2(0, -20f);
+            nameText.alpha = 0f;
+            costText.alpha = 0f;
+
+            EventTrigger trigger = go.AddComponent<EventTrigger>();
+
+            EventTrigger.Entry pointerEnter = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+            pointerEnter.callback.AddListener((data) =>
+            {
+                nameRect.DOAnchorPosX(imagePos.x + 120f, 0.3f).SetEase(Ease.OutQuad);
+                costRect.DOAnchorPosX(imagePos.x + 120f, 0.3f).SetEase(Ease.OutQuad);
+                nameText.DOFade(1f, 0.3f);
+                costText.DOFade(1f, 0.3f);
+            });
+            trigger.triggers.Add(pointerEnter);
+
+            EventTrigger.Entry pointerExit = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+            pointerExit.callback.AddListener((data) =>
+            {
+                nameRect.DOAnchorPosX(imagePos.x, 0.3f).SetEase(Ease.InQuad);
+                costRect.DOAnchorPosX(imagePos.x, 0.3f).SetEase(Ease.InQuad);
+                nameText.DOFade(0f, 0.3f);
+                costText.DOFade(0f, 0.3f);
+            });
+            trigger.triggers.Add(pointerExit);
 
             go.GetComponent<Button>().onClick.AddListener(() =>
             {
@@ -254,14 +285,13 @@ public class BuildingManager : MonoBehaviour
             });
         }
     }
-    //USE THIS IN CUONG'S TOWER CONTROLLER
+
     public void RemoveTowerFromList(GameObject tower)
     {
         if (placedTowers.Contains(tower))
         {
             placedTowers.Remove(tower);
-            OnTowerRemoved?.Invoke(tower);
-
+            OnTowerRemoved?.Invoke(tower); // Pass tower for removal
         }
     }
 

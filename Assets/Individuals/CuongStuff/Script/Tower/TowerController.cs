@@ -42,7 +42,7 @@ public class TowerController : MonoBehaviour, I_TowerInfo, I_Damagable
     [HideInInspector] public List<GameObject> _EnemyList = new List<GameObject>();
     [HideInInspector] public GameObject Target;
     [HideInInspector] public Vector3 TargetPos = new Vector3(0,0,0);
-
+    public GameObject sellTowerFX;
     
     private void Awake()
     {   
@@ -235,6 +235,8 @@ public class TowerController : MonoBehaviour, I_TowerInfo, I_Damagable
         //Remove the tower from the placed list (I think)
         BuildingManager.Instance.RemoveTowerFromList(gameObject);
         AudioManager.Instance.PlaySoundEffect("DestroyTower_SFX");
+        
+        Instantiate(sellTowerFX, transform.position, transform.rotation);
         Destroy(gameObject);
     }
 
