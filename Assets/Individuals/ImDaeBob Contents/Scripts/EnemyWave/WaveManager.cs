@@ -29,10 +29,10 @@ public class WaveManager : MonoBehaviour
     private int _remTime = 0;
     private bool _waitingForNextWave = false;
 
-    private int _curWave = 0;
+    public int _curWave = 0;
     public int _allEnemies = 0, _summoned = 0, _despawned = 0;
     [HideInInspector] public int _allEnemiesInWave = 0, _summonedInWave = 0, _despawnedInWave = 0;
-    private bool _isSpawning = false, _waveFinished = false;
+    public bool _isSpawning = false, _waveFinished = false;
 
     [Header("Pooling")]
     [SerializeField] private GameObject _enemyPool;

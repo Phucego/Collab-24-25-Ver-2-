@@ -1,7 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class CurrencyManager : MonoBehaviour
 {
     public static CurrencyManager Instance;
@@ -11,7 +11,8 @@ public class CurrencyManager : MonoBehaviour
     public int currentCurrency;
     GameObject go;
     [SerializeField] private TextMeshProUGUI currencyText; // UI Text element to display currency
-
+    public SceneField tutorialScene;
+    public SceneField Level1;
     private void Awake()
     {
         if (Instance == null)
@@ -21,6 +22,11 @@ public class CurrencyManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+
+        if (SceneManager.GetActiveScene().name == Level1.SceneName)
+        {
+            InitializeCurrency(50);
         }
     }
 

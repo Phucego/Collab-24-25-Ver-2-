@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Individuals/Phuc/Scene/[Main] TutorialScene.unity
     guid: 186f304aae5338f4c9e7450d34cd2b39
+  - enabled: 1
+    path: Assets/Individuals/Phuc/Scene/[Main] Level 1.unity
+    guid: 34179791d1c203f4ea700e21832d5758
+  - enabled: 1
+    path: Assets/Individuals/Phuc/Scene/[Main] Level 2.unity
+    guid: 3799f1b6dad89934aae272ad3a1a5dca
   m_configObjects: {}

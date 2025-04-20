@@ -19,7 +19,7 @@ public class TutorialGuidance : MonoBehaviour
 
     [Header("Animation Controller")]
     public Animator anim;
-
+    private TutorialGuidance Instance;
     // EVENTS
     public UnityEvent OnIntroCompleted;
     public UnityEvent OnMovementPracticeCompleted;
@@ -297,5 +297,32 @@ public class TutorialGuidance : MonoBehaviour
     {
         _freeFlyCamera._enableRotation = false;
         _freeFlyCamera._enableMovement = false;
+    }
+    public void Cleanup()
+    {
+        if (nextButton != null)
+        {
+            nextButton.onClick.RemoveListener(OnNextButtonClicked);
+        }
+
+        if (typingCoroutine != null)
+        {
+            StopCoroutine(typingCoroutine);
+            typingCoroutine = null;
+        }
+
+        // Clear references
+        currentDialogueLines = null;
+        characterNameText = null;
+        dialogueText = null;
+        nextButton = null;
+        dialogueUI = null;
+
+        // Destroy the GameObject
+        if (Instance == this)
+        {
+            Instance = null;
+            Destroy(gameObject);
+        }
     }
 }

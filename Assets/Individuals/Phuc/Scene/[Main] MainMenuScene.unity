@@ -718,7 +718,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 0.26415092, g: 0.26314804, b: 0.26041293, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -762,8 +762,8 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
+  m_ColorTemperature: 20000
+  m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
@@ -1179,8 +1179,8 @@ MonoBehaviour:
   - levelPreview: {fileID: 21300000, guid: d0ab81033c1b95840b19f6838dffeda3, type: 3}
     displayName: 'LEVEL 2: The Wrath of Zeus'
     scene:
-      m_SceneAsset: {fileID: 102900000, guid: 34179791d1c203f4ea700e21832d5758, type: 3}
-      m_SceneName: '[Main] Level 1'
+      m_SceneAsset: {fileID: 102900000, guid: 3799f1b6dad89934aae272ad3a1a5dca, type: 3}
+      m_SceneName: '[Main] Level 2'
     isTutorial: 0
   - levelPreview: {fileID: 21300000, guid: d0ab81033c1b95840b19f6838dffeda3, type: 3}
     displayName: 'LEVEL 3: Nature''s Grasps'

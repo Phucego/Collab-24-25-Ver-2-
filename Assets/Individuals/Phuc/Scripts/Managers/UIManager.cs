@@ -64,10 +64,6 @@ public class UIManager : MonoBehaviour
     public string currentLevelName = "Level 1";
     public List<int> miniBossWaves = new List<int> { 3, 6, 9 };
 
-    [Header("Wave Flag Tracker")]
-    public GameObject waveFlagPrefab;
-    public Transform waveFlagContainer;
-    private List<GameObject> waveFlags = new List<GameObject>();
 
     private Animator anim;
     private Camera cam;
@@ -80,6 +76,9 @@ public class UIManager : MonoBehaviour
 
     private int totalWaves;
 
+    [SerializeField] private SceneField tutorialLevel;
+    [SerializeField] private SceneField Level_1;
+    
     private void Awake() => Instance = this;
 
     private void Start()
@@ -92,9 +91,19 @@ public class UIManager : MonoBehaviour
         anim = GetComponent<Animator>();
         anim.SetBool("isTowerSelectPanelOpened", false);
 
-        CurrencyManager.Instance.InitializeCurrency(0);
-        UpdateCoinCounterUI();
-
+        if (SceneManager.GetActiveScene().name == tutorialLevel.SceneName)
+        {
+            CurrencyManager.Instance.InitializeCurrency(0);
+            UpdateCoinCounterUI();
+        }
+        else if (SceneManager.GetActiveScene().name == Level_1.SceneName)
+        {
+            CurrencyManager.Instance.InitializeCurrency(50);
+            UpdateCoinCounterUI();
+        }
+        
+        
+        
         lightningNotificationText.alpha = 0f;
 
         toggleTowerSelectButton.onClick.AddListener(ToggleTowerSelectPanel);
@@ -129,7 +138,7 @@ public class UIManager : MonoBehaviour
             WaveManager.Instance.OnLevelComplete += ShowVictoryPanel;
 
             totalWaves = WaveManager.Instance._curData[0].Waves.Count;
-            //InitializeWaveFlags(totalWaves);
+            
         }
 
         Color c = nextWaveCountdownText.color;
@@ -154,50 +163,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // private void InitializeWaveFlags(int totalWaves)
-    // {
-    //     foreach (Transform child in waveFlagContainer)
-    //     {
-    //         Destroy(child.gameObject);
-    //     }
-    //     waveFlags.Clear();
-    //
-    //     if (waveProgressSlider == null || waveFlagPrefab == null || waveFlagContainer == null)
-    //         return;
-    //
-    //     RectTransform sliderRect = waveProgressSlider.GetComponent<RectTransform>();
-    //     float sliderWidth = sliderRect.rect.width;
-    //
-    //     for (int i = 0; i < totalWaves; i++)
-    //     {
-    //         GameObject flag = Instantiate(waveFlagPrefab, waveFlagContainer);
-    //         waveFlags.Add(flag);
-    //
-    //         RectTransform flagRect = flag.GetComponent<RectTransform>();
-    //
-    //         float normalizedPos = totalWaves == 1 ? 1f : (float)(i + 1) / totalWaves;
-    //         float xPos = Mathf.Lerp(0, sliderWidth, normalizedPos);
-    //
-    //         flagRect.anchorMin = new Vector2(0f, 0.5f);
-    //         flagRect.anchorMax = new Vector2(0f, 0.5f);
-    //         flagRect.pivot = new Vector2(0.5f, 0.5f);
-    //         flagRect.anchoredPosition = new Vector2(xPos, 0f);
-    //         flagRect.localScale = Vector3.one;
-    //
-    //         Image img = flag.GetComponent<Image>();
-    //         if (img != null)
-    //         {
-    //             Color c = img.color;
-    //             c.a = 0.3f;
-    //
-    //             if (miniBossWaves.Contains(i + 1))
-    //                 img.color = new Color(1f, 0.5f, 0.2f, c.a); // orange tint for boss waves
-    //             else
-    //                 img.color = c;
-    //         }
-    //     }
-    // }
-
+   
     private void Update()
     {
         UpdateCoinCounterUI();
@@ -228,17 +194,7 @@ public class UIManager : MonoBehaviour
         waveProgressSlider.DOValue(progress, 0.5f).SetEase(Ease.OutQuad);
 
         waveProgressText.text = $"{currentLevelName} - Wave {Mathf.Min(currentWave + 1, totalWaves)}/{totalWaves}";
-
-        for (int i = 0; i < waveFlags.Count; i++)
-        {
-            Image img = waveFlags[i].GetComponent<Image>();
-            if (img != null)
-            {
-                Color c = img.color;
-                c.a = (i < currentWave) ? 1f : 0.3f;
-                img.color = c;
-            }
-        }
+        
     }
 
     private void ShowVictoryPanel()

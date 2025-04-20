@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728ee75b15d23754abadb7b5b01dd571, type: 3}
+  m_Name: Level1Start
+  m_EditorClassIdentifier: 
+  sectionName: Level 1 Start
+  dialogueLines:
+  - characterName: 'General:'
+    dialogueText: Good job finishing the tutorial.
+  - characterName: 'General:'
+    dialogueText: 'In this level, I have a gift for you. '
+  - characterName: 'General:'
+    dialogueText: A MORTAR!!!!
+  - characterName: 'General:'
+    dialogueText: Have fun defending.
