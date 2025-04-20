@@ -973,7 +973,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &279293261
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1164,25 +1164,25 @@ MonoBehaviour:
   backButton: {fileID: 1603152347}
   levelSelectionTitle: {fileID: 123397038}
   levels:
-  - levelPreview: {fileID: 21300000, guid: d0ab81033c1b95840b19f6838dffeda3, type: 3}
+  - levelPreview: {fileID: 21300000, guid: ccd7d81aa50bd284eaad6eaa8e873d97, type: 3}
     displayName: 'LEVEL 0: The Beginning'
     scene:
       m_SceneAsset: {fileID: 102900000, guid: 186f304aae5338f4c9e7450d34cd2b39, type: 3}
       m_SceneName: '[Main] TutorialScene'
     isTutorial: 1
-  - levelPreview: {fileID: 21300000, guid: d0ab81033c1b95840b19f6838dffeda3, type: 3}
+  - levelPreview: {fileID: 21300000, guid: ed46cdf16e703824288acd5da4b25976, type: 3}
     displayName: 'LEVEL 1: The Start of A Journey'
     scene:
       m_SceneAsset: {fileID: 102900000, guid: 34179791d1c203f4ea700e21832d5758, type: 3}
       m_SceneName: '[Main] Level 1'
     isTutorial: 0
-  - levelPreview: {fileID: 21300000, guid: d0ab81033c1b95840b19f6838dffeda3, type: 3}
+  - levelPreview: {fileID: 21300000, guid: c4b640daff8410e41a68d6eb74612a41, type: 3}
     displayName: 'LEVEL 2: The Wrath of Zeus'
     scene:
       m_SceneAsset: {fileID: 102900000, guid: 3799f1b6dad89934aae272ad3a1a5dca, type: 3}
       m_SceneName: '[Main] Level 2'
     isTutorial: 0
-  - levelPreview: {fileID: 21300000, guid: d0ab81033c1b95840b19f6838dffeda3, type: 3}
+  - levelPreview: {fileID: 21300000, guid: ccd7d81aa50bd284eaad6eaa8e873d97, type: 3}
     displayName: 'LEVEL 3: Nature''s Grasps'
     scene:
       m_SceneAsset: {fileID: 102900000, guid: 34179791d1c203f4ea700e21832d5758, type: 3}
@@ -1775,7 +1775,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3036592163721903356, guid: 1979424d65edd3f47b502716eabe765e, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -148
+      value: -217
       objectReference: {fileID: 0}
     - target: {fileID: 3036592163721903356, guid: 1979424d65edd3f47b502716eabe765e, type: 3}
       propertyPath: m_AnchoredPosition.y

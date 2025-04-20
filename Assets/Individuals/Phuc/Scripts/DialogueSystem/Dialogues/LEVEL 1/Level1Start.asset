@@ -21,4 +21,7 @@ MonoBehaviour:
   - characterName: 'General:'
     dialogueText: A MORTAR!!!!
   - characterName: 'General:'
+    dialogueText: Use the mortar to counter horde of enemies moving close to each
+      other.
+  - characterName: 'General:'
     dialogueText: Have fun defending.
