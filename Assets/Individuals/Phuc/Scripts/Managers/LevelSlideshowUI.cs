@@ -42,13 +42,21 @@ public class LevelSlideshowUI : MonoBehaviour
     [SerializeField] private Image fadeToBlackPanel;
     [SerializeField] private float fadeToBlackDuration = 1f;
 
+    [Header("Locked Level Feedback")]
+    [SerializeField] private Image lockIcon; // Lock icon image for locked levels
+    [SerializeField] private TextMeshProUGUI lockedMessage; // Message for locked level feedback
+    [SerializeField] private Sprite lockedLevelSprite; // Optional: Sprite for locked level preview
+    [SerializeField] private bool preventLockedLevelLoading = true; // Prevent loading locked levels
+    [SerializeField] private float lockedLevelOpacity = 0.5f; // Opacity for locked level images
+    [SerializeField] private Vector2 lockIconPosition = new Vector2(-31f, 89f); // Lock icon position
+    [SerializeField] private float lockedMessageDuration = 3f; // Duration to show locked message
+
+    private Coroutine lockedMessageCoroutine;
+
     private void Start()
     {
-        if (!PlayerPrefs.HasKey("UnlockedLevel"))
-        {
-            PlayerPrefs.SetInt("UnlockedLevel", 0);
-            PlayerPrefs.Save();
-        }
+        // Initialize unlock states via LevelUnlockManager
+        LevelUnlockManager.InitializeLevels(levels);
 
         AnimateLevelSelectionTitle();
 
@@ -68,6 +76,7 @@ public class LevelSlideshowUI : MonoBehaviour
                 slideshowPanel.DOAnchorPos(slideInPosition, slideDuration).SetEase(Ease.OutExpo);
             });
         }
+
         if (levelIndicatorHint != null)
         {
             RectTransform hintRect = levelIndicatorHint.GetComponent<RectTransform>();
@@ -76,7 +85,6 @@ public class LevelSlideshowUI : MonoBehaviour
                 levelIndicatorOriginalPos = hintRect.anchoredPosition;
             }
         }
-
         else
         {
             slideshowPanel.DOAnchorPos(slideInPosition, slideDuration).SetEase(Ease.OutExpo);
@@ -87,7 +95,33 @@ public class LevelSlideshowUI : MonoBehaviour
         playButton.onClick.AddListener(PlayCurrentLevel);
         backButton.onClick.AddListener(BackToMainMenu);
 
-        UpdateSlideshow();
+        // Initialize lock feedback UI
+        if (lockIcon != null)
+        {
+            lockIcon.gameObject.SetActive(false);
+            // Position the lock icon at x: -31, y: 89
+            RectTransform lockRect = lockIcon.GetComponent<RectTransform>();
+            if (lockRect != null)
+            {
+                lockRect.anchorMin = new Vector2(0.5f, 0.5f);
+                lockRect.anchorMax = new Vector2(0.5f, 0.5f);
+                lockRect.pivot = new Vector2(0.5f, 0.5f);
+                lockRect.anchoredPosition = lockIconPosition; // Set to x: -31, y: 89
+            }
+        }
+        if (lockedMessage != null)
+        {
+            lockedMessage.gameObject.SetActive(false);
+            lockedMessage.text = "Level Locked! Complete previous levels to unlock.";
+            // Ensure CanvasGroup for animation
+            CanvasGroup cg = lockedMessage.GetComponent<CanvasGroup>();
+            if (cg == null)
+                cg = lockedMessage.gameObject.AddComponent<CanvasGroup>();
+            cg.alpha = 0f;
+        }
+
+        // Initialize the first level image
+        InitializeLevelImage();
     }
 
     private void Update()
@@ -102,16 +136,40 @@ public class LevelSlideshowUI : MonoBehaviour
             PlayCurrentLevel();
     }
 
+    private void InitializeLevelImage()
+    {
+        if (levels == null || levels.Count == 0)
+            return;
+
+        bool isLocked = LevelUnlockManager.IsLevelLocked(currentIndex);
+
+        levelDisplayImage.sprite = isLocked && lockedLevelSprite != null ? lockedLevelSprite : levels[currentIndex].levelPreview;
+        levelDisplayImage.color = new Color(1, 1, 1, isLocked ? lockedLevelOpacity : 1f);
+
+        // Show lock icon for locked levels
+        if (lockIcon != null)
+            lockIcon.gameObject.SetActive(isLocked);
+
+        // Locked message is only shown when trying to play
+        if (lockedMessage != null)
+            lockedMessage.gameObject.SetActive(false);
+
+        levelNameText.text = levels[currentIndex].displayName;
+        playButton.interactable = !isLocked;
+    }
+
     private void UpdateSlideshow()
     {
         if (levels == null || levels.Count == 0)
             return;
 
+        bool isLocked = LevelUnlockManager.IsLevelLocked(currentIndex);
+
         levelDisplayImage.DOFade(0f, 0.2f).OnComplete(() =>
         {
-            levelDisplayImage.sprite = levels[currentIndex].levelPreview;
+            levelDisplayImage.sprite = isLocked && lockedLevelSprite != null ? lockedLevelSprite : levels[currentIndex].levelPreview;
             levelDisplayImage.color = new Color(1, 1, 1, 0);
-            levelDisplayImage.DOFade(1f, 0.4f).SetEase(Ease.InOutSine);
+            levelDisplayImage.DOFade(isLocked ? lockedLevelOpacity : 1f, 0.4f).SetEase(Ease.InOutSine);
         });
 
         levelNameText.rectTransform.DOKill();
@@ -119,8 +177,15 @@ public class LevelSlideshowUI : MonoBehaviour
         levelNameText.rectTransform.anchoredPosition = titleHiddenPos;
         levelNameText.rectTransform.DOAnchorPos(titleVisiblePos, 0.4f).SetEase(Ease.OutBack);
 
-        int unlocked = PlayerPrefs.GetInt("UnlockedLevel", 0);
-        playButton.interactable = currentIndex <= unlocked;
+        playButton.interactable = !isLocked;
+
+        // Show lock icon for locked levels
+        if (lockIcon != null)
+            lockIcon.gameObject.SetActive(isLocked);
+
+        // Locked message is only shown when trying to play
+        if (lockedMessage != null)
+            lockedMessage.gameObject.SetActive(false);
     }
 
     private void PreviousLevel()
@@ -141,23 +206,51 @@ public class LevelSlideshowUI : MonoBehaviour
     {
         if (levels == null || levels.Count == 0) return;
 
-        int unlocked = PlayerPrefs.GetInt("UnlockedLevel", 0);
-        if (currentIndex > unlocked)
+        if (preventLockedLevelLoading && LevelUnlockManager.IsLevelLocked(currentIndex))
         {
-            Debug.LogWarning("Level is locked!");
+            Debug.LogWarning("Level is locked! Scene loading prevented.");
+            if (lockedMessage != null)
+            {
+                // Stop any existing message coroutine
+                if (lockedMessageCoroutine != null)
+                    StopCoroutine(lockedMessageCoroutine);
+                // Start new coroutine to show message
+                lockedMessageCoroutine = StartCoroutine(ShowLockedMessage());
+            }
             return;
         }
 
         var selectedLevel = levels[currentIndex];
         PlayerPrefs.SetInt("IsTutorial", selectedLevel.isTutorial ? 1 : 0);
 
-        if (currentIndex >= unlocked && currentIndex < levels.Count - 1)
+        // Unlock the next level only if the current level is unlocked and playable
+        if (currentIndex < levels.Count - 1 && !LevelUnlockManager.IsLevelLocked(currentIndex))
         {
-            PlayerPrefs.SetInt("UnlockedLevel", currentIndex + 1);
-            PlayerPrefs.Save();
+            LevelUnlockManager.UnlockLevel(currentIndex + 1);
         }
 
         StartCoroutine(FadeAndLoadScene(selectedLevel.scene.SceneName));
+    }
+
+    private IEnumerator ShowLockedMessage()
+    {
+        if (lockedMessage == null) yield break;
+
+        lockedMessage.gameObject.SetActive(true);
+        CanvasGroup cg = lockedMessage.GetComponent<CanvasGroup>();
+        if (cg != null)
+        {
+            cg.alpha = 0f;
+            cg.DOFade(1f, 0.3f).SetEase(Ease.InOutSine);
+            yield return new WaitForSeconds(lockedMessageDuration);
+            cg.DOFade(0f, 0.3f).SetEase(Ease.InOutSine);
+            yield return new WaitForSeconds(0.3f);
+        }
+        else
+        {
+            yield return new WaitForSeconds(lockedMessageDuration);
+        }
+        lockedMessage.gameObject.SetActive(false);
     }
 
     private IEnumerator LoadSceneAsync(string sceneName)
@@ -208,8 +301,7 @@ public class LevelSlideshowUI : MonoBehaviour
                     Debug.LogWarning("MainMenuPanel is not assigned!");
 
                 if (levelIndicatorHint != null)
-                    AnimateLevelIndicator(); 
-
+                    AnimateLevelIndicator();
 
                 if (levelSelectionTitle != null)
                 {
@@ -224,6 +316,7 @@ public class LevelSlideshowUI : MonoBehaviour
             });
         });
     }
+
     private void AnimateLevelIndicator()
     {
         if (levelIndicatorHint == null) return;
@@ -239,7 +332,7 @@ public class LevelSlideshowUI : MonoBehaviour
             hintRect.anchorMax = new Vector2(0.5f, 0.5f);
             hintRect.pivot = new Vector2(0.5f, 0.5f);
 
-            // Restore original scale (from your screenshot)
+            // Restore original scale
             hintRect.localScale = new Vector3(182.03f, 94.78234f, 1f);
             hintRect.localRotation = Quaternion.identity;
 
@@ -258,7 +351,6 @@ public class LevelSlideshowUI : MonoBehaviour
         }
     }
 
-    //Reusable animation method for the level selection title
     private void AnimateLevelSelectionTitle()
     {
         if (levelSelectionTitle == null) return;

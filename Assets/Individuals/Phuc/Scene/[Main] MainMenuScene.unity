@@ -579,6 +579,141 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 265.38, z: 0}
+--- !u!1 &203078006
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 203078007}
+  - component: {fileID: 203078009}
+  - component: {fileID: 203078008}
+  m_Layer: 5
+  m_Name: LockedMessage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &203078007
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203078006}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 332069285}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -235, y: -116}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &203078008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203078006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Level is locked!
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: fa610b66b42c5bb468b67483a6a462af, type: 2}
+  m_sharedMaterial: {fileID: 8434446050780371538, guid: fa610b66b42c5bb468b67483a6a462af, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4286480108
+  m_fontColor: {r: 0.9245283, g: 0.49279103, b: 0.49279103, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: -203.70947, y: 0, z: -635.35254, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &203078009
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203078006}
+  m_CullTransparentMesh: 1
 --- !u!1 &221886843
 GameObject:
   m_ObjectHideFlags: 0
@@ -1072,6 +1207,8 @@ RectTransform:
   - {fileID: 1790482666}
   - {fileID: 879470951}
   - {fileID: 279293261}
+  - {fileID: 203078007}
+  - {fileID: 631495304}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1165,29 +1302,33 @@ MonoBehaviour:
   levelSelectionTitle: {fileID: 123397038}
   levels:
   - levelPreview: {fileID: 21300000, guid: ccd7d81aa50bd284eaad6eaa8e873d97, type: 3}
-    displayName: 'LEVEL 0: The Beginning'
+    displayName: 'LEVEL 0: The Last Bastion'
     scene:
       m_SceneAsset: {fileID: 102900000, guid: 186f304aae5338f4c9e7450d34cd2b39, type: 3}
       m_SceneName: '[Main] TutorialScene'
     isTutorial: 1
+    isLockedInitially: 0
   - levelPreview: {fileID: 21300000, guid: ed46cdf16e703824288acd5da4b25976, type: 3}
     displayName: 'LEVEL 1: The Start of A Journey'
     scene:
       m_SceneAsset: {fileID: 102900000, guid: 34179791d1c203f4ea700e21832d5758, type: 3}
       m_SceneName: '[Main] Level 1'
     isTutorial: 0
+    isLockedInitially: 1
   - levelPreview: {fileID: 21300000, guid: c4b640daff8410e41a68d6eb74612a41, type: 3}
     displayName: 'LEVEL 2: The Wrath of Zeus'
     scene:
       m_SceneAsset: {fileID: 102900000, guid: 3799f1b6dad89934aae272ad3a1a5dca, type: 3}
       m_SceneName: '[Main] Level 2'
     isTutorial: 0
+    isLockedInitially: 1
   - levelPreview: {fileID: 21300000, guid: ccd7d81aa50bd284eaad6eaa8e873d97, type: 3}
     displayName: 'LEVEL 3: Nature''s Grasps'
     scene:
       m_SceneAsset: {fileID: 102900000, guid: 34179791d1c203f4ea700e21832d5758, type: 3}
       m_SceneName: '[Main] Level 1'
     isTutorial: 0
+    isLockedInitially: 1
   titleHiddenPos: {x: -80, y: -6}
   titleVisiblePos: {x: -80, y: -12}
   slideInPosition: {x: -80, y: -12}
@@ -1202,6 +1343,13 @@ MonoBehaviour:
   levelIndicatorHint: {fileID: 372314536}
   fadeToBlackPanel: {fileID: 279293262}
   fadeToBlackDuration: 1
+  lockIcon: {fileID: 631495305}
+  lockedMessage: {fileID: 203078008}
+  lockedLevelSprite: {fileID: 0}
+  preventLockedLevelLoading: 1
+  lockedLevelOpacity: 0.5
+  lockIconPosition: {x: -31, y: 89}
+  lockedMessageDuration: 3
 --- !u!1 &334774745
 GameObject:
   m_ObjectHideFlags: 0
@@ -1525,6 +1673,127 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 580202369}
   m_CullTransparentMesh: 1
+--- !u!1 &631495303
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 631495304}
+  - component: {fileID: 631495306}
+  - component: {fileID: 631495305}
+  m_Layer: 5
+  m_Name: Lock
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &631495304
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631495303}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 332069285}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -31, y: 89}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &631495305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631495303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 602a2ef311862704e8f92d8aa68b109d, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &631495306
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631495303}
+  m_CullTransparentMesh: 1
+--- !u!1 &649042098
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 649042099}
+  - component: {fileID: 649042100}
+  m_Layer: 0
+  m_Name: PlayerPrefsResetter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &649042099
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649042098}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 997.7408, y: 481.657, z: -2.0877247}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &649042100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649042098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 546326a70a23f5b41a88bb0a1f7cb1de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainMenuUI: {fileID: 1952854939}
 --- !u!1 &729974117
 GameObject:
   m_ObjectHideFlags: 0
@@ -1577,7 +1846,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3430,19 +3699,41 @@ MonoBehaviour:
   rightArrowButton: {fileID: 879470952}
   playSelectedButton: {fileID: 1216246080}
   backToMainButton: {fileID: 1603152347}
+  lockIcon: {fileID: 631495305}
+  lockedMessage: {fileID: 203078008}
+  lockedLevelSprite: {fileID: 0}
+  lockedLevelOpacity: 0.5
+  lockIconPosition: {x: -31, y: 89}
+  lockedMessageDuration: 3
   slideshowLevels:
-  - levelPreview: {fileID: 21300000, guid: d0ab81033c1b95840b19f6838dffeda3, type: 3}
-    displayName: 'LEVEL 0: The Beginning'
+  - levelPreview: {fileID: 21300000, guid: ccd7d81aa50bd284eaad6eaa8e873d97, type: 3}
+    displayName: 'LEVEL 0: The Last Bastion'
     scene:
       m_SceneAsset: {fileID: 102900000, guid: 186f304aae5338f4c9e7450d34cd2b39, type: 3}
       m_SceneName: '[Main] TutorialScene'
     isTutorial: 1
-  - levelPreview: {fileID: 21300000, guid: d0ab81033c1b95840b19f6838dffeda3, type: 3}
+    isLockedInitially: 0
+  - levelPreview: {fileID: 21300000, guid: ed46cdf16e703824288acd5da4b25976, type: 3}
     displayName: 'LEVEL 1: The Start of A Journey'
     scene:
       m_SceneAsset: {fileID: 102900000, guid: 34179791d1c203f4ea700e21832d5758, type: 3}
       m_SceneName: '[Main] Level 1'
     isTutorial: 0
+    isLockedInitially: 1
+  - levelPreview: {fileID: 21300000, guid: c4b640daff8410e41a68d6eb74612a41, type: 3}
+    displayName: 'LEVEL 2: The Wrath of Zeus'
+    scene:
+      m_SceneAsset: {fileID: 102900000, guid: 3799f1b6dad89934aae272ad3a1a5dca, type: 3}
+      m_SceneName: '[Main] Level 2'
+    isTutorial: 0
+    isLockedInitially: 1
+  - levelPreview: {fileID: 21300000, guid: ccd7d81aa50bd284eaad6eaa8e873d97, type: 3}
+    displayName: 'LEVEL 3: Nature''s Grasps'
+    scene:
+      m_SceneAsset: {fileID: 102900000, guid: 34179791d1c203f4ea700e21832d5758, type: 3}
+      m_SceneName: '[Main] Level 1'
+    isTutorial: 0
+    isLockedInitially: 1
   levelSelectionTitleText: {fileID: 123397038}
   levelTitleVisiblePos: {x: -78, y: -12}
   levelTitleHiddenPos: {x: -78, y: -6}

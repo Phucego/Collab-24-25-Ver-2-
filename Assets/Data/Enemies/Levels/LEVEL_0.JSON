@@ -27,7 +27,7 @@
             "Enemies": [
               {
                 "Name": "DEMON",
-                "Amount": 3,
+                "Amount": 2,
                 "SpawnInterval": 5.0
               }
             ],

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -55,8 +56,17 @@ public class LevelManager : MonoBehaviour
     {
         StartCoroutine(PlaySoundAtRandomIntervals());
         StartCoroutine(DisplayRandomTips());
-    }
 
+        CompleteLevel();
+    }
+    public void CompleteLevel()
+    {
+        if (MainMenuUI.instance != null)
+        {
+            var levelIndex = SceneManager.GetActiveScene().buildIndex;
+            MainMenuUI.instance.OnLevelCompleted(levelIndex);
+        }
+    }
     private IEnumerator PlaySoundAtRandomIntervals()
     {
         while (true)
