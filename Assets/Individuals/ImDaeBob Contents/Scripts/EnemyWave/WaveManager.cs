@@ -19,15 +19,15 @@ public class WaveManager : MonoBehaviour
     private List<BaseEnemySO> _enemySOs;
 
     [Header("Level Data")]
-    [SerializeField] private string _selectedLevel;
+    public string _selectedLevel;
     private List<string> _lvList = new List<string>();
     private string _jsonDirectory;
     public List<LevelData> _curData = new List<LevelData>();
 
     [Header("Wave Control")]
     [SerializeField] private int _timerBetweenWave = 30;
-    private int _remTime = 0;
-    private bool _waitingForNextWave = false;
+    public int _remTime = 0;
+    public bool _waitingForNextWave = false;
 
     public int _curWave = 0;
     public int _allEnemies = 0, _summoned = 0, _despawned = 0;

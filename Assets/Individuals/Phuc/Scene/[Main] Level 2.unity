@@ -10583,6 +10583,10 @@ PrefabInstance:
       value: LightningStrikeEvent
       objectReference: {fileID: 0}
     - target: {fileID: 4962465496411646788, guid: f93b9b234c5fe2b41bf04bf78e853140, type: 3}
+      propertyPath: tornadoEffectPrefab
+      value: 
+      objectReference: {fileID: 1265422879940814, guid: 345e3d10eb67cec4e9a68ec905e24c36, type: 3}
+    - target: {fileID: 4962465496411646788, guid: f93b9b234c5fe2b41bf04bf78e853140, type: 3}
       propertyPath: targetScene.m_SceneName
       value: '[Main] Level 2'
       objectReference: {fileID: 0}
