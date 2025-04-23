@@ -12,38 +12,34 @@ public class LightningStrikeEvent : MonoBehaviour
     private Dictionary<GameObject, GameObject> activeEffects = new Dictionary<GameObject, GameObject>();
     public UnityEvent<string, int> OnLightningStrike; // For UI notification (UIManager)
     private bool hasPlayedLightningSound = false;
-    private WaveManager waveManager;
+    public WaveManager waveManager;
     private UIManager uiManager;
     private int lastKnownWave = -1;
 
     private void Awake()
     {
         waveManager = WaveManager.Instance;
-        if (waveManager == null)
-        {
-            Debug.LogError("LightningStrikeEvent: WaveManager.Instance not found in scene!");
-            enabled = false;
-        }
-
         uiManager = FindObjectOfType<UIManager>();
-        if (uiManager == null)
-        {
-            Debug.LogError("LightningStrikeEvent: UIManager.Instance not found in scene!");
-            enabled = false;
-        }
     }
 
     private void Start()
     {
-        if (waveManager != null)
+        if (waveManager == null)
         {
-            StartCoroutine(InitializeTornadoStrike());
-            StartCoroutine(WaitForWaveManagerData());
+            Debug.LogError("LightningStrikeEvent: WaveManager.Instance not found in scene!");
+            enabled = false;
+            return;
         }
-        else
+
+        if (uiManager == null)
         {
-            Debug.LogWarning("LightningStrikeEvent: Cannot initialize due to missing WaveManager.");
+            Debug.LogError("LightningStrikeEvent: UIManager.Instance not found in scene!");
+            enabled = false;
+            return;
         }
+
+        StartCoroutine(InitializeTornadoStrike());
+        StartCoroutine(WaitForWaveManagerData());
 
         if (BuildingManager.Instance != null)
         {
@@ -55,7 +51,7 @@ public class LightningStrikeEvent : MonoBehaviour
             Debug.LogWarning("LightningStrikeEvent: BuildingManager.Instance not found.");
         }
 
-        // Hook into UIManager's startWaveButton
+        // Hook into UIManager's startWaveButton for wave 1
         if (uiManager != null && uiManager.startWaveButton != null)
         {
             uiManager.startWaveButton.onClick.AddListener(OnStartWaveButtonClicked);
@@ -67,7 +63,7 @@ public class LightningStrikeEvent : MonoBehaviour
         if (waveManager == null || waveManager._curWave != 0) return;
 
         Debug.Log("UIManager startWaveButton clicked. Triggering tornado for wave 1.");
-        TriggerTornadoStrike(1);
+        TriggerTornadoStrike(1); // Trigger 1 tornado for wave 1
     }
 
     private IEnumerator WaitForWaveManagerData()
@@ -76,18 +72,16 @@ public class LightningStrikeEvent : MonoBehaviour
         float elapsed = 0f;
         while (waveManager != null && (waveManager._curData == null || waveManager._curData.Count == 0) && elapsed < timeout)
         {
-            Debug.LogWarning($"Waiting for WaveManager._curData to initialize. Elapsed: {elapsed:F1}s, SelectedLevel: {waveManager._selectedLevel}");
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         if (waveManager == null || waveManager._curData == null || waveManager._curData.Count == 0)
-        {
-            Debug.LogError($"WaveManager._curData not initialized after {timeout}s. Tornado strikes disabled.");
+        { 
             yield break;
         }
 
-        Debug.Log("WaveManager._curData initialized. Starting wave monitoring.");
+        
         HookWaveEvents();
     }
 
@@ -111,17 +105,17 @@ public class LightningStrikeEvent : MonoBehaviour
         {
             if (!spot.CompareTag("Placeable"))
             {
-                Debug.LogWarning($"Placeholder {spot.name} has incorrect tag: {spot.tag}. Expected 'Placeable'.");
+               
                 continue;
             }
             bool hasTower = spot.GetComponent<TowerController>() != null;
-            Debug.Log($"Placeholder {spot.name}: Tag={spot.tag}, HasTowerController={hasTower}");
+           ;
             if (!hasTower)
             {
                 placeableSpots.Add(spot);
             }
         }
-        Debug.Log($"Updated placeableSpots: {placeableSpots.Count} empty placeholders found.");
+       
     }
 
     private void HandleTowerPlaced(GameObject placeholder)
@@ -155,14 +149,13 @@ public class LightningStrikeEvent : MonoBehaviour
 
     private IEnumerator WatchForWaveStart()
     {
-        bool wasSpawning = false;
+        bool wasWaitingForNextWave = false;
         int lastCurWave = -1;
 
         while (waveManager != null)
         {
-            bool isSpawning = waveManager._isSpawning;
-            int currentWave = waveManager._curWave + 1;
             bool isWaitingForNextWave = waveManager._waitingForNextWave;
+            int currentWave = waveManager._curWave + 1;
             int remTime = waveManager._remTime;
 
             if (currentWave != lastKnownWave)
@@ -171,24 +164,16 @@ public class LightningStrikeEvent : MonoBehaviour
                 lastKnownWave = currentWave;
             }
 
-            Debug.Log($"WaveManager state: isSpawning={isSpawning}, wasSpawning={wasSpawning}, currentWave={currentWave}, _curWave={waveManager._curWave}, waitingForNextWave={isWaitingForNextWave}, remTime={remTime}, placeableSpots.Count={placeableSpots.Count}");
+         
 
-            // Trigger for waves 2+ when _isSpawning transitions or _curWave increments
-            if (currentWave > 1 && !isWaitingForNextWave)
+            // Trigger tornadoes when countdown ends (transition from waiting to not waiting)
+            if (wasWaitingForNextWave && !isWaitingForNextWave && currentWave >= 1)
             {
-                if (isSpawning && !wasSpawning)
-                {
-                    Debug.Log($"Detected _isSpawning transition for wave {currentWave}. Triggering tornadoes.");
-                    TriggerTornadoStrike(currentWave);
-                }
-                else if (waveManager._curWave > lastCurWave)
-                {
-                    Debug.LogWarning($"Detected _curWave increment without _isSpawning transition for wave {currentWave}. Triggering tornadoes.");
-                    TriggerTornadoStrike(currentWave);
-                }
+                
+                TriggerTornadoStrike(currentWave);
             }
 
-            wasSpawning = isSpawning;
+            wasWaitingForNextWave = isWaitingForNextWave;
             lastCurWave = waveManager._curWave;
             yield return new WaitForSeconds(0.1f);
         }
@@ -207,7 +192,7 @@ public class LightningStrikeEvent : MonoBehaviour
         // Refresh placeableSpots before spawning
         UpdatePlaceableSpots();
 
-        Debug.Log($"Wave {currentWave} started. Triggering {currentWave} tornado strike(s).");
+        Debug.Log($"Wave {currentWave} starting. Triggering {currentWave} tornado strike(s).");
         StrikeRandomSpots(currentWave);
     }
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.047488183, g: 0.045809504, b: 0.04870781, a: 1}
+  m_IndirectSpecularColor: {r: 0.046391644, g: 0.045775667, b: 0.04843645, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10583,6 +10583,10 @@ PrefabInstance:
       value: LightningStrikeEvent
       objectReference: {fileID: 0}
     - target: {fileID: 4962465496411646788, guid: f93b9b234c5fe2b41bf04bf78e853140, type: 3}
+      propertyPath: waveManager
+      value: 
+      objectReference: {fileID: 1143322410}
+    - target: {fileID: 4962465496411646788, guid: f93b9b234c5fe2b41bf04bf78e853140, type: 3}
       propertyPath: tornadoEffectPrefab
       value: 
       objectReference: {fileID: 1265422879940814, guid: 345e3d10eb67cec4e9a68ec905e24c36, type: 3}
@@ -14798,6 +14802,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 9126698368566758631, guid: a6e51f476a4bf404098d9c9bd9f8ae99, type: 3}
   m_PrefabInstance: {fileID: 1143322408}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1143322410 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9073465194050615556, guid: a6e51f476a4bf404098d9c9bd9f8ae99, type: 3}
+  m_PrefabInstance: {fileID: 1143322408}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b863fbe45255ee440a0bd65500bc6075, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1147105029
 PrefabInstance:
   m_ObjectHideFlags: 0
