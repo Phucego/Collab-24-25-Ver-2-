@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using UnityEngine.Video;
 
 public class MainMenuUI : MonoBehaviour
 {
@@ -58,15 +59,20 @@ public class MainMenuUI : MonoBehaviour
     public Vector2 levelSelectionTitleHiddenPos;
     public Vector2 levelSelectionTitleVisiblePos;
 
-    private int selectedIndex = 0;
-    private List<Button> menuButtons = new List<Button>();
-    private int currentLevelIndex = 0;
-    private Coroutine lockedMessageCoroutine;
+    [Header("Splash Screen Elements")]
+    [SerializeField] private GameObject splashScreenContainer; // Container for splash screen video players
+    [SerializeField] private VideoPlayer schoolSplashVideoPlayer; // VideoPlayer for school splash
+    [SerializeField] private VideoPlayer teamSplashVideoPlayer; // VideoPlayer for team splash
 
     [Header("Fade Controls")]
     public CanvasGroup mainMenuGroup;
 
     public static MainMenuUI instance;
+
+    private int selectedIndex = 0;
+    private List<Button> menuButtons = new List<Button>();
+    private int currentLevelIndex = 0;
+    private Coroutine lockedMessageCoroutine;
 
     private void Awake()
     {
@@ -74,9 +80,11 @@ public class MainMenuUI : MonoBehaviour
         anim = GetComponent<Animator>();
         instance = this;
 
+        // Initialize main menu UI
         confirmationMenu.SetActive(false);
         levelSelectionCanvas.SetActive(false);
         levelSelectionPanel.anchoredPosition = offScreenPos;
+        mainMenuCanvas.SetActive(false); // Hide main menu initially
 
         menuButtons.Add(startButton);
         menuButtons.Add(settingsButton);
@@ -110,6 +118,77 @@ public class MainMenuUI : MonoBehaviour
                 cg = lockedMessage.gameObject.AddComponent<CanvasGroup>();
             cg.alpha = 0f;
         }
+
+        // Initialize splash screen
+        InitializeSplashScreens();
+    }
+
+    private void InitializeSplashScreens()
+    {
+        if (splashScreenContainer != null)
+        {
+            splashScreenContainer.SetActive(true);
+        }
+
+        // Configure school splash video
+        if (schoolSplashVideoPlayer != null)
+        {
+            schoolSplashVideoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
+            schoolSplashVideoPlayer.targetCamera = Camera.main;
+          //  schoolSplashVideoPlayer.loop = false;
+            schoolSplashVideoPlayer.playOnAwake = false;
+            schoolSplashVideoPlayer.gameObject.SetActive(true);
+        }
+
+        // Configure team splash video
+        if (teamSplashVideoPlayer != null)
+        {
+            teamSplashVideoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
+            teamSplashVideoPlayer.targetCamera = Camera.main;
+          //  teamSplashVideoPlayer.loop = false;
+            teamSplashVideoPlayer.playOnAwake = false;
+            teamSplashVideoPlayer.gameObject.SetActive(false); // Hide team splash initially
+        }
+
+        // Start splash screen sequence
+        StartCoroutine(PlaySplashScreens());
+    }
+
+    private IEnumerator PlaySplashScreens()
+    {
+        // Play school splash screen
+        if (schoolSplashVideoPlayer != null)
+        {
+            schoolSplashVideoPlayer.Play();
+            yield return new WaitUntil(() => !schoolSplashVideoPlayer.isPlaying);
+        }
+
+        // Hide school splash and show team splash
+        if (schoolSplashVideoPlayer != null)
+            schoolSplashVideoPlayer.gameObject.SetActive(false);
+        if (teamSplashVideoPlayer != null)
+            teamSplashVideoPlayer.gameObject.SetActive(true);
+
+        // Play team splash screen
+        if (teamSplashVideoPlayer != null)
+        {
+            teamSplashVideoPlayer.Play();
+            yield return new WaitUntil(() => !teamSplashVideoPlayer.isPlaying);
+        }
+
+        // Hide splash container and show main menu
+        if (splashScreenContainer != null)
+            splashScreenContainer.SetActive(false);
+
+        // Show main menu
+        mainMenuCanvas.SetActive(true);
+        mainMenuGroup.alpha = 0f;
+        mainMenuGroup.DOFade(1f, 0.4f).SetEase(Ease.OutSine).OnComplete(() =>
+        {
+            mainMenuGroup.interactable = true;
+            mainMenuGroup.blocksRaycasts = true;
+            startButton.interactable = true;
+        });
     }
 
     private void Start()
