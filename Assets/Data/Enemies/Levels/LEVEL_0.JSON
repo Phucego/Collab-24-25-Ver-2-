@@ -52,6 +52,30 @@
           }
         ],
         "IsBossWave": false
+      },
+      {
+        "Groups": [
+          {
+            "Name": "GROUP 1",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              },
+              {
+                "Name": "CLOAK",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 0.0
+          }
+        ],
+        "IsBossWave": true
       }
     ]
   }

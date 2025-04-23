@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.22873558, g: 0.22981292, b: 0.13747577, a: 1}
+  m_IndirectSpecularColor: {r: 0.09445876, g: 0.16732967, b: 0.36685812, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 565ec1e9b9b6dde4dbfd37d5e7b1268d, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -3746,7 +3746,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -3789,7 +3789,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 4541
+  m_ColorTemperature: 2622
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -20410,6 +20410,11 @@ MonoBehaviour:
   confirmationMenu: {fileID: 1688421069}
   confirmationMenu_MainMenu: {fileID: 1132735161}
   victoryPanel: {fileID: 0}
+  victoryText: {fileID: 0}
+  victoryNextLevelButton: {fileID: 0}
+  victoryMainMenuButton: {fileID: 0}
+  fireworkPrefab: {fileID: 0}
+  castle: {fileID: 0}
   toggleTowerSelectButton: {fileID: 1570777478}
   resumeButton: {fileID: 859379811}
   quitButton: {fileID: 1002851599}
@@ -20431,6 +20436,10 @@ MonoBehaviour:
     m_SceneAsset: {fileID: 102900000, guid: 5ab70225f46419e44b0924c46a99e266, type: 3}
     m_SceneName: '[Main] MainMenuScene'
   vineEntangleNotificationPanel: {fileID: 0}
+  fadePanel: {fileID: 0}
+  nextLevel:
+    m_SceneAsset: {fileID: 0}
+    m_SceneName: 
   startWaveButton: {fileID: 2072931426}
   startWaveRect: {fileID: 2072931425}
   nextWaveCountdownText: {fileID: 2117611034}

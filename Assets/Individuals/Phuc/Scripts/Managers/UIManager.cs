@@ -6,11 +6,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DG.Tweening;
-using UnityEngine.Playables;
 
 public class UIManager : MonoBehaviour
 {
-    [Header("Game Objects")]
+    [Header("Game Objects")] 
     public GameObject coinCounterParent;
     public GameObject waveProgressParent;
     public GameObject mainUI;
@@ -22,11 +21,10 @@ public class UIManager : MonoBehaviour
     [Header("Victory UI")]
     public GameObject victoryPanel;
     public TextMeshProUGUI victoryText;
-    public Button victoryNextLevelButton; // Button for next level
-    public Button victoryMainMenuButton; // Button for main menu
-    public PlayableDirector victoryTimeline; // Timeline for castle animation
-    public GameObject fireworkPrefab; // Firework particle system prefab
-    public GameObject castle; // Reference to castle GameObject for firework positioning
+    public Button victoryNextLevelButton;
+    public Button victoryMainMenuButton;
+    public GameObject fireworkPrefab;
+    public GameObject castle;
 
     [Header("Main UI Elements")]
     public Button toggleTowerSelectButton;
@@ -34,8 +32,8 @@ public class UIManager : MonoBehaviour
     public Button quitButton;
     public Button mainMenuButton;
 
-    [Header("Confirmation UI Elements")]
-    public Button Quit_Yes;
+    [Header("Confirmation UI Elements")] 
+    public Button Quit_Yes; 
     public Button Quit_No;
     public Button MainMenu_No;
     public Button MainMenu_Yes;
@@ -43,10 +41,10 @@ public class UIManager : MonoBehaviour
     [Header("Choose Options UI Elements")]
     public Button chooseOptions;
     public Button speedUpButton;
-    public Button pauseButton;
+    public Button pauseButton;    
     public Button muteButton;
     public Button restartButton;
-
+    
     public GameObject optionsContainer;
 
     [Header("Other References")]
@@ -55,8 +53,8 @@ public class UIManager : MonoBehaviour
     public TutorialGuidance dialogueManager;
     public SceneField mainMenuScene;
     public GameObject vineEntangleNotificationPanel;
-    public Image fadePanel; // UI Image for fade transitions
-    public SceneField nextLevel; // SceneField for next level
+    public Image fadePanel;
+    public SceneField nextLevel;
 
     [Header("Wave Start UI")]
     public Button startWaveButton;
@@ -87,10 +85,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] private SceneField tutorialLevel;
     [SerializeField] private SceneField Level_1;
 
+    // Track active tween for wave progress slider
+    private Tween waveSliderTween;
+
     private void Awake() => Instance = this;
 
     private void Start()
     {
+        // Set DOTween capacity to prevent max tweens warning
+        DOTween.SetTweensCapacity(500, 50);
+
         Time.timeScale = 0f;
         StartCoroutine(ShowUIAfterTransition());
 
@@ -109,10 +113,9 @@ public class UIManager : MonoBehaviour
             CurrencyManager.Instance.InitializeCurrency(50);
             UpdateCoinCounterUI();
         }
-
+        
         lightningNotificationText.alpha = 0f;
 
-        // Initialize buttons
         toggleTowerSelectButton.onClick.AddListener(ToggleTowerSelectPanel);
         resumeButton.onClick.AddListener(() => SetPauseState(false));
         quitButton.onClick.AddListener(() => ToggleConfirmationMenu(true));
@@ -133,13 +136,11 @@ public class UIManager : MonoBehaviour
         startWaveButton.gameObject.SetActive(true);
         nextWaveCountdownText.gameObject.SetActive(false);
 
-        // Initialize victory panel buttons
         if (victoryNextLevelButton != null)
             victoryNextLevelButton.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(nextLevel)));
         if (victoryMainMenuButton != null)
             victoryMainMenuButton.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(mainMenuScene)));
 
-        // Initialize fade panel
         if (fadePanel != null)
         {
             Color fadeColor = fadePanel.color;
@@ -158,7 +159,27 @@ public class UIManager : MonoBehaviour
         {
             WaveManager.Instance.OnWaveComplete += StartNextWaveCountdown;
             WaveManager.Instance.OnLevelComplete += StartVictorySequence;
-            totalWaves = WaveManager.Instance._curData[0].Waves.Count;
+            try
+            {
+                if (WaveManager.Instance._curData != null && WaveManager.Instance._curData.Count > 0)
+                {
+                    totalWaves = WaveManager.Instance._curData[0].Waves.Count;
+                }
+                else
+                {
+                    Debug.LogWarning("WaveManager._curData is empty or null. Setting totalWaves to 0.");
+                    totalWaves = 0;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to access WaveManager._curData: {e.Message}");
+                totalWaves = 0;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("WaveManager.Instance is null. Victory sequence may not trigger.");
         }
 
         Color c = nextWaveCountdownText.color;
@@ -167,14 +188,22 @@ public class UIManager : MonoBehaviour
 
         if (waveProgressSlider != null)
         {
-            waveProgressSlider.minValue = 0f;
-            waveProgressSlider.maxValue = 1f;
-            waveProgressSlider.value = 0f;
+            try
+            {
+                waveProgressSlider.minValue = 0f;
+                waveProgressSlider.maxValue = 1f;
+                waveProgressSlider.value = 0f;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to initialize waveProgressSlider: {e.Message}");
+                waveProgressSlider.gameObject.SetActive(false);
+            }
         }
 
         if (victoryPanel != null)
             victoryPanel.SetActive(false);
-
+        
         if (waveProgressText != null)
         {
             waveProgressText.alpha = 0f;
@@ -204,15 +233,31 @@ public class UIManager : MonoBehaviour
     {
         if (waveProgressSlider == null || WaveManager.Instance == null) return;
 
-        int totalEnemies = WaveManager.Instance._allEnemies;
-        int enemiesKilled = WaveManager.Instance._despawned;
+        try
+        {
+            int totalEnemies = WaveManager.Instance._allEnemies;
+            int enemiesKilled = WaveManager.Instance._despawned;
 
-        if (totalEnemies <= 0) return;
+            if (totalEnemies <= 0) return;
 
-        float progress = Mathf.Clamp01((float)enemiesKilled / totalEnemies);
-        waveProgressSlider.DOValue(progress, 0.5f).SetEase(Ease.OutQuad);
+            float progress = Mathf.Clamp01((float)enemiesKilled / totalEnemies);
 
-        waveProgressText.text = $"{currentLevelName} - Wave {Mathf.Min(currentWave + 1, totalWaves)}/{totalWaves}";
+            // Kill existing tween if it exists to prevent overlap
+            if (waveSliderTween != null && waveSliderTween.IsActive())
+            {
+                waveSliderTween.Kill();
+            }
+
+            // Create new tween and store it
+            waveSliderTween = waveProgressSlider.DOValue(progress, 0.5f).SetEase(Ease.OutQuad);
+
+            waveProgressText.text = $"{currentLevelName} - Wave {Mathf.Min(currentWave + 1, totalWaves)}/{totalWaves}";
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"Failed to update wave progress: {e.Message}");
+            waveProgressSlider.gameObject.SetActive(false);
+        }
     }
 
     private void StartVictorySequence()
@@ -222,60 +267,104 @@ public class UIManager : MonoBehaviour
 
     private IEnumerator VictorySequence()
     {
-        // Hide gameplay UI
         mainUI.SetActive(false);
         waveProgressParent.SetActive(false);
         coinCounterParent.SetActive(false);
         optionsContainer.SetActive(false);
+        pauseMenu.SetActive(false);
+        towerSelectMenu.SetActive(false);
+        confirmationMenu.SetActive(false);
+        confirmationMenu_MainMenu.SetActive(false);
+        if (vineEntangleNotificationPanel != null)
+            vineEntangleNotificationPanel.SetActive(false);
+        startWaveButton.gameObject.SetActive(false);
+        nextWaveCountdownText.gameObject.SetActive(false);
+        if (minibossNotificationText != null)
+            minibossNotificationText.gameObject.SetActive(false);
 
-        // Play timeline for castle animation
-        if (victoryTimeline != null)
-        {
-            victoryTimeline.Play();
-            yield return new WaitForSeconds((float)victoryTimeline.duration);
-        }
-        else
-        {
-            Debug.LogWarning("Victory Timeline not assigned in UIManager.");
-        }
-
-        // Spawn fireworks
         if (fireworkPrefab != null && castle != null)
         {
-            for (int i = 0; i < 5; i++) // Spawn 5 fireworks
-            {
-                Vector3 spawnPos = castle.transform.position + new Vector3
-                (
-                     UnityEngine.Random.Range(-5f, 5f),
-                     UnityEngine.Random.Range(5f, 10f),
-                     UnityEngine.Random.Range(-5f, 5f)
-                );
-                GameObject firework = Instantiate(fireworkPrefab, spawnPos, Quaternion.identity);
-                Destroy(firework, 3f); // Destroy after 3 seconds
-                yield return new WaitForSeconds(0.5f); // Stagger fireworks
-            }
+            StartCoroutine(SpawnFireworks());
         }
         else
         {
             Debug.LogWarning("Firework Prefab or Castle not assigned in UIManager.");
         }
 
-        // Show victory panel
-        ShowVictoryPanel();
+        yield return StartCoroutine(ShowVictoryPanel());
     }
 
-    private void ShowVictoryPanel()
+    private IEnumerator SpawnFireworks()
     {
-        if (victoryPanel == null) return;
+        for (int i = 0; i < 5; i++)
+        {
+            Vector3 spawnPos = castle.transform.position + new Vector3(
+                UnityEngine.Random.Range(-5f, 5f),
+                UnityEngine.Random.Range(5f, 10f),
+                UnityEngine.Random.Range(-5f, 5f)
+            );
+            GameObject firework = Instantiate(fireworkPrefab, spawnPos, Quaternion.identity);
+            Destroy(firework, 3f);
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    private IEnumerator ShowVictoryPanel()
+    {
+        if (victoryPanel == null) yield break;
+
+        RectTransform panelRect = victoryPanel.GetComponent<RectTransform>();
+        Vector2 originalPanelPos = panelRect.anchoredPosition;
+        panelRect.anchoredPosition = originalPanelPos + new Vector2(0, -500f);
+        victoryPanel.SetActive(true);
 
         if (victoryText != null)
             victoryText.text = $"Victory! {currentLevelName} Completed!";
 
-        victoryPanel.SetActive(true);
-        victoryPanel.transform.localScale = Vector3.zero;
-        victoryPanel.transform.DOScale(Vector3.one, 0.6f).SetEase(Ease.OutBack);
+        Vector3 nextLevelOriginalScale = Vector3.one;
+        Vector2 nextLevelOriginalPos = Vector2.zero;
+        Vector3 mainMenuOriginalScale = Vector3.one;
+        Vector2 mainMenuOriginalPos = Vector2.zero;
 
-        Time.timeScale = 0f; // Pause gameplay
+        if (victoryNextLevelButton != null)
+        {
+            RectTransform nextLevelRect = victoryNextLevelButton.GetComponent<RectTransform>();
+            nextLevelOriginalScale = nextLevelRect.localScale;
+            nextLevelOriginalPos = nextLevelRect.anchoredPosition;
+            nextLevelRect.localScale = nextLevelOriginalScale;
+            nextLevelRect.anchoredPosition = nextLevelOriginalPos;
+            victoryNextLevelButton.gameObject.SetActive(false);
+        }
+
+        if (victoryMainMenuButton != null)
+        {
+            RectTransform mainMenuRect = victoryMainMenuButton.GetComponent<RectTransform>();
+            mainMenuOriginalScale = mainMenuRect.localScale;
+            mainMenuOriginalPos = mainMenuRect.anchoredPosition;
+            mainMenuRect.localScale = mainMenuOriginalScale;
+            mainMenuRect.anchoredPosition = mainMenuOriginalPos;
+            victoryMainMenuButton.gameObject.SetActive(false);
+        }
+
+        yield return panelRect.DOAnchorPos(originalPanelPos, 0.8f).SetEase(Ease.OutQuad).WaitForCompletion();
+
+        if (victoryNextLevelButton != null)
+        {
+            RectTransform nextLevelRect = victoryNextLevelButton.GetComponent<RectTransform>();
+            nextLevelRect.localScale = nextLevelOriginalScale;
+            nextLevelRect.anchoredPosition = nextLevelOriginalPos;
+            victoryNextLevelButton.gameObject.SetActive(true);
+        }
+
+        if (victoryMainMenuButton != null)
+        {
+            RectTransform mainMenuRect = victoryMainMenuButton.GetComponent<RectTransform>();
+            mainMenuRect.localScale = mainMenuOriginalScale;
+            mainMenuRect.anchoredPosition = mainMenuOriginalPos;
+            victoryMainMenuButton.gameObject.SetActive(true);
+        }
+
+        Time.timeScale = 0f;
         AudioManager.Instance.PlaySoundEffect("Victory_SFX");
     }
 
@@ -320,7 +409,7 @@ public class UIManager : MonoBehaviour
         fadePanel.gameObject.SetActive(true);
         yield return fadePanel.DOFade(1f, 0.5f).WaitForCompletion();
         SceneManager.LoadScene(sceneName);
-        Time.timeScale = 1f; // Reset time scale
+        Time.timeScale = 1f;
     }
 
     private IEnumerator LoadSceneWithFade(SceneField sceneField)
@@ -393,18 +482,25 @@ public class UIManager : MonoBehaviour
     {
         if (hasStartedFirstWave) return;
 
-        WaveManager.Instance.StartWave();
-        
-        UpdateWaveProgress();
-        hasStartedFirstWave = true;
-        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
+        if (WaveManager.Instance != null)
+        {
+            WaveManager.Instance.StartWave();
+            currentWave = 0;
+            UpdateWaveProgress();
+            hasStartedFirstWave = true;
+            AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
 
-        AnimateWaveTextReveal();
+            AnimateWaveTextReveal();
 
-        Sequence waveButtonSeq = DOTween.Sequence();
-        waveButtonSeq.Append(startWaveRect.DOAnchorPosY(200f, 0.5f).SetEase(Ease.InBack));
-        waveButtonSeq.Join(startWaveButton.image.DOFade(0f, 0.5f));
-        waveButtonSeq.OnComplete(() => startWaveButton.gameObject.SetActive(false));
+            Sequence waveButtonSeq = DOTween.Sequence();
+            waveButtonSeq.Append(startWaveRect.DOAnchorPosY(200f, 0.5f).SetEase(Ease.InBack));
+            waveButtonSeq.Join(startWaveButton.image.DOFade(0f, 0.5f));
+            waveButtonSeq.OnComplete(() => startWaveButton.gameObject.SetActive(false));
+        }
+        else
+        {
+            Debug.LogWarning("WaveManager.Instance is null. Cannot start wave.");
+        }
     }
 
     private void AnimateWaveTextReveal()
@@ -412,7 +508,6 @@ public class UIManager : MonoBehaviour
         if (waveProgressText == null) return;
 
         waveProgressText.gameObject.SetActive(true);
-
         waveProgressText.rectTransform.anchoredPosition = new Vector2(241, -900);
 
         Sequence textSeq = DOTween.Sequence();
@@ -466,7 +561,8 @@ public class UIManager : MonoBehaviour
         endSeq.Join(nextWaveCountdownText.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack));
         endSeq.OnComplete(() => nextWaveCountdownText.gameObject.SetActive(false));
 
-        WaveManager.Instance.StartWave();
+        if (WaveManager.Instance != null)
+            WaveManager.Instance.StartWave();
     }
 
     private void ShowMiniBossNotification(string message)

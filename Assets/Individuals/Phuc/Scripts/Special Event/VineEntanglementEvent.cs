@@ -19,6 +19,7 @@ public class VineEntangleEvent : MonoBehaviour
     private Dictionary<GameObject, int> debuffTypes = new Dictionary<GameObject, int>();
     public List<GameObject> towerSpots;
 
+    public float distanceUpVine;
     [Header("Events")]
     public UnityEvent<string, int> OnVineEntangle;
 
@@ -134,7 +135,7 @@ public class VineEntangleEvent : MonoBehaviour
             debuffTypes[targetSpot] = debuffType;
         }
 
-        GameObject vineEffect = Instantiate(vineEffectPrefab, targetSpot.transform.position + Vector3.up * 1.2f, Quaternion.identity);
+        GameObject vineEffect = Instantiate(vineEffectPrefab, targetSpot.transform.position + Vector3.up * distanceUpVine, Quaternion.identity);
         activeVines[targetSpot] = vineEffect;
 
         if (!hasPlayedVineSound)
