@@ -5,6 +5,7 @@ using UnityEngine;
 public class BalistaController : TowerController
 {
     public int bulletIndex = 0;
+    public GameObject ArrowModel;
     private bool lockedIn = false;
 
     protected override void Update()
@@ -40,6 +41,7 @@ public class BalistaController : TowerController
         
         SetStat(Projectile);
         Projectile.SetActive(true);
+        ArrowModel.SetActive(false);
     }
 
     protected override IEnumerator LOSCheck()
@@ -49,6 +51,7 @@ public class BalistaController : TowerController
             TimeBeforeFire = FireRate;
             yield return null;
         }
+        ArrowModel.SetActive(true);
         lockedIn = true;
         bool targetFaced = false;
         while (!targetFaced)
