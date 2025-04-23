@@ -24,20 +24,6 @@ public class LightningStrikeEvent : MonoBehaviour
 
     private void Start()
     {
-        if (waveManager == null)
-        {
-            Debug.LogError("LightningStrikeEvent: WaveManager.Instance not found in scene!");
-            enabled = false;
-            return;
-        }
-
-        if (uiManager == null)
-        {
-            Debug.LogError("LightningStrikeEvent: UIManager.Instance not found in scene!");
-            enabled = false;
-            return;
-        }
-
         StartCoroutine(InitializeTornadoStrike());
         StartCoroutine(WaitForWaveManagerData());
 
@@ -68,6 +54,8 @@ public class LightningStrikeEvent : MonoBehaviour
 
     private IEnumerator WaitForWaveManagerData()
     {
+        waveManager = FindObjectOfType<WaveManager>();
+        
         float timeout = 15f;
         float elapsed = 0f;
         while (waveManager != null && (waveManager._curData == null || waveManager._curData.Count == 0) && elapsed < timeout)
