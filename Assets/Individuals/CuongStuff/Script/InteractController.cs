@@ -27,6 +27,7 @@ public class InteractController : MonoBehaviour
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(pointerEventData, results);
 
+            
             if (results.Count > 0)
             {
                 targethit = true;
@@ -42,6 +43,7 @@ public class InteractController : MonoBehaviour
             RaycastHit[] hit = Physics.RaycastAll(ray, 150f, layerMask);
             for (int i = 0; i < hit.Length; i++)
             {
+                
                 if (hit[i].collider == null)
                     continue;
                 if (hit[i].collider.isTrigger)

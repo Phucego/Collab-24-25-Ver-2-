@@ -35,7 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2253149683213265956
 MeshFilter:
@@ -106,7 +106,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &3493634050935938107
 Rigidbody:
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90d3be1aa0707cb42bbf0e092ce01b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 300
+  Speed: 200
 --- !u!96 &2644251172878749926
 TrailRenderer:
   serializedVersion: 3
@@ -156,7 +156,7 @@ TrailRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7753407126714748281}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

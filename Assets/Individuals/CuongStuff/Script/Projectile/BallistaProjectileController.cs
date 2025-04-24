@@ -6,6 +6,7 @@ public class BallistaProjectileController : ProjectileController
 {
     private TrailRenderer trailRenderer;
     private MeshRenderer meshRenderer;
+    private SphereCollider sphereCollider;
 
     private bool Moving = true;
 
@@ -14,9 +15,11 @@ public class BallistaProjectileController : ProjectileController
         rb = GetComponent<Rigidbody>();
         trailRenderer = GetComponent<TrailRenderer>();
         meshRenderer = GetComponent<MeshRenderer>();
+        sphereCollider = GetComponent<SphereCollider>();
         trailRenderer.Clear();
         Moving = false;
         meshRenderer.enabled = false;
+        trailRenderer.enabled = false;
         rb.isKinematic = true;
     }
 
@@ -32,6 +35,8 @@ public class BallistaProjectileController : ProjectileController
         trailRenderer.Clear();
         Moving = true;
         meshRenderer.enabled = true;
+        trailRenderer.enabled = true;
+        sphereCollider.enabled = true;
         rb.isKinematic = false;
         rb.velocity = Vector3.zero;
     }
@@ -40,6 +45,7 @@ public class BallistaProjectileController : ProjectileController
     {
         Moving = false;
         meshRenderer.enabled = false;
+        sphereCollider.enabled = false;
         rb.isKinematic = true;
         yield return new WaitForSeconds(1);
         Pooling.Despawn("BallistaArrow", gameObject);
@@ -50,6 +56,7 @@ public class BallistaProjectileController : ProjectileController
     {
         if (collision != null && !collisionCount)
         {
+            StartCoroutine(DisableObject());
             collisionCount = true;
             if (collision.gameObject.CompareTag("Enemy"))
             {
@@ -58,8 +65,6 @@ public class BallistaProjectileController : ProjectileController
             GameObject Particle = ParticlesManager.Instance.SpawnParticles(0, "BallistaExplosion");
             Particle.transform.position = transform.position;
             Particle.SetActive(true);
- 
-            StartCoroutine(DisableObject());   
         }
     }
 }

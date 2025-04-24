@@ -5,6 +5,7 @@ using UnityEngine;
 public class BalistaController : TowerController
 {
     public int bulletIndex = 0;
+    public GameObject ArrowModel;
     private bool lockedIn = false;
 
     protected override void Update()
@@ -16,7 +17,7 @@ public class BalistaController : TowerController
         {
             float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
             Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
-            TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.1f);
+            TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.05f);
             Vector3 dir = Head.transform.position - TargetPos;
             Quaternion desireddir = Quaternion.LookRotation(-dir);
             Head.transform.rotation = Quaternion.Slerp(Head.transform.rotation, desireddir, Time.deltaTime * 20f);
@@ -40,6 +41,7 @@ public class BalistaController : TowerController
         
         SetStat(Projectile);
         Projectile.SetActive(true);
+        ArrowModel.SetActive(false);
     }
 
     protected override IEnumerator LOSCheck()
@@ -49,6 +51,7 @@ public class BalistaController : TowerController
             TimeBeforeFire = FireRate;
             yield return null;
         }
+        ArrowModel.SetActive(true);
         lockedIn = true;
         bool targetFaced = false;
         while (!targetFaced)
