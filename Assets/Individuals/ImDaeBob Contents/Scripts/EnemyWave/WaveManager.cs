@@ -126,15 +126,15 @@ public class WaveManager : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.F2))
             SkipToNextWave();
         else if (Input.GetKeyDown(KeyCode.Keypad1) || Input.GetKeyDown(KeyCode.Alpha0))
-            SpawnEnemy("DEMON", "TUT_PATH1");
+            SpawnEnemy("GOLEM", "TUT_PATH1");
         else if (Input.GetKeyDown(KeyCode.Keypad2))
-            SpawnEnemy("BIRD", "TUT_PATH1");
+            SpawnEnemy("DEMON", "TUT_PATH1");
         else if (Input.GetKeyDown(KeyCode.Keypad3))
             SpawnEnemy("CLOAK", "TUT_PATH1");
         else if (Input.GetKeyDown(KeyCode.Keypad4))
-            SpawnEnemy("DEMON", "TUT_PATH2");
+            SpawnEnemy("GOLEM", "TUT_PATH2");
         else if (Input.GetKeyDown(KeyCode.Keypad5))
-            SpawnEnemy("BIRD", "TUT_PATH2");
+            SpawnEnemy("DEMON", "TUT_PATH2");
         else if (Input.GetKeyDown(KeyCode.Keypad6))
             SpawnEnemy("CLOAK", "TUT_PATH2");
     }
@@ -345,7 +345,7 @@ public class WaveManager : MonoBehaviour
             return;
         }
 
-        GameObject _enemy;
+        GameObject _enemy = _enemyPrefab;
         if (_enemyPools[enemyName].Count > 0)
             _enemy = _enemyPools[enemyName].Dequeue();
         else

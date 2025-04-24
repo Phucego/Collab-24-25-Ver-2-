@@ -7,12 +7,12 @@
             "Name": "GROUP 1",
             "Enemies": [
               {
-                "Name": "BIRD",
+                "Name": "GOLEM",
                 "Amount": 3,
                 "SpawnInterval": 1.0
               }
             ],
-            "Path": "TUT_PATH1",
+            "Path": "TEST_PATH",
             "IsLoop": false,
             "LoopAmount": 3,
             "Delay": 5.0
@@ -26,7 +26,7 @@
             "Name": "GROUP 1",
             "Enemies": [
               {
-                "Name": "BIRD",
+                "Name": "GOLEM",
                 "Amount": 3,
                 "SpawnInterval": 0.25
               }

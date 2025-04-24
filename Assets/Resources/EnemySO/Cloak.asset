@@ -12,7 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d848d119cef2d05478e47e5986df311c, type: 3}
   m_Name: Cloak
   m_EditorClassIdentifier: 
-  color: {r: 1, g: 0, b: 0, a: 0.2}
+  model: {fileID: 919132149155446097, guid: 78026dabcb850dc47accc16ef318f408, type: 3}
+  scale: 0.2
+  hitbox: {x: 0.2, y: 1}
+  directionOffset: -90
+  feetOffset: 0
+  healthbarDistance: 1.8
+  animation: {fileID: 0}
+  animationSpeedMult: 1
   name: Cloak
   description: An invisble enemy, that's it
   typing: 0000000002000000

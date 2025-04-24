@@ -16,7 +16,7 @@ public class Enemy_HPBar : MonoBehaviour
 
     [Header("Positioning:")]
     [SerializeField] Transform _target;
-    [SerializeField] Vector3 _offset;
+    [HideInInspector] public Vector3 _offset = new Vector3();
 
     [Header("Visibility Settings:")]
     [SerializeField] float _visibilityDistance = 50f;
