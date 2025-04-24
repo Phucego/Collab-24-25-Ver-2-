@@ -23,9 +23,9 @@ MonoBehaviour:
   name: Cloak
   description: An invisble enemy, that's it
   typing: 0000000002000000
-  reward: 0
-  maxHealth: 75
-  maxSpeed: 12
-  acceleration: 6
+  reward: 15
+  maxHealth: 100
+  maxSpeed: 3
+  acceleration: 1
   gravity: 10
   levitation: 0.5

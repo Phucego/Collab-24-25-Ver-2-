@@ -15,15 +15,15 @@ MonoBehaviour:
   towerPrefab: {fileID: 2511547511679108423, guid: 4a1171a543ced5d498d39bf45644701e, type: 3}
   TowerType: 0
   TargetType: 0000000001000000
-  Damage: 40
+  Damage: 30
   Health: 100
   Radius: 10
-  FireRate: 3
+  FireRate: 2.4
   ProjectileSpeed: 100
   ProjectileRadius: 0
   ProjectileInterval: 0
-  CritChance: 5
-  CritAmplifier: 2
+  CritChance: 100
+  CritAmplifier: 1
   Cost: 40
   listUpgrades:
   - {fileID: 11400000, guid: 5892d4fa37be5194fa6b73431016b6f6, type: 2}
