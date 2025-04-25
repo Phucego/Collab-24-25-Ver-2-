@@ -32,6 +32,12 @@ public class TowerRangeDetection : MonoBehaviour
                 towerController.Target = null;
                 towerController.TargetPos = new Vector3(0,0,0);
             }
+            else if (target.gameObject == towerController.Target)
+            {
+                towerController.Target = null;
+                towerController.TargetPos = new Vector3(0, 0, 0);
+                towerController.FindNearestEnemy();
+            }
             
         }
     }

@@ -13,14 +13,24 @@ public class BalistaController : TowerController
         base.Update();
 
         // Slowly rotate torward enemies, only fire once the tower has full LOS of them
-        if (lockedIn && Target != null)
+        if (lockedIn && Target != null && Target.activeSelf)
         {
-            float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
-            Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
-            TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.05f);
-            Vector3 dir = Head.transform.position - TargetPos;
-            Quaternion desireddir = Quaternion.LookRotation(-dir);
-            Head.transform.rotation = Quaternion.Slerp(Head.transform.rotation, desireddir, Time.deltaTime * 20f);
+            float distance = Vector3.Distance(transform.position, Target.transform.position);
+            if (distance > Radius * 3f)
+            {
+                Target = null;
+                FindNearestEnemy();
+            };
+            if (Target != null)
+            {
+                float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
+                Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
+                TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.05f);
+                Vector3 dir = Head.transform.position - TargetPos;
+                Quaternion desireddir = Quaternion.LookRotation(-dir);
+                Head.transform.rotation = Quaternion.Slerp(Head.transform.rotation, desireddir, Time.deltaTime * 20f);
+            }
+            
             
         }
     }

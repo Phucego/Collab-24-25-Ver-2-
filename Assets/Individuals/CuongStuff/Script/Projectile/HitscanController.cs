@@ -11,6 +11,7 @@ public class HitscanController : MonoBehaviour, I_TowerProjectile
     protected float Damage = 10f;
     protected float Debounce = 0.1f;
     protected Color defaultColor;
+    protected Material mat;
 
     private bool damagable = true;
     private bool lingering;
@@ -22,16 +23,28 @@ public class HitscanController : MonoBehaviour, I_TowerProjectile
         layerMask = LayerMask.GetMask("Enemy");
         lineRenderer = GetComponent<LineRenderer>();
         defaultColor = lineRenderer.material.color;
+        lineRenderer.material = new Material(lineRenderer.material);
+
+        // Clone material to avoid sharedMaterial problems
+        mat = new Material(lineRenderer.material);
+        mat.SetFloat("_Surface", 1);
+        mat.SetFloat("_Blend", 0);
+        mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+        mat.renderQueue = 3000;
+
+        defaultColor = new Color(1f, 1f, 0f, 1f);
+        mat.color = defaultColor;
     }
 
     protected void Update()
     {
-        Color rendererColor = defaultColor; 
         if (opacity > 0f && lingering)
         {
-            opacity -= 0.005f;
-            rendererColor.a = opacity;
-            lineRenderer.material.SetColor("_Color", rendererColor);
+            opacity -= 0.0075f;
+            Color fadedcolor = new Color(1f, 1f, 0f, opacity);
+            lineRenderer.startColor = fadedcolor;
+            lineRenderer.endColor = fadedcolor;
+            //lineRenderer.material.SetColor("_Color", rendererColor);
         }
     }
 
@@ -74,7 +87,9 @@ public class HitscanController : MonoBehaviour, I_TowerProjectile
     private void OnDisable()
     {
         lineRenderer.SetPositions(new Vector3[] { });
-        lineRenderer.material.SetColor("_Color", defaultColor);
+        lineRenderer.startColor = defaultColor;
+        lineRenderer.endColor = defaultColor;
+        //lineRenderer.material.SetColor("_Color", defaultColor);
         target = null;
     }
 
@@ -88,14 +103,15 @@ public class HitscanController : MonoBehaviour, I_TowerProjectile
     private IEnumerator DisableObject()
     {
         yield return new WaitForSeconds(3f);
-        Color rendererColor = defaultColor;
         lingering = false;
 
         while (opacity > 0f)
         {
             opacity -= 0.05f;
-            rendererColor.a = opacity;
-            lineRenderer.material.SetColor("_Color", rendererColor);
+            Color fadedcolor = new Color(1f, 1f, 0f, opacity);
+            lineRenderer.startColor = fadedcolor;
+            lineRenderer.endColor = fadedcolor;
+            
             yield return new WaitForFixedUpdate();
         }
 
@@ -110,7 +126,7 @@ public class HitscanController : MonoBehaviour, I_TowerProjectile
         linepos[9] = end;
         for (int i = 0; i < 8; i++)
         { 
-            float point = ((float)i + 1f) / 10f;
+            float point = (i + 1f) / 10f;
             Vector3 offsetline = Vector3.Lerp(original, end, point);
             offsetline = new Vector3(offsetline.x, offsetline.y + Random.Range(-1f, 1f), offsetline.z);
             linepos[i + 1] = offsetline;     
@@ -121,7 +137,7 @@ public class HitscanController : MonoBehaviour, I_TowerProjectile
     protected virtual void ApplyDamage(GameObject target)
     {
         target.GetComponent<I_Damagable>().TakeDamage(Damage);
-        if (gameObject.activeInHierarchy)
+        if (gameObject.activeSelf)
             StartCoroutine(SetDamagable());
     }
 

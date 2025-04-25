@@ -1236,7 +1236,7 @@ Transform:
   - {fileID: 6047413643574175444}
   - {fileID: 618296679443966761}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &5706325660714094243
 BoxCollider:
@@ -1649,10 +1649,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8063
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -3121,6 +3121,10 @@ PrefabInstance:
       value: cbHeadLV2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6b395155e151463449fc340f14ea8114, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6b395155e151463449fc340f14ea8114, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -3374,6 +3378,10 @@ PrefabInstance:
       value: cbHeadLV3
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 54a6668f152ebaa49b3eb83dc036a608, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 54a6668f152ebaa49b3eb83dc036a608, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -3544,6 +3552,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 1ff8759d7164c7f42a0870ff139940a0, type: 3}
       propertyPath: m_Name
       value: cbHeadLV4
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1ff8759d7164c7f42a0870ff139940a0, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1ff8759d7164c7f42a0870ff139940a0, type: 3}
       propertyPath: m_IsActive
@@ -3717,6 +3729,10 @@ PrefabInstance:
     - target: {fileID: 8031381510040446342, guid: bc5a7de66796d6f498e96c8c3f2b99be, type: 3}
       propertyPath: m_Name
       value: PlacementIndicator
+      objectReference: {fileID: 0}
+    - target: {fileID: 8031381510040446342, guid: bc5a7de66796d6f498e96c8c3f2b99be, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

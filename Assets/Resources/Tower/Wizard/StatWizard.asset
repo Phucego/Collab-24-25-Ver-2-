@@ -18,7 +18,7 @@ MonoBehaviour:
   Damage: 10
   Health: 100
   Radius: 8
-  FireRate: 1.5
+  FireRate: 5
   ProjectileSpeed: 20
   ProjectileRadius: 1
   ProjectileInterval: 0

@@ -72,7 +72,7 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
             if (LevelEditor_Handler.Instance != null)
                 LevelEditor_Handler.Instance._coinTest += _reward;
         }
-
+        transform.position = _startPosition;
         WaveManager.Instance.ReturnToPool(gameObject, data.name);
     }
 
