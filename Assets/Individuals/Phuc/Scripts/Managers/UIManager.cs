@@ -26,6 +26,12 @@ public class UIManager : MonoBehaviour
     public GameObject fireworkPrefab;
     public GameObject castle;
 
+    [Header("Lose UI")]
+    public GameObject losePanel;
+    public TextMeshProUGUI loseText;
+    public Button loseRestartButton;
+    public Button loseMainMenuButton;
+
     [Header("Main UI Elements")]
     public Button toggleTowerSelectButton;
     public Button resumeButton;
@@ -155,6 +161,12 @@ public class UIManager : MonoBehaviour
         if (victoryMainMenuButton != null)
             victoryMainMenuButton.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(mainMenuScene)));
 
+        // Setup lose panel buttons
+        if (loseRestartButton != null)
+            loseRestartButton.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(SceneManager.GetActiveScene().name)));
+        if (loseMainMenuButton != null)
+            loseMainMenuButton.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(mainMenuScene)));
+
         if (fadePanel != null)
         {
             Color fadeColor = fadePanel.color;
@@ -184,7 +196,7 @@ public class UIManager : MonoBehaviour
                     Debug.LogWarning("WaveManager._curData is empty or null. Setting totalWaves to 0.");
                     totalWaves = 0;
                 }
-            }
+                }
             catch (Exception e)
             {
                 Debug.LogError($"Failed to access WaveManager._curData: {e.Message}");
@@ -217,6 +229,9 @@ public class UIManager : MonoBehaviour
 
         if (victoryPanel != null)
             victoryPanel.SetActive(false);
+
+        if (losePanel != null)
+            losePanel.SetActive(false);
         
         if (waveProgressText != null)
         {
@@ -278,7 +293,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void StartVictorySequence()
+    public void StartVictorySequence()
     {
         if (TutorialGuidance._instance != null)
         {
@@ -290,6 +305,11 @@ public class UIManager : MonoBehaviour
         }
 
         StartCoroutine(VictorySequence());
+    }
+
+    public void StartLoseSequence()
+    {
+        StartCoroutine(LoseSequence());
     }
 
     private IEnumerator VictorySequence()
@@ -320,6 +340,27 @@ public class UIManager : MonoBehaviour
         }
 
         yield return StartCoroutine(ShowVictoryPanel());
+    }
+
+    private IEnumerator LoseSequence()
+    {
+        mainUI.SetActive(false);
+        waveProgressParent.SetActive(false);
+        coinCounterParent.SetActive(false);
+        optionsContainer.SetActive(false);
+        pauseMenu.SetActive(false);
+        towerSelectMenu.SetActive(false);
+        confirmationMenu.SetActive(false);
+        confirmationMenu_MainMenu.SetActive(false);
+
+        if (vineEntangleNotificationPanel != null)
+            vineEntangleNotificationPanel.SetActive(false);
+        startWaveButton.gameObject.SetActive(false);
+        nextWaveCountdownText.gameObject.SetActive(false);
+        if (minibossNotificationText != null)
+            minibossNotificationText.gameObject.SetActive(false);
+
+        yield return StartCoroutine(ShowLosePanel());
     }
 
     private IEnumerator SpawnFireworks()
@@ -394,6 +435,65 @@ public class UIManager : MonoBehaviour
 
         Time.timeScale = 0f;
         AudioManager.Instance?.PlaySoundEffect("Victory_SFX");
+    }
+
+    private IEnumerator ShowLosePanel()
+    {
+        if (losePanel == null) yield break;
+
+        RectTransform panelRect = losePanel.GetComponent<RectTransform>();
+        Vector2 originalPanelPos = panelRect.anchoredPosition;
+        panelRect.anchoredPosition = originalPanelPos + new Vector2(0, -500f);
+        losePanel.SetActive(true);
+
+        if (loseText != null)
+            loseText.text = $"You have failed to defend the last bastion! Try again?";
+
+        Vector3 restartOriginalScale = Vector3.one;
+        Vector2 restartOriginalPos = Vector2.zero;
+        Vector3 mainMenuOriginalScale = Vector3.one;
+        Vector2 mainMenuOriginalPos = Vector2.zero;
+
+        if (loseRestartButton != null)
+        {
+            RectTransform restartRect = loseRestartButton.GetComponent<RectTransform>();
+            restartOriginalScale = restartRect.localScale;
+            restartOriginalPos = restartRect.anchoredPosition;
+            restartRect.localScale = restartOriginalScale;
+            restartRect.anchoredPosition = restartOriginalPos;
+            loseRestartButton.gameObject.SetActive(false);
+        }
+
+        if (loseMainMenuButton != null)
+        {
+            RectTransform mainMenuRect = loseMainMenuButton.GetComponent<RectTransform>();
+            mainMenuOriginalScale = mainMenuRect.localScale;
+            mainMenuOriginalPos = mainMenuRect.anchoredPosition;
+            mainMenuRect.localScale = mainMenuOriginalScale;
+            mainMenuRect.anchoredPosition = mainMenuOriginalPos;
+            loseMainMenuButton.gameObject.SetActive(false);
+        }
+
+        yield return panelRect.DOAnchorPos(originalPanelPos, 0.8f).SetEase(Ease.OutQuad).WaitForCompletion();
+
+        if (loseRestartButton != null)
+        {
+            RectTransform restartRect = loseRestartButton.GetComponent<RectTransform>();
+            restartRect.localScale = restartOriginalScale;
+            restartRect.anchoredPosition = restartOriginalPos;
+            loseRestartButton.gameObject.SetActive(true);
+        }
+
+        if (loseMainMenuButton != null)
+        {
+            RectTransform mainMenuRect = loseMainMenuButton.GetComponent<RectTransform>();
+            mainMenuRect.localScale = mainMenuOriginalScale;
+            mainMenuRect.anchoredPosition = mainMenuOriginalPos;
+            loseMainMenuButton.gameObject.SetActive(true);
+        }
+
+        Time.timeScale = 0f;
+        AudioManager.Instance?.PlaySoundEffect("Defeat_SFX");
     }
 
     private void SetPauseState(bool isPaused)
