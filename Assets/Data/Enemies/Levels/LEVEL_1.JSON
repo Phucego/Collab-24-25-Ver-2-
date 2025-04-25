@@ -1,0 +1,312 @@
+[
+  {
+    "Waves": [
+      {
+        "Groups": [
+          {
+            "Name": "GROUP 1",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 4,
+                "SpawnInterval": 1.0
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 1,
+            "Delay": 0.0
+          },
+          {
+            "Name": "Group 2",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 6,
+                "SpawnInterval": 1.5
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 15.0
+          },
+          {
+            "Name": "Group 3",
+            "Enemies": [
+              {
+                "Name": "DEMON",
+                "Amount": 4,
+                "SpawnInterval": 1.0
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 30.0
+          },
+          {
+            "Name": "Group 4",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 5,
+                "SpawnInterval": 2.5
+              },
+              {
+                "Name": "DEMON",
+                "Amount": 5,
+                "SpawnInterval": 2.5
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 45.0
+          }
+        ],
+        "IsBossWave": false
+      },
+      {
+        "Groups": [
+          {
+            "Name": "GROUP 1",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 10,
+                "SpawnInterval": 2.5
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 0.0
+          },
+          {
+            "Name": "Group 2",
+            "Enemies": [
+              {
+                "Name": "DEMON",
+                "Amount": 5,
+                "SpawnInterval": 1.25
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 15.0
+          },
+          {
+            "Name": "Group 3",
+            "Enemies": [
+              {
+                "Name": "CLOAK",
+                "Amount": 2,
+                "SpawnInterval": 0.5
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 25.0
+          },
+          {
+            "Name": "Group 4",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 10,
+                "SpawnInterval": 3.75
+              },
+              {
+                "Name": "DEMON",
+                "Amount": 5,
+                "SpawnInterval": 3.75
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 30.0
+          },
+          {
+            "Name": "Group 5",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 5,
+                "SpawnInterval": 3.75
+              },
+              {
+                "Name": "DEMON",
+                "Amount": 5,
+                "SpawnInterval": 3.75
+              },
+              {
+                "Name": "CLOAK",
+                "Amount": 5,
+                "SpawnInterval": 3.75
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 45.0
+          },
+          {
+            "Name": "Group 6",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 10,
+                "SpawnInterval": 2.5
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 60.0
+          },
+          {
+            "Name": "Group 7",
+            "Enemies": [
+              {
+                "Name": "DEMON",
+                "Amount": 10,
+                "SpawnInterval": 2.5
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 75.0
+          },
+          {
+            "Name": "Group 8",
+            "Enemies": [
+              {
+                "Name": "CLOAK",
+                "Amount": 8,
+                "SpawnInterval": 2.0
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 90.0
+          }
+        ],
+        "IsBossWave": false
+      },
+      {
+        "Groups": [
+          {
+            "Name": "GROUP 1",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 10,
+                "SpawnInterval": 2.5
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 0.0
+          },
+          {
+            "Name": "Group 2",
+            "Enemies": [
+              {
+                "Name": "DEMON",
+                "Amount": 5,
+                "SpawnInterval": 1.25
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 15.0
+          },
+          {
+            "Name": "Group 3",
+            "Enemies": [
+              {
+                "Name": "CLOAK",
+                "Amount": 4,
+                "SpawnInterval": 1.0
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 20.0
+          },
+          {
+            "Name": "Group 4",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 15,
+                "SpawnInterval": 3.75
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 25.0
+          },
+          {
+            "Name": "Group 5",
+            "Enemies": [
+              {
+                "Name": "DEMON",
+                "Amount": 6,
+                "SpawnInterval": 1.5
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 40.0
+          },
+          {
+            "Name": "Group 6",
+            "Enemies": [
+              {
+                "Name": "CLOAK",
+                "Amount": 4,
+                "SpawnInterval": 1.0
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 45.0
+          },
+          {
+            "Name": "Group 7",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 5,
+                "SpawnInterval": 2.5
+              },
+              {
+                "Name": "DEMON",
+                "Amount": 5,
+                "SpawnInterval": 2.5
+              }
+            ],
+            "Path": "TUT_PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 50.0
+          }
+        ],
+        "IsBossWave": false
+      }
+    ]
+  }
+]

@@ -137,12 +137,15 @@ public class TowerController : MonoBehaviour, I_TowerInfo, I_Damagable
     // Check if enemy is within the sight of the aimpoint
     protected virtual IEnumerator LOSCheck()
     {
-        float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
-        Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
-        TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.5f);
-        Head.transform.LookAt(TargetPos);
+        //float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
+        //Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
+        //TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.5f);
+        //Head.transform.LookAt(TargetPos);
 
-        StartCoroutine(FireProjectile(TargetPos - AimPoint.transform.position));
+        //StartCoroutine(FireProjectile(TargetPos - AimPoint.transform.position));
+
+        Head.transform.LookAt(Target.transform.position);
+        StartCoroutine(FireProjectile(Target.transform.position - AimPoint.transform.position));
 
         yield return null;
     }

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: LVL1Wizard
   m_EditorClassIdentifier: 
   upgradeName: Level 1
-  Cost: 15
+  Cost: 56
   upgradeDatas: []
