@@ -452,13 +452,12 @@ public class TutorialGuidance : MonoBehaviour
         EnableStartWave();
         SetDialogueSection("Corrupted Zone Intro", OnCorruptedIntroCompleted.Invoke);
         anim.SetTrigger("hideUI");
+        corruptedIntroCompleted = true;
     }
 
     private void EnableStartWave()
     {
         startWaveLocked = false;
-        corruptedIntroCompleted = true;
-
         if (UIManager.Instance != null && UIManager.Instance.startWaveButton != null)
             UIManager.Instance.startWaveButton.interactable = true;
     }

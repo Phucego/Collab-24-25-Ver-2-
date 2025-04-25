@@ -97,7 +97,7 @@ public class UIManager : MonoBehaviour
         // Set DOTween capacity to prevent max tweens warning
         DOTween.SetTweensCapacity(500, 50);
 
-        // Load mute state from PlayerPrefs
+        // Load mute state from PlayerPrefs, default to unmuted (normal volume)
         isMuteButtonPressed = PlayerPrefs.GetInt("MuteState", 0) == 1;
         if (AudioManager.Instance != null)
         {
@@ -108,7 +108,8 @@ public class UIManager : MonoBehaviour
             Debug.LogWarning("AudioManager.Instance is null in UIManager.Start. Mute state not applied.");
         }
 
-        Time.timeScale = 0f;
+        // Ensure time scale is set to 1 at start
+        Time.timeScale = 1f;
         StartCoroutine(ShowUIAfterTransition());
 
         optionsContainer.SetActive(false);
@@ -301,6 +302,7 @@ public class UIManager : MonoBehaviour
         towerSelectMenu.SetActive(false);
         confirmationMenu.SetActive(false);
         confirmationMenu_MainMenu.SetActive(false);
+
         if (vineEntangleNotificationPanel != null)
             vineEntangleNotificationPanel.SetActive(false);
         startWaveButton.gameObject.SetActive(false);
@@ -432,10 +434,23 @@ public class UIManager : MonoBehaviour
             yield break;
         }
 
+        // Reset time scale and audio state before loading
+        Time.timeScale = 1f;
+        isSpeedUp = false;
+        if (AudioManager.Instance != null)
+        {
+            isMuteButtonPressed = false;
+            PlayerPrefs.SetInt("MuteState", 0);
+            AudioManager.Instance.SetAudioPaused(false);
+            if (muteButton != null && unmuteSprite != null)
+            {
+                muteButton.image.sprite = unmuteSprite;
+            }
+        }
+
         fadePanel.gameObject.SetActive(true);
         yield return fadePanel.DOFade(1f, 0.5f).WaitForCompletion();
         SceneManager.LoadScene(sceneName);
-        Time.timeScale = 1f;
     }
 
     private IEnumerator LoadSceneWithFade(SceneField sceneField)
@@ -528,7 +543,8 @@ public class UIManager : MonoBehaviour
             currentWave = 0;
             UpdateWaveProgress();
             hasStartedFirstWave = true;
-            AudioManager.Instance?.PlaySoundEffect("ButtonClick_SFX");
+            AudioManager.Instance?.PlaySoundEffect("ButtonClick_SFX"); // Button click sound
+            AudioManager.Instance?.PlaySoundEffect("StartWave_SFX");  // Wave start sound
 
             AnimateWaveTextReveal();
 
@@ -602,7 +618,10 @@ public class UIManager : MonoBehaviour
         endSeq.OnComplete(() => nextWaveCountdownText.gameObject.SetActive(false));
 
         if (WaveManager.Instance != null)
+        {
             WaveManager.Instance.StartWave();
+            AudioManager.Instance?.PlaySoundEffect("StartWave_SFX"); // Wave start sound
+        }
     }
 
     private void ShowMiniBossNotification(string message)

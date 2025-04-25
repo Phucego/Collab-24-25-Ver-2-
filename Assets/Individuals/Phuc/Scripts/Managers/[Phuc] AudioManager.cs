@@ -28,7 +28,7 @@ public class AudioManager : Singleton<AudioManager>
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Persist across scenes
+         
             Debug.Log($"AudioManager Instance initialized: {gameObject.name}");
         }
         else
