@@ -29,6 +29,7 @@ public class MainTowerStateManager : MonoBehaviour
         }
         Instance = this;
     }
+
     private void Start()
     {
         // Auto-find the tower health reference if not set
@@ -97,6 +98,11 @@ public class MainTowerStateManager : MonoBehaviour
             case TowerState.Destroyed:
                 destroyedEffect?.SetActive(true);
                 Debug.Log("Tower has been destroyed!");
+                // Trigger losing sequence in UIManager
+                if (UIManager.Instance != null)
+                {
+                    UIManager.Instance.StartLoseSequence();
+                }
                 break;
         }
     }
