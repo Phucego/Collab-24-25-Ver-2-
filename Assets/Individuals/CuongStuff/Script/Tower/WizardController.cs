@@ -15,8 +15,11 @@ public class WizardController : TowerController
         if (!TowerPlaced || !UnlockBeam || _EnemyList.Count <= 0)
             return;
 
-        if (Target != null && TimeBeforeFire <= 0)
+        if (Target != null && TimeBeforeFire <= 0 && Target.activeSelf)
         {
+            float distance = Vector3.Distance(transform.position, Target.transform.position);
+            if (distance > Radius * 3f) { return; }
+
             StartCoroutine(FireProjectile(new Vector3(0,0,0).normalized));
             StartCoroutine(Cooldown());
             TimeBeforeFire = FireRate;
@@ -40,7 +43,10 @@ public class WizardController : TowerController
             {
                 if (_ProjectileList[i].activeInHierarchy)
                 {
-                    hitscanControllers[i].SetTarget(Target);
+                    float distance = Vector3.Distance(transform.position, Target.transform.position);
+                    if (distance > Radius * 3f) { FindNearestEnemy(); };
+                    if (Target != null)
+                        hitscanControllers[i].SetTarget(Target);
                 }
             }
             
