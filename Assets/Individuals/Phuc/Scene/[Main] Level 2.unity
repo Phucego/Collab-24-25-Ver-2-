@@ -5891,6 +5891,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &414118924 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8133221288800523766, guid: 0906c70d53285584781df31963185646, type: 3}
+  m_PrefabInstance: {fileID: 414118919}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &424461505
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8242,18 +8247,61 @@ MonoBehaviour:
   m_GameObject: {fileID: 597401151}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0051ecc893c7e214b93e2660bd364543, type: 3}
+  m_Script: {fileID: 11500000, guid: 2b6a95105a0cd2f4db7fe98ee5400db4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   characterNameText: {fileID: 414118922}
   dialogueText: {fileID: 414118921}
   nextButton: {fileID: 414118923}
-  dialogueUI: {fileID: 1658624216}
-  dialogueScriptables:
+  dialogueUI: {fileID: 414118924}
+  tutorialDialogues:
+  - {fileID: 11400000, guid: f7561143fe4fd9f40ad3ed6a4d04e6a6, type: 2}
+  - {fileID: 11400000, guid: ef134005f4b58c641ba14daaaf979090, type: 2}
+  - {fileID: 11400000, guid: 656a5b517f03bb644ad79fe098795fa5, type: 2}
+  - {fileID: 11400000, guid: 3a9e9abd95c263344bb4437a5d3c221c, type: 2}
+  - {fileID: 11400000, guid: fe4191ab5d223f844941a434d7354fbb, type: 2}
+  - {fileID: 11400000, guid: 939431112354c314daed205c4b3a3333, type: 2}
+  - {fileID: 11400000, guid: 9089b78d7d61f4645b1c1d9a6d89b3db, type: 2}
+  level1Dialogues:
   - {fileID: 11400000, guid: fe9a899e1e6cbf14cb282614f77d61ab, type: 2}
+  level2Dialogues:
+  - {fileID: 11400000, guid: 174c4b2297a65404c98cadaf067007e2, type: 2}
+  level3Dialogues:
+  - {fileID: 11400000, guid: 974243907451b3743bc4efa92de89159, type: 2}
   anim: {fileID: 1676139304}
+  OnIntroCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMovementPracticeCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBuildingCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCorruptedIntroCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTowerDamaged:
+    m_PersistentCalls:
+      m_Calls: []
+  tutorialScene:
+    m_SceneAsset: {fileID: 102900000, guid: 186f304aae5338f4c9e7450d34cd2b39, type: 3}
+    m_SceneName: '[Main] TutorialScene'
+  level1Scene:
+    m_SceneAsset: {fileID: 102900000, guid: 34179791d1c203f4ea700e21832d5758, type: 3}
+    m_SceneName: '[Main] Level 1'
+  level2Scene:
+    m_SceneAsset: {fileID: 102900000, guid: 3799f1b6dad89934aae272ad3a1a5dca, type: 3}
+    m_SceneName: '[Main] Level 2'
+  level3Scene:
+    m_SceneAsset: {fileID: 0}
+    m_SceneName: 
+  buildingDestination: {fileID: 0}
+  targetDestination: {fileID: 0}
+  corruptedIntroDestination: {fileID: 0}
   movementDetected: 0
   buildingManager: {fileID: 2108838503}
+  currentSceneType: 2
 --- !u!4 &605402456 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2035405497521351004, guid: d76f8cf6d6d23834d97c23574821f38e, type: 3}
@@ -18632,6 +18680,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1810836374240881437, guid: 962996e23ffcbc44d92fb20cd03940cd, type: 3}
   m_PrefabInstance: {fileID: 1179434212}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1499868506 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b927d4506b702864e9a61f860be545fd, type: 3}
+  m_PrefabInstance: {fileID: 1795770396}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1501996344 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3637134996410565414, guid: 9c6178fe943216540b276b975dafae16, type: 3}
@@ -20711,11 +20764,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 006b65b0d432b984b976b5597544bc15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1658624216 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3648393283678182275, guid: 0906c70d53285584781df31963185646, type: 3}
-  m_PrefabInstance: {fileID: 414118919}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1667654264
 GameObject:
   m_ObjectHideFlags: 0
@@ -20910,7 +20958,7 @@ MonoBehaviour:
   victoryNextLevelButton: {fileID: 0}
   victoryMainMenuButton: {fileID: 0}
   fireworkPrefab: {fileID: 0}
-  castle: {fileID: 0}
+  castle: {fileID: 1499868506}
   toggleTowerSelectButton: {fileID: 1570777478}
   resumeButton: {fileID: 859379811}
   quitButton: {fileID: 1002851599}
@@ -20948,9 +20996,9 @@ MonoBehaviour:
   tutorialLevel:
     m_SceneAsset: {fileID: 102900000, guid: 186f304aae5338f4c9e7450d34cd2b39, type: 3}
     m_SceneName: '[Main] TutorialScene'
-  Level_1:
-    m_SceneAsset: {fileID: 102900000, guid: 34179791d1c203f4ea700e21832d5758, type: 3}
-    m_SceneName: '[Main] Level 1'
+  nextScene:
+    m_SceneAsset: {fileID: 102900000, guid: 5ab70225f46419e44b0924c46a99e266, type: 3}
+    m_SceneName: '[Main] MainMenuScene'
 --- !u!95 &1676139304
 Animator:
   serializedVersion: 5

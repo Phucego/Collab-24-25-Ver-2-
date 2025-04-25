@@ -166,6 +166,13 @@ public class BuildingManager : MonoBehaviour
             placementIndicator.SetActive(false);
         }
 
+        // Re-enable all colliders on the placed tower
+        Collider[] colliders = pendingObj.GetComponentsInChildren<Collider>();
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = true;
+        }
+
         towerController.TowerPlaced = true;
         pendingObj.GetComponent<TowerInteract>().isPlaced = true;
         AudioManager.Instance.PlaySoundEffect("BuildTower_SFX");
@@ -313,6 +320,13 @@ public class BuildingManager : MonoBehaviour
 
         pendingObj = Instantiate(prefab, Vector3.zero, Quaternion.identity);
         placementIndicator = pendingObj.transform.Find("PlacementIndicator")?.gameObject;
+
+        // Disable all colliders on the pending object to prevent interactions
+        Collider[] colliders = pendingObj.GetComponentsInChildren<Collider>();
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = false;
+        }
 
         if (placementIndicator == null)
         {

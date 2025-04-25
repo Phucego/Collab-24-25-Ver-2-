@@ -83,7 +83,7 @@ public class UIManager : MonoBehaviour
     private int totalWaves;
 
     [SerializeField] private SceneField tutorialLevel;
-    [SerializeField] private SceneField Level_1;
+    [SerializeField] private SceneField nextScene;
 
     // Track active tween for wave progress slider
     private Tween waveSliderTween;
@@ -108,7 +108,7 @@ public class UIManager : MonoBehaviour
             CurrencyManager.Instance.InitializeCurrency(0);
             UpdateCoinCounterUI();
         }
-        else if (SceneManager.GetActiveScene().name == Level_1.SceneName)
+        else if (SceneManager.GetActiveScene().name == nextScene.SceneName)
         {
             CurrencyManager.Instance.InitializeCurrency(50);
             UpdateCoinCounterUI();
@@ -262,6 +262,16 @@ public class UIManager : MonoBehaviour
 
     private void StartVictorySequence()
     {
+        // Mark the current scene as completed
+        if (TutorialGuidance._instance != null)
+        {
+            TutorialGuidance._instance.CompleteScene(TutorialGuidance._instance.currentSceneType);
+        }
+        else
+        {
+            Debug.LogWarning("TutorialGuidance._instance is null. Cannot mark scene as completed.");
+        }
+
         StartCoroutine(VictorySequence());
     }
 

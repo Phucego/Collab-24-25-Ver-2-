@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 728ee75b15d23754abadb7b5b01dd571, type: 3}
-  m_Name: Level1Start
+  m_Name: Level3Start
   m_EditorClassIdentifier: 
-  sectionName: Level 1 Intro
+  sectionName: Level 3 Intro
   dialogueLines:
   - characterName: 'General:'
     dialogueText: Good job finishing the tutorial.
