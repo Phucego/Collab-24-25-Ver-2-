@@ -17,7 +17,7 @@ public class BalistaController : TowerController
         {
             float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
             Vector3 PredictedPos = Target.transform.position + (Target.transform.forward * TargetSpd);
-            TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.1f);
+            TargetPos = Vector3.Slerp(Target.transform.position, PredictedPos, 0.05f);
             Vector3 dir = Head.transform.position - TargetPos;
             Quaternion desireddir = Quaternion.LookRotation(-dir);
             Head.transform.rotation = Quaternion.Slerp(Head.transform.rotation, desireddir, Time.deltaTime * 20f);

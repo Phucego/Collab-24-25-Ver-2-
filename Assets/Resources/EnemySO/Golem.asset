@@ -23,9 +23,9 @@ MonoBehaviour:
   name: Golem
   description: Just your generic enemy, walk on ground
   typing: 00000000
-  reward: 10
+  reward: 5
   maxHealth: 60
-  maxSpeed: 6
-  acceleration: 4
+  maxSpeed: 4
+  acceleration: 1
   gravity: 7
   levitation: 0.5
