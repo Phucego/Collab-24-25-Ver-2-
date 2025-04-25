@@ -43,6 +43,8 @@ public class UIManager : MonoBehaviour
     public Button speedUpButton;
     public Button pauseButton;    
     public Button muteButton;
+    [SerializeField] private Sprite muteSprite; // Sprite when audio is muted
+    [SerializeField] private Sprite unmuteSprite; // Sprite when audio is unmuted
     public Button restartButton;
     
     public GameObject optionsContainer;
@@ -94,6 +96,17 @@ public class UIManager : MonoBehaviour
     {
         // Set DOTween capacity to prevent max tweens warning
         DOTween.SetTweensCapacity(500, 50);
+
+        // Load mute state from PlayerPrefs
+        isMuteButtonPressed = PlayerPrefs.GetInt("MuteState", 0) == 1;
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetAudioPaused(isMuteButtonPressed);
+        }
+        else
+        {
+            Debug.LogWarning("AudioManager.Instance is null in UIManager.Start. Mute state not applied.");
+        }
 
         Time.timeScale = 0f;
         StartCoroutine(ShowUIAfterTransition());
@@ -210,6 +223,12 @@ public class UIManager : MonoBehaviour
             waveProgressText.rectTransform.anchoredPosition = new Vector2(241, -900);
             waveProgressText.gameObject.SetActive(false);
         }
+
+        // Initialize mute button sprite
+        if (muteButton != null && muteSprite != null && unmuteSprite != null)
+        {
+            muteButton.image.sprite = isMuteButtonPressed ? muteSprite : unmuteSprite;
+        }
     }
 
     private void Update()
@@ -242,13 +261,11 @@ public class UIManager : MonoBehaviour
 
             float progress = Mathf.Clamp01((float)enemiesKilled / totalEnemies);
 
-            // Kill existing tween if it exists to prevent overlap
             if (waveSliderTween != null && waveSliderTween.IsActive())
             {
                 waveSliderTween.Kill();
             }
 
-            // Create new tween and store it
             waveSliderTween = waveProgressSlider.DOValue(progress, 0.5f).SetEase(Ease.OutQuad);
 
             waveProgressText.text = $"{currentLevelName} - Wave {Mathf.Min(currentWave + 1, totalWaves)}/{totalWaves}";
@@ -262,7 +279,6 @@ public class UIManager : MonoBehaviour
 
     private void StartVictorySequence()
     {
-        // Mark the current scene as completed
         if (TutorialGuidance._instance != null)
         {
             TutorialGuidance._instance.CompleteScene(TutorialGuidance._instance.currentSceneType);
@@ -375,12 +391,12 @@ public class UIManager : MonoBehaviour
         }
 
         Time.timeScale = 0f;
-        AudioManager.Instance.PlaySoundEffect("Victory_SFX");
+        AudioManager.Instance?.PlaySoundEffect("Victory_SFX");
     }
 
     private void SetPauseState(bool isPaused)
     {
-        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
+        AudioManager.Instance?.PlaySoundEffect("ButtonClick_SFX");
 
         if (isPaused)
         {
@@ -401,7 +417,7 @@ public class UIManager : MonoBehaviour
 
     private void ToggleConfirmationMenu(bool isActive, bool isMainMenu = false)
     {
-        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
+        AudioManager.Instance?.PlaySoundEffect("ButtonClick_SFX");
         confirmationMenu_MainMenu.SetActive(isMainMenu && isActive);
         confirmationMenu.SetActive(!isMainMenu && isActive);
         anim.SetBool(isMainMenu ? "isConfirmMainMenu" : "isConfirmationMenu", isActive);
@@ -434,7 +450,7 @@ public class UIManager : MonoBehaviour
 
     private void ToggleTowerSelectPanel()
     {
-        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
+        AudioManager.Instance?.PlaySoundEffect("ButtonClick_SFX");
         bool isOpened = !anim.GetBool("isTowerSelectPanelOpened");
         anim.SetBool("isTowerSelectPanelOpened", isOpened);
     }
@@ -459,7 +475,21 @@ public class UIManager : MonoBehaviour
     private void ToggleMute()
     {
         isMuteButtonPressed = !isMuteButtonPressed;
-        AudioManager.Instance.SetAudioPaused(isMuteButtonPressed);
+        PlayerPrefs.SetInt("MuteState", isMuteButtonPressed ? 1 : 0);
+        Debug.Log($"Mute state: {isMuteButtonPressed}");
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetAudioPaused(isMuteButtonPressed);
+        }
+        else
+        {
+            Debug.LogWarning("AudioManager.Instance is null in ToggleMute. Mute state not applied.");
+        }
+        
+        if (muteButton != null && muteSprite != null && unmuteSprite != null)
+        {
+            muteButton.image.sprite = isMuteButtonPressed ? muteSprite : unmuteSprite;
+        }
     }
 
     private void ToggleChooseOptions()
@@ -467,7 +497,7 @@ public class UIManager : MonoBehaviour
         isRotated = !isRotated;
         anim.SetBool("isChooseOptionsOpened", isRotated);
         StartCoroutine(RotateChooseOptions(isRotated ? -93 : 0));
-        AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
+        AudioManager.Instance?.PlaySoundEffect("ButtonClick_SFX");
         optionsContainer.SetActive(isRotated);
     }
 
@@ -498,7 +528,7 @@ public class UIManager : MonoBehaviour
             currentWave = 0;
             UpdateWaveProgress();
             hasStartedFirstWave = true;
-            AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
+            AudioManager.Instance?.PlaySoundEffect("ButtonClick_SFX");
 
             AnimateWaveTextReveal();
 
@@ -608,7 +638,7 @@ public class UIManager : MonoBehaviour
         anim.SetTrigger("isSpeedChange");
         Time.timeScale = isSpeedUp ? 4f : 1f;
 
-        AudioManager.Instance.PlaySoundEffect(isSpeedUp ? "SpeedUp_SFX" : "SlowDown_SFX");
+        AudioManager.Instance?.PlaySoundEffect(isSpeedUp ? "SpeedUp_SFX" : "SlowDown_SFX");
     }
 
     private void UpdateLightningNotification(string placeholderName, int pathID)

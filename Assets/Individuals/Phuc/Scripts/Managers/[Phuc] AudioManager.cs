@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine.Audio;
 
 public class AudioManager : Singleton<AudioManager>
 {
-    public static AudioManager Instance;
+    public static AudioManager Instance { get; private set; }
 
     [Header("Background Ambience")]
     public AudioClip[] backgroundAmbienceTracks;
@@ -15,6 +16,11 @@ public class AudioManager : Singleton<AudioManager>
 
     private List<AudioSource> bgAmbienceSources = new List<AudioSource>();
     private AudioSource sfxSource;
+    private List<float> bgAmbienceOriginalVolumes = new List<float>();
+    private float sfxOriginalVolume;
+
+    // Event to notify when mute state changes
+    public event Action<bool> OnMuteStateChanged;
 
     private void Awake()
     {
@@ -22,10 +28,12 @@ public class AudioManager : Singleton<AudioManager>
         if (Instance == null)
         {
             Instance = this;
-            //DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject); // Persist across scenes
+            Debug.Log($"AudioManager Instance initialized: {gameObject.name}");
         }
         else
         {
+            Debug.LogWarning($"Duplicate AudioManager detected on {gameObject.name}. Destroying this instance.");
             Destroy(gameObject);
             return;
         }
@@ -38,14 +46,16 @@ public class AudioManager : Singleton<AudioManager>
             source.loop = true;
             source.playOnAwake = false;
             source.volume = 0.4f;
-            source.ignoreListenerPause = true;
+            bgAmbienceOriginalVolumes.Add(source.volume);
             bgAmbienceSources.Add(source);
         }
 
         // Create AudioSource for sound effects
         sfxSource = gameObject.AddComponent<AudioSource>();
-        sfxSource.volume = 1f;
-        sfxSource.ignoreListenerPause = true;
+        sfxOriginalVolume = 1f;
+        sfxSource.volume = sfxOriginalVolume;
+
+        Debug.Log($"Initialized {bgAmbienceSources.Count} ambience sources and SFX source: {sfxSource != null}");
     }
 
     private void Start()
@@ -89,7 +99,17 @@ public class AudioManager : Singleton<AudioManager>
     
     public void SetAudioPaused(bool isMuted)
     {
-        AudioListener.pause = isMuted;
+        Debug.Log($"Setting audio paused: {isMuted}");
+        for (int i = 0; i < bgAmbienceSources.Count; i++)
+        {
+            bgAmbienceSources[i].volume = isMuted ? 0f : bgAmbienceOriginalVolumes[i];
+            Debug.Log($"Ambience {i} volume: {bgAmbienceSources[i].volume}");
+        }
+        sfxSource.volume = isMuted ? 0f : sfxOriginalVolume;
+        Debug.Log($"SFX volume: {sfxSource.volume}");
+
+        // Notify subscribers of mute state change
+        OnMuteStateChanged?.Invoke(isMuted);
     }
     
     // OPTIONAL: If using an AudioMixer

@@ -19,9 +19,14 @@ namespace DigitalRuby.RainMaker
         [Tooltip("The top y value of the mist particles")]
         public float RainMistHeight = 3.0f;
 
+        // Audio source for rain sound (assumed to be set in BaseRainScript or attached to GameObject)
+        private AudioSource rainAudioSource;
+        private float rainOriginalVolume;
+        private AudioManager audioManager; // Cached reference to avoid null issues
+
         private void UpdateRain()
         {
-            // keep rain and mist above the player
+            // Keep rain and mist above the player
             if (RainFallParticleSystem != null)
             {
                 if (FollowCamera)
@@ -60,12 +65,73 @@ namespace DigitalRuby.RainMaker
         protected override void Start()
         {
             base.Start();
+
+            // Initialize rain audio source
+            rainAudioSource = GetComponent<AudioSource>();
+            if (rainAudioSource == null)
+            {
+                Debug.LogWarning("No AudioSource found on RainScript GameObject. Checking BaseRainScript for audio source.");
+                // Optionally, add logic to access BaseRainScript's AudioSource if available
+                // Example: rainAudioSource = base.rainSound; // If BaseRainScript has a protected AudioSource field
+            }
+            else
+            {
+                rainOriginalVolume = rainAudioSource.volume;
+                Debug.Log($"Rain AudioSource initialized with volume: {rainOriginalVolume}");
+                
+                // Apply initial mute state from PlayerPrefs
+                bool isMuted = PlayerPrefs.GetInt("MuteState", 0) == 1;
+                rainAudioSource.volume = isMuted ? 0f : rainOriginalVolume;
+            }
+
+            // Cache AudioManager reference with delayed initialization
+            StartCoroutine(InitializeAudioManager());
+        }
+
+        private IEnumerator InitializeAudioManager()
+        {
+            // Wait until AudioManager is available
+            while (AudioManager.Instance == null)
+            {
+                Debug.Log("Waiting for AudioManager to initialize...");
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            audioManager = AudioManager.Instance;
+            if (audioManager != null)
+            {
+                audioManager.OnMuteStateChanged += UpdateRainAudioMuteState;
+                Debug.Log("Successfully subscribed to AudioManager.OnMuteStateChanged");
+            }
+            else
+            {
+                Debug.LogError("AudioManager.Instance is null after waiting. Rain sound mute functionality will not work.");
+            }
+        }
+
+        protected void OnDestroy() 
+        {
+            
+            // Unsubscribe from AudioManager events using cached reference
+            if (audioManager != null)
+            {
+                audioManager.OnMuteStateChanged -= UpdateRainAudioMuteState;
+                Debug.Log("Unsubscribed from AudioManager.OnMuteStateChanged");
+            }
+        }
+
+        private void UpdateRainAudioMuteState(bool isMuted)
+        {
+            if (rainAudioSource != null)
+            {
+                rainAudioSource.volume = isMuted ? 0f : rainOriginalVolume;
+                Debug.Log($"Rain audio volume set to: {rainAudioSource.volume}");
+            }
         }
 
         protected override void Update()
         {
             base.Update();
-
             UpdateRain();
         }
     }
