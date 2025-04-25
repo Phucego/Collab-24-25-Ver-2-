@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerPrefab: {fileID: 1530151749540177062, guid: e28cc24f75adcd64694edacc16bd950b, type: 3}
   TowerType: 2
-  TargetType: 0000000002000000
+  TargetType: 0100000002000000
   Damage: 10
   Health: 100
   Radius: 8
@@ -24,7 +24,7 @@ MonoBehaviour:
   ProjectileInterval: 0
   CritChance: 100
   CritAmplifier: 1
-  Cost: 60
+  Cost: 80
   listUpgrades:
   - {fileID: 11400000, guid: c3be4f4b7f72e1646a08e87e2b3bbf99, type: 2}
   - {fileID: 11400000, guid: 587c19609f113774593ce911bb17df01, type: 2}
