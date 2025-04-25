@@ -16,7 +16,11 @@ public class BalistaController : TowerController
         if (lockedIn && Target != null && Target.activeSelf)
         {
             float distance = Vector3.Distance(transform.position, Target.transform.position);
-            if (distance > Radius * 3f) { FindNearestEnemy(); }
+            if (distance > Radius * 3f)
+            {
+                Target = null;
+                FindNearestEnemy();
+            };
             if (Target != null)
             {
                 float TargetSpd = Target.GetComponent<I_GetType>().GetSpeed();
