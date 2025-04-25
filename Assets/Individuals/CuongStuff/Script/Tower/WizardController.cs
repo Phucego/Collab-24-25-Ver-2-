@@ -19,12 +19,15 @@ public class WizardController : TowerController
         {
             float distance = Vector3.Distance(transform.position, Target.transform.position);
             if (distance > Radius * 3f) { FindNearestEnemy(); }
-
-            StartCoroutine(FireProjectile(new Vector3(0,0,0).normalized));
-            StartCoroutine(Cooldown());
-            TimeBeforeFire = FireRate;
-            intervalCooldown = 0f;
-            Firing = true;
+            if (Target != null)
+            {
+                StartCoroutine(FireProjectile(new Vector3(0, 0, 0).normalized));
+                StartCoroutine(Cooldown());
+                TimeBeforeFire = FireRate;
+                intervalCooldown = 0f;
+                Firing = true;
+            }
+                
         }
         else if (TimeBeforeFire > 0)
         {
