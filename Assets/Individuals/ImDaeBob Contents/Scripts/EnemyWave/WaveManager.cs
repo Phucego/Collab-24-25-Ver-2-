@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using TMPro;
 using UnityEngine;
 using static LevelEditor_Handler;
 
@@ -37,6 +38,8 @@ public class WaveManager : MonoBehaviour
     [Header("Pooling")]
     [SerializeField] private GameObject _enemyPool;
     [SerializeField] private GameObject _visualPool;
+
+    public TMP_Text _text;
 
     //-------------------------------------------------------------- < Public Functions > --------------------------------------------------------------//
     // For general gameplay coding
@@ -119,22 +122,6 @@ public class WaveManager : MonoBehaviour
         TestCurWave(wave);
     }
     //-------------------------------------------------------------------- < Main > --------------------------------------------------------------------//
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Keypad1))
-            SpawnEnemy("GOLEM", "TUT_PATH1");
-        else if (Input.GetKeyDown(KeyCode.Keypad2) || Input.GetKeyDown(KeyCode.Minus))
-            SpawnEnemy("DEMON", "TUT_PATH1");
-        else if (Input.GetKeyDown(KeyCode.Keypad3) || Input.GetKeyDown(KeyCode.Equals))
-            SpawnEnemy("CLOAK", "TUT_PATH1");
-        else if (Input.GetKeyDown(KeyCode.Keypad4))
-            SpawnEnemy("GOLEM", "TUT_PATH2");
-        else if (Input.GetKeyDown(KeyCode.Keypad5))
-            SpawnEnemy("DEMON", "TUT_PATH2");
-        else if (Input.GetKeyDown(KeyCode.Keypad6))
-            SpawnEnemy("CLOAK", "TUT_PATH2");
-    }
-
     void Awake()
     {
         if (Instance == null)
@@ -192,6 +179,8 @@ public class WaveManager : MonoBehaviour
         _allEnemies = _totalEnemies;
         _summoned = 0;
         _summonedInWave = 0;
+
+        _text.text = _curData.ToString();
     }
 
     private void CreateEnemyPools()
