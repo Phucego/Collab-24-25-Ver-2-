@@ -24502,6 +24502,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1055963257599086911, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1956942608100029524, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
@@ -24534,6 +24538,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5802677789001526602, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6645422600723829166, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8030277789370507594, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
@@ -24544,6 +24556,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8921344232675880896, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9056135798927395900, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
+      propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
