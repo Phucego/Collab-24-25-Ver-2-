@@ -23832,7 +23832,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4591aabd90e69054f91a7cad55099eb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentCurrency: 120
+  currentCurrency: 240
   currencyText: {fileID: 1130766934}
   tutorialScene:
     m_SceneAsset: {fileID: 0}

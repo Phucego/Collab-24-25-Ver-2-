@@ -15066,7 +15066,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9073465194050615556, guid: a6e51f476a4bf404098d9c9bd9f8ae99, type: 3}
       propertyPath: _selectedLevel
-      value: LEVEL_0
+      value: LEVEL_2
       objectReference: {fileID: 0}
     - target: {fileID: 9126698368566758631, guid: a6e51f476a4bf404098d9c9bd9f8ae99, type: 3}
       propertyPath: m_RootOrder
@@ -18292,7 +18292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4591aabd90e69054f91a7cad55099eb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentCurrency: 50
+  currentCurrency: 500
   currencyText: {fileID: 1130766934}
   tutorialScene:
     m_SceneAsset: {fileID: 102900000, guid: 186f304aae5338f4c9e7450d34cd2b39, type: 3}

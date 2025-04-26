@@ -35,9 +35,9 @@ public class ProjectileController : MonoBehaviour, I_TowerProjectile
         rb.velocity = Vector3.zero;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
-        if (collision != null && !collisionCount)
+        if (collision != null && !collisionCount && !collision.gameObject.CompareTag("MainCamera"))
         {
             collisionCount = true;
             if (collision.gameObject.CompareTag("Enemy"))
@@ -45,7 +45,7 @@ public class ProjectileController : MonoBehaviour, I_TowerProjectile
                 ApplyDamage(collision.gameObject);
             }
             GameObject particle = ParticlesManager.Instance.SpawnParticles(1, "CannonExplode");
-            particle.transform.position = collision.GetContact(0).point;
+            particle.transform.position = collision.transform.position;
             particle.SetActive(true);
 
             Pooling.Despawn("CannonBall", gameObject);
