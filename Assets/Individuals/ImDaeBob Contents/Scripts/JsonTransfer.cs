@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+
+using UnityEngine;
 using UnityEditor;
 using System.IO;
 using UnityEditor.Build;
@@ -9,7 +11,6 @@ public class BuildProcessor : IPreprocessBuildWithReport
 {
     public int callbackOrder => 0;
 
-    // List of source folders to copy JSON files from
     private readonly List<string> sourceFolders = new List<string>
     {
         "Assets/Data/Enemies/Levels",
@@ -23,7 +24,6 @@ public class BuildProcessor : IPreprocessBuildWithReport
     {
         Debug.Log("==== Copying JSON files to StreamingAssets ====");
 
-        // Ensure the root StreamingAssets folder exists
         if (!Directory.Exists(Application.streamingAssetsPath))
         {
             Directory.CreateDirectory(Application.streamingAssetsPath);
@@ -31,7 +31,7 @@ public class BuildProcessor : IPreprocessBuildWithReport
 
         foreach (string sourcePath in sourceFolders)
         {
-            string folderName = Path.GetFileName(sourcePath); // Extract folder name
+            string folderName = Path.GetFileName(sourcePath);
             string targetPath = Path.Combine(targetRootPath, folderName);
 
             if (!Directory.Exists(sourcePath))
@@ -40,7 +40,6 @@ public class BuildProcessor : IPreprocessBuildWithReport
                 continue;
             }
 
-            // Ensure the target directory exists
             if (!Directory.Exists(targetPath))
             {
                 Directory.CreateDirectory(targetPath);
@@ -59,7 +58,7 @@ public class BuildProcessor : IPreprocessBuildWithReport
                 string fileName = Path.GetFileName(file);
                 string targetFilePath = Path.Combine(targetPath, fileName);
 
-                File.Copy(file, targetFilePath, true); // Overwrite existing files
+                File.Copy(file, targetFilePath, true);
                 Debug.Log($"[COPIED] {file} → {targetFilePath}");
             }
         }
@@ -67,3 +66,5 @@ public class BuildProcessor : IPreprocessBuildWithReport
         Debug.Log("==== JSON Copying Completed Successfully ====");
     }
 }
+
+#endif

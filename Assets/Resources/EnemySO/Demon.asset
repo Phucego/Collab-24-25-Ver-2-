@@ -18,12 +18,13 @@ MonoBehaviour:
   directionOffset: 0
   feetOffset: 0
   healthbarDistance: 1.8
-  animation: {fileID: 0}
+  editorAnimationController: {fileID: 0}
+  animationController: {fileID: 0}
   animationSpeedMult: 1
   name: Demon
   description: Da baloon
   typing: 01000000
-  reward: 10
+  reward: 9
   maxHealth: 80
   maxSpeed: 6
   acceleration: 1

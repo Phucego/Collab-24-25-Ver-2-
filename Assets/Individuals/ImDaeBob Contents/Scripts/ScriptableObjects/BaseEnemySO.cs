@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
 
 public enum eType
@@ -18,15 +17,21 @@ public class BaseEnemySO : ScriptableObject
 {
     [Tooltip("Model")]
     public GameObject model;
+
     [Header("")]
     public float scale = 1;
     [Tooltip("Radius - Height")]
     public Vector2 hitbox = Vector2.one;
     public float directionOffset = 0;
-    public float feetOffset = 0; 
+    public float feetOffset = 0;
     public float healthbarDistance = 1;
+
+    #if UNITY_EDITOR
     [Header("")]
-    public UnityEditor.Animations.AnimatorController animation = null;
+    [Tooltip("Animation Controller")]
+    public UnityEditor.Animations.AnimatorController editorAnimationController = null;
+    #endif
+    [HideInInspector] public RuntimeAnimatorController animationController;
     public float animationSpeedMult = 1;
 
     [Header("")]
@@ -59,5 +64,10 @@ public class BaseEnemySO : ScriptableObject
     {
         if (typing == null || typing.Count == 0)
             typing.Add(eType.Normal);
+
+        #if UNITY_EDITOR
+            if (editorAnimationController != null && animationController == null)
+                animationController = editorAnimationController;
+        #endif
     }
 }

@@ -42,9 +42,9 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
     void Awake()
     {
         #if UNITY_EDITOR
-        _pathDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Paths"); // Editors
+            _pathDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Paths"); // Editors
         #else
-            _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData"); // Works in Final Build
+            _pathDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData"); // Works in Final Build
         #endif
     }
 
@@ -110,10 +110,10 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         {
             _modelled = true;
             _model = Instantiate(type.model, transform);
-            if (type.animation != null)
+            if (type.animationController != null)
             {
                 var anim = _model.AddComponent<Animator>();
-                anim.runtimeAnimatorController = type.animation;
+                anim.runtimeAnimatorController = type.animationController;
                 anim.speed = type.animationSpeedMult;
             }
         }

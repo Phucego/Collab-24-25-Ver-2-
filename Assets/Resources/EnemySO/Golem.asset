@@ -18,7 +18,8 @@ MonoBehaviour:
   directionOffset: 0
   feetOffset: -0.75
   healthbarDistance: 4
-  animation: {fileID: 9100000, guid: 4b3fefc560c25254b8186c1ff4bd2384, type: 2}
+  editorAnimationController: {fileID: 9100000, guid: 4b3fefc560c25254b8186c1ff4bd2384, type: 2}
+  animationController: {fileID: 0}
   animationSpeedMult: 1
   name: Golem
   description: Just your generic enemy, walk on ground
