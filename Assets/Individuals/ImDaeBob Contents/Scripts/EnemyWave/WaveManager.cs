@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
@@ -130,12 +131,12 @@ public class WaveManager : MonoBehaviour
         #if UNITY_EDITOR
             _jsonDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Levels");
         #else
-            _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData");
+            _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData/Levels");
         #endif
 
         if (Directory.Exists(_jsonDirectory))
         {
-            string[] _files = Directory.GetFiles(_jsonDirectory, "*.json");
+            var _files = Directory.GetFiles(_jsonDirectory, "*.json");
 
             foreach (string f in _files)
             {
@@ -144,6 +145,8 @@ public class WaveManager : MonoBehaviour
             }
         }
     }
+
+
 
     void Start()
     {
@@ -177,10 +180,9 @@ public class WaveManager : MonoBehaviour
             }
         }
         _allEnemies = _totalEnemies;
+        _text.text = _curData[0].Waves.Count().ToString();
         _summoned = 0;
         _summonedInWave = 0;
-
-        _text.text = _curData.ToString();
     }
 
     private void CreateEnemyPools()

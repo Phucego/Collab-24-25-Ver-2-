@@ -44,7 +44,7 @@ public class EnemyBehavior : MonoBehaviour, I_GetType, I_Damagable
         #if UNITY_EDITOR
             _pathDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Paths"); // Editors
         #else
-            _pathDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData"); // Works in Final Build
+            _pathDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData/Paths"); // Works in Final Build
         #endif
     }
 
