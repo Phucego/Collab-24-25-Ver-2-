@@ -443,7 +443,7 @@ public class TutorialGuidance : MonoBehaviour
         if (currentSceneType != SceneType.Tutorial) return;
         SetDialogueSection("Building", OnBuildingCompleted.Invoke);
         anim.SetTrigger("hideUI");
-        CurrencyManager.Instance.currentCurrency = 25;
+        CurrencyManager.Instance.currentCurrency = 80;
     }
 
     public void StartCorruptedIntro()

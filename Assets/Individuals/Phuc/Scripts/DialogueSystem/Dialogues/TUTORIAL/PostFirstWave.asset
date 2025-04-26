@@ -17,7 +17,7 @@ MonoBehaviour:
   - characterName: 'General: '
     dialogueText: You have finished the first wave.
   - characterName: 'General: '
-    dialogueText: Now you have 40 coins.
+    dialogueText: Now you have 60 coins.
   - characterName: 'General: '
     dialogueText: 'Build a "Ballista" for the flying enemies, the "Ballista" is useful
       to counter aerial enemies. '

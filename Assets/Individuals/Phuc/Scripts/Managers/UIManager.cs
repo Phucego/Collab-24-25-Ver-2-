@@ -98,154 +98,155 @@ public class UIManager : MonoBehaviour
 
     private void Awake() => Instance = this;
 
-    private void Start()
+   private void Start()
+{
+    // Set DOTween capacity to prevent max tweens warning
+    DOTween.SetTweensCapacity(500, 50);
+
+    // Set audio to unmuted at start
+    isMuteButtonPressed = false;
+    PlayerPrefs.SetInt("MuteState", 0); // Save unmuted state
+    if (AudioManager.Instance != null)
     {
-        // Set DOTween capacity to prevent max tweens warning
-        DOTween.SetTweensCapacity(500, 50);
+        AudioManager.Instance.SetAudioPaused(false); // Unmute audio
+    }
+    else
+    {
+        Debug.LogWarning("AudioManager.Instance is null in UIManager.Start. Mute state not applied.");
+    }
 
-        // Load mute state from PlayerPrefs, default to unmuted (normal volume)
-        isMuteButtonPressed = PlayerPrefs.GetInt("MuteState", 0) == 1;
-        if (AudioManager.Instance != null)
+    // Update mute button sprite
+    if (muteButton != null && muteSprite != null && unmuteSprite != null)
+    {
+        muteButton.image.sprite = unmuteSprite;
+    }
+
+    // Ensure time scale is set to 1 at start
+    Time.timeScale = 1f;
+    StartCoroutine(ShowUIAfterTransition());
+
+    optionsContainer.SetActive(false);
+    cam = Camera.main;
+    anim = GetComponent<Animator>();
+    anim.SetBool("isTowerSelectPanelOpened", false);
+
+    if (SceneManager.GetActiveScene().name == tutorialLevel.SceneName)
+    {
+        CurrencyManager.Instance.InitializeCurrency(0);
+        UpdateCoinCounterUI();
+    }
+    else if (SceneManager.GetActiveScene().name == nextScene.SceneName)
+    {
+        CurrencyManager.Instance.InitializeCurrency(50);
+        UpdateCoinCounterUI();
+    }
+    
+    lightningNotificationText.alpha = 0f;
+
+    toggleTowerSelectButton.onClick.AddListener(ToggleTowerSelectPanel);
+    resumeButton.onClick.AddListener(() => SetPauseState(false));
+    quitButton.onClick.AddListener(() => ToggleConfirmationMenu(true));
+    mainMenuButton.onClick.AddListener(() => ToggleConfirmationMenu(true, true));
+
+    Quit_Yes.onClick.AddListener(Application.Quit);
+    Quit_No.onClick.AddListener(() => ToggleConfirmationMenu(false));
+    MainMenu_Yes.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(mainMenuScene)));
+    MainMenu_No.onClick.AddListener(() => ToggleConfirmationMenu(false, true));
+
+    chooseOptions.onClick.AddListener(ToggleChooseOptions);
+    speedUpButton.onClick.AddListener(ToggleSpeed);
+    pauseButton.onClick.AddListener(() => SetPauseState(true));
+    muteButton.onClick.AddListener(ToggleMute);
+    restartButton.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(SceneManager.GetActiveScene().name)));
+
+    startWaveButton.onClick.AddListener(OnStartWaveClicked);
+    startWaveButton.gameObject.SetActive(true);
+    nextWaveCountdownText.gameObject.SetActive(false);
+
+    if (victoryNextLevelButton != null)
+        victoryNextLevelButton.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(nextLevel)));
+    if (victoryMainMenuButton != null)
+        victoryMainMenuButton.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(mainMenuScene)));
+
+    // Setup lose panel buttons
+    if (loseRestartButton != null)
+        loseRestartButton.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(SceneManager.GetActiveScene().name)));
+    if (loseMainMenuButton != null)
+        loseMainMenuButton.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(mainMenuScene)));
+
+    if (fadePanel != null)
+    {
+        Color fadeColor = fadePanel.color;
+        fadeColor.a = 0f;
+        fadePanel.color = fadeColor;
+        fadePanel.gameObject.SetActive(false);
+    }
+
+    LightningStrikeEvent lightningEvent = FindObjectOfType<LightningStrikeEvent>();
+    if (lightningEvent != null)
+    {
+        lightningEvent.OnLightningStrike.AddListener(UpdateLightningNotification);
+    }
+
+    if (WaveManager.Instance != null)
+    {
+        WaveManager.Instance.OnWaveComplete += StartNextWaveCountdown;
+        WaveManager.Instance.OnLevelComplete += StartVictorySequence;
+        try
         {
-            AudioManager.Instance.SetAudioPaused(isMuteButtonPressed);
-        }
-        else
-        {
-            Debug.LogWarning("AudioManager.Instance is null in UIManager.Start. Mute state not applied.");
-        }
-
-        // Ensure time scale is set to 1 at start
-        Time.timeScale = 1f;
-        StartCoroutine(ShowUIAfterTransition());
-
-        optionsContainer.SetActive(false);
-        cam = Camera.main;
-        anim = GetComponent<Animator>();
-        anim.SetBool("isTowerSelectPanelOpened", false);
-
-        if (SceneManager.GetActiveScene().name == tutorialLevel.SceneName)
-        {
-            CurrencyManager.Instance.InitializeCurrency(0);
-            UpdateCoinCounterUI();
-        }
-        else if (SceneManager.GetActiveScene().name == nextScene.SceneName)
-        {
-            CurrencyManager.Instance.InitializeCurrency(50);
-            UpdateCoinCounterUI();
-        }
-        
-        lightningNotificationText.alpha = 0f;
-
-        toggleTowerSelectButton.onClick.AddListener(ToggleTowerSelectPanel);
-        resumeButton.onClick.AddListener(() => SetPauseState(false));
-        quitButton.onClick.AddListener(() => ToggleConfirmationMenu(true));
-        mainMenuButton.onClick.AddListener(() => ToggleConfirmationMenu(true, true));
-
-        Quit_Yes.onClick.AddListener(Application.Quit);
-        Quit_No.onClick.AddListener(() => ToggleConfirmationMenu(false));
-        MainMenu_Yes.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(mainMenuScene)));
-        MainMenu_No.onClick.AddListener(() => ToggleConfirmationMenu(false, true));
-
-        chooseOptions.onClick.AddListener(ToggleChooseOptions);
-        speedUpButton.onClick.AddListener(ToggleSpeed);
-        pauseButton.onClick.AddListener(() => SetPauseState(true));
-        muteButton.onClick.AddListener(ToggleMute);
-        restartButton.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(SceneManager.GetActiveScene().name)));
-
-        startWaveButton.onClick.AddListener(OnStartWaveClicked);
-        startWaveButton.gameObject.SetActive(true);
-        nextWaveCountdownText.gameObject.SetActive(false);
-
-        if (victoryNextLevelButton != null)
-            victoryNextLevelButton.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(nextLevel)));
-        if (victoryMainMenuButton != null)
-            victoryMainMenuButton.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(mainMenuScene)));
-
-        // Setup lose panel buttons
-        if (loseRestartButton != null)
-            loseRestartButton.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(SceneManager.GetActiveScene().name)));
-        if (loseMainMenuButton != null)
-            loseMainMenuButton.onClick.AddListener(() => StartCoroutine(LoadSceneWithFade(mainMenuScene)));
-
-        if (fadePanel != null)
-        {
-            Color fadeColor = fadePanel.color;
-            fadeColor.a = 0f;
-            fadePanel.color = fadeColor;
-            fadePanel.gameObject.SetActive(false);
-        }
-
-        LightningStrikeEvent lightningEvent = FindObjectOfType<LightningStrikeEvent>();
-        if (lightningEvent != null)
-        {
-            lightningEvent.OnLightningStrike.AddListener(UpdateLightningNotification);
-        }
-
-        if (WaveManager.Instance != null)
-        {
-            WaveManager.Instance.OnWaveComplete += StartNextWaveCountdown;
-            WaveManager.Instance.OnLevelComplete += StartVictorySequence;
-            try
+            if (WaveManager.Instance._curData != null && WaveManager.Instance._curData.Count > 0)
             {
-                if (WaveManager.Instance._curData != null && WaveManager.Instance._curData.Count > 0)
-                {
-                    totalWaves = WaveManager.Instance._curData[0].Waves.Count;
-                }
-                else
-                {
-                    Debug.LogWarning("WaveManager._curData is empty or null. Setting totalWaves to 0.");
-                    totalWaves = 0;
-                }
-                }
-            catch (Exception e)
+                totalWaves = WaveManager.Instance._curData[0].Waves.Count;
+            }
+            else
             {
-                Debug.LogError($"Failed to access WaveManager._curData: {e.Message}");
+                Debug.LogWarning("WaveManager._curData is empty or null. Setting totalWaves to 0.");
                 totalWaves = 0;
             }
         }
-        else
+        catch (Exception e)
         {
-            Debug.LogWarning("WaveManager.Instance is null. Victory sequence may not trigger.");
-        }
-
-        Color c = nextWaveCountdownText.color;
-        c.a = 0f;
-        nextWaveCountdownText.color = c;
-
-        if (waveProgressSlider != null)
-        {
-            try
-            {
-                waveProgressSlider.minValue = 0f;
-                waveProgressSlider.maxValue = 1f;
-                waveProgressSlider.value = 0f;
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"Failed to initialize waveProgressSlider: {e.Message}");
-                waveProgressSlider.gameObject.SetActive(false);
-            }
-        }
-
-        if (victoryPanel != null)
-            victoryPanel.SetActive(false);
-
-        if (losePanel != null)
-            losePanel.SetActive(false);
-        
-        if (waveProgressText != null)
-        {
-            waveProgressText.alpha = 0f;
-            waveProgressText.rectTransform.anchoredPosition = new Vector2(241, -900);
-            waveProgressText.gameObject.SetActive(false);
-        }
-
-        // Initialize mute button sprite
-        if (muteButton != null && muteSprite != null && unmuteSprite != null)
-        {
-            muteButton.image.sprite = isMuteButtonPressed ? muteSprite : unmuteSprite;
+            Debug.LogError($"Failed to access WaveManager._curData: {e.Message}");
+            totalWaves = 0;
         }
     }
+    else
+    {
+        Debug.LogWarning("WaveManager.Instance is null. Victory sequence may not trigger.");
+    }
+
+    Color c = nextWaveCountdownText.color;
+    c.a = 0f;
+    nextWaveCountdownText.color = c;
+
+    if (waveProgressSlider != null)
+    {
+        try
+        {
+            waveProgressSlider.minValue = 0f;
+            waveProgressSlider.maxValue = 1f;
+            waveProgressSlider.value = 0f;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to initialize waveProgressSlider: {e.Message}");
+            waveProgressSlider.gameObject.SetActive(false);
+        }
+    }
+
+    if (victoryPanel != null)
+        victoryPanel.SetActive(false);
+
+    if (losePanel != null)
+        losePanel.SetActive(false);
+    
+    if (waveProgressText != null)
+    {
+        waveProgressText.alpha = 0f;
+        waveProgressText.rectTransform.anchoredPosition = new Vector2(241, -900);
+        waveProgressText.gameObject.SetActive(false);
+    }
+}
 
     private void Update()
     {
