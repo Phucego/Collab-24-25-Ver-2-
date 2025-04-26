@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LVL3Ballista
   m_EditorClassIdentifier: 
   upgradeName: Level 3
-  Cost: 35
+  Cost: 126
   upgradeDatas:
   - upgradeType: 1
     value: 10

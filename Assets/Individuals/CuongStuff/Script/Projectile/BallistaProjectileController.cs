@@ -52,9 +52,9 @@ public class BallistaProjectileController : ProjectileController
         transform.gameObject.SetActive(false);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
-        if (collision != null && !collisionCount)
+        if (collision != null && !collisionCount && !collision.gameObject.CompareTag("MainCamera"))
         {
             StartCoroutine(DisableObject());
             collisionCount = true;
@@ -63,7 +63,7 @@ public class BallistaProjectileController : ProjectileController
                 ApplyDamage(collision.gameObject);
             }
             GameObject Particle = ParticlesManager.Instance.SpawnParticles(0, "BallistaExplosion");
-            Particle.transform.position = collision.GetContact(0).point;
+            Particle.transform.position = collision.transform.position;
             Particle.SetActive(true);
         }
     }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LVL1Ballista
   m_EditorClassIdentifier: 
   upgradeName: Level 1
-  Cost: 15
+  Cost: 42
   upgradeDatas:
   - upgradeType: 1
     value: 10

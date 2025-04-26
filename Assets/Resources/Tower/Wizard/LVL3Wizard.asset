@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LVL3Wizard
   m_EditorClassIdentifier: 
   upgradeName: Level 3
-  Cost: 35
+  Cost: 168
   upgradeDatas:
   - upgradeType: 2
     value: 2.5

@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerPrefab: {fileID: 696605464391488558, guid: 5960e39c09b5c1942b9bd8883a34039f, type: 3}
   TowerType: 1
-  TargetType: 00000000
+  TargetType: 000000000100000002000000
   Damage: 60
   Health: 0
-  Radius: 12
-  FireRate: 2
+  Radius: 10
+  FireRate: 6
   ProjectileSpeed: 0
-  ProjectileRadius: 1
+  ProjectileRadius: 5
   ProjectileInterval: 0
   CritChance: 0
   CritAmplifier: 1

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LVL2Cannon
   m_EditorClassIdentifier: 
   upgradeName: Level 2
-  Cost: 20
+  Cost: 56
   upgradeDatas:
   - upgradeType: 1
     value: 20

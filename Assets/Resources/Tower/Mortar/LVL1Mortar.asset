@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LVL1Mortar
   m_EditorClassIdentifier: 
   upgradeName: Level 1
-  Cost: 15
+  Cost: 70
   upgradeDatas:
   - upgradeType: 1
     value: 10

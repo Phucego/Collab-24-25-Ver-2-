@@ -15,10 +15,10 @@ MonoBehaviour:
   towerPrefab: {fileID: 1530151749540177062, guid: e28cc24f75adcd64694edacc16bd950b, type: 3}
   TowerType: 2
   TargetType: 0100000002000000
-  Damage: 10
+  Damage: 15
   Health: 100
-  Radius: 8
-  FireRate: 5
+  Radius: 12
+  FireRate: 1.5
   ProjectileSpeed: 20
   ProjectileRadius: 1
   ProjectileInterval: 0

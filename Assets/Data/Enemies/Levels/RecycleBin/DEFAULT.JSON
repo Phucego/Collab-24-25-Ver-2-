@@ -9,20 +9,10 @@
               {
                 "Name": "DEMON",
                 "Amount": 1,
-                "SpawnInterval": 0.0
-              },
-              {
-                "Name": "GOLEM",
-                "Amount": 1,
-                "SpawnInterval": 0.0
-              },
-              {
-                "Name": "CLOAK",
-                "Amount": 1,
-                "SpawnInterval": 0.0
+                "SpawnInterval": 1.0
               }
             ],
-            "Path": "TEST_PATH",
+            "Path": "TUT_PATH1",
             "IsLoop": false,
             "LoopAmount": 1,
             "Delay": 0.0
