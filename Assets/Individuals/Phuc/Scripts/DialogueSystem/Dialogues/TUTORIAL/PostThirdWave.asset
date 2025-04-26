@@ -15,11 +15,10 @@ MonoBehaviour:
   sectionName: Post Third Wave
   dialogueLines:
   - characterName: 'General: '
-    dialogueText: You have finished the second wave.
+    dialogueText: You are getting the hang of it!
   - characterName: 'General: '
-    dialogueText: 'Upgrade your existing towers or build more towers, it is all up
-      to you.
-
-'
+    dialogueText: Press on the tower you want to upgrade to show the canvas.
   - characterName: 'General: '
-    dialogueText: Have fun.
+    dialogueText: You can either sell or upgrade the tower, it is all up to you.
+  - characterName: 'General: '
+    dialogueText: Have fun defending!

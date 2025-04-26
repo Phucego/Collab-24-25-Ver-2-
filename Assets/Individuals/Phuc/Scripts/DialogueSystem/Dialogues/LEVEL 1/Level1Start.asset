@@ -17,11 +17,7 @@ MonoBehaviour:
   - characterName: 'General:'
     dialogueText: Good job finishing the tutorial.
   - characterName: 'General:'
-    dialogueText: 'In this level, I have a gift for you. '
-  - characterName: 'General:'
-    dialogueText: A MORTAR!!!!
-  - characterName: 'General:'
-    dialogueText: Use the mortar to counter horde of enemies moving close to each
-      other.
+    dialogueText: In this level, there is one more additional path to defend, have
+      a look at that and plan out your strategy.
   - characterName: 'General:'
     dialogueText: Have fun defending.
