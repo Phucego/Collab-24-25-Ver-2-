@@ -18,13 +18,13 @@ public class TutorialGuidance : MonoBehaviour
     [Header("Tutorial Dialogues")]
     public List<Dialogue> tutorialDialogues;
 
-    [Header("Level 1 Dialogues")]
+    [Header("Level 1 dialogues")]
     public List<Dialogue> level1Dialogues;
 
-    [Header("Level 2 Dialogues")]
+    [Header("Level 2 dialogues")]
     public List<Dialogue> level2Dialogues;
 
-    [Header("Level 3 Dialogues")]
+    [Header("Level 3 dialogues")]
     public List<Dialogue> level3Dialogues;
 
     [Header("Animation Controller")]
@@ -65,6 +65,7 @@ public class TutorialGuidance : MonoBehaviour
 
     private bool hasShownPostFirstWaveDialogue = false;
     private bool hasShownPostSecondWaveDialogue = false;
+    private bool hasShownPostThirdWaveDialogue = false;
     private bool corruptedIntroCompleted = false;
 
     [SerializeField] private BuildingManager buildingManager;
@@ -316,6 +317,15 @@ public class TutorialGuidance : MonoBehaviour
             return;
         }
 
+        // Reset timescale to 1 if sped up
+        if (UIManager.Instance != null && UIManager.Instance.isSpeedUp)
+        {
+            UIManager.Instance.isSpeedUp = false;
+            Time.timeScale = 1f;
+            AudioManager.Instance?.PlaySoundEffect("SlowDown_SFX");
+            UIManager.Instance.anim.SetTrigger("isSpeedChange");
+        }
+
         currentDialogueLines = dialogue.dialogueLines;
         currentLineIndex = 0;
         isTutorialActive = true;
@@ -484,6 +494,13 @@ public class TutorialGuidance : MonoBehaviour
                 DisableMovements();
                 anim.SetTrigger("hideUI");
                 SetDialogueSection("Post Second Wave", null);
+            }
+            else if (!hasShownPostThirdWaveDialogue && waveIndex == 2)
+            {
+                hasShownPostThirdWaveDialogue = true;
+                DisableMovements();
+                anim.SetTrigger("hideUI");
+                SetDialogueSection("Post Third Wave", null);
             }
         }
     }

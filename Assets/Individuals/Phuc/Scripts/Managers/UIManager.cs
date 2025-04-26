@@ -79,10 +79,10 @@ public class UIManager : MonoBehaviour
     public string currentLevelName = "Level 1";
     public List<int> miniBossWaves = new List<int> { 3, 6, 9 };
 
-    private Animator anim;
+    public Animator anim;
     private Camera cam;
     private bool isRotated = false;
-    private bool isSpeedUp = false;
+    public bool isSpeedUp = false;
     private bool isMuteButtonPressed = false;
     private GameStates previousState;
 
