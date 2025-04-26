@@ -127,9 +127,9 @@ public class WaveManager : MonoBehaviour
             SkipToNextWave();
         else if (Input.GetKeyDown(KeyCode.Keypad1) || Input.GetKeyDown(KeyCode.Alpha0))
             SpawnEnemy("GOLEM", "TUT_PATH1");
-        else if (Input.GetKeyDown(KeyCode.Keypad2))
+        else if (Input.GetKeyDown(KeyCode.Keypad2) || Input.GetKeyDown(KeyCode.Minus))
             SpawnEnemy("DEMON", "TUT_PATH1");
-        else if (Input.GetKeyDown(KeyCode.Keypad3))
+        else if (Input.GetKeyDown(KeyCode.Keypad3) || Input.GetKeyDown(KeyCode.Equals))
             SpawnEnemy("CLOAK", "TUT_PATH1");
         else if (Input.GetKeyDown(KeyCode.Keypad4))
             SpawnEnemy("GOLEM", "TUT_PATH2");

@@ -39,8 +39,8 @@ public class TowerController : MonoBehaviour, I_TowerInfo, I_Damagable
     protected float TimeBeforeFire = 0f;
 
     [HideInInspector] public List<GameObject> _EnemyList = new List<GameObject>();
-    [HideInInspector] public GameObject Target;
-    [HideInInspector] public Vector3 TargetPos = new Vector3(0,0,0);
+    /*[HideInInspector]*/ public GameObject Target;
+    [HideInInspector] public Vector3 TargetPos = new Vector3(999,999,999);
     public GameObject sellTowerFX;
     
     private void Awake()
