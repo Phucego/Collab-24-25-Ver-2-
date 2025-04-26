@@ -27,9 +27,6 @@ public class TutorialGuidance : MonoBehaviour
     [Header("Level 3 dialogues")]
     public List<Dialogue> level3Dialogues;
 
-    [Header("Animation Controller")]
-    public Animator anim;
-
     public UnityEvent OnIntroCompleted;
     public UnityEvent OnMovementPracticeCompleted;
     public UnityEvent OnBuildingCompleted;
@@ -251,7 +248,6 @@ public class TutorialGuidance : MonoBehaviour
                 UIManager.Instance.startWaveButton.interactable = true;
                 Debug.Log("[TutorialGuidance] Enabled startWaveButton for Level 1.");
             }
-            dialogueUI.SetActive(false); // Ensure dialogue UI is hidden
             EnableMovements();
         });
     }
@@ -268,7 +264,6 @@ public class TutorialGuidance : MonoBehaviour
                 UIManager.Instance.startWaveButton.interactable = true;
                 Debug.Log("[TutorialGuidance] Enabled startWaveButton for Level 2.");
             }
-            dialogueUI.SetActive(false); // Ensure dialogue UI is hidden
             EnableMovements();
         });
     }
@@ -282,7 +277,16 @@ public class TutorialGuidance : MonoBehaviour
             UIManager.Instance.startWaveButton.interactable = true;
             Debug.Log("[TutorialGuidance] Enabled startWaveButton for Level 3.");
         }
-        dialogueUI.SetActive(false);
+        if (UIManager.Instance != null && UIManager.Instance.anim != null)
+        {
+            UIManager.Instance.anim.Play("hideUI");
+            Debug.Log("[TutorialGuidance] Played hideUI animation for Level 3 setup.");
+        }
+        else
+        {
+            dialogueUI.SetActive(false);
+            Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly for Level 3.");
+        }
         EnableMovements();
     }
 
@@ -331,7 +335,16 @@ public class TutorialGuidance : MonoBehaviour
         if (dialogue == null || dialogue.dialogueLines.Count == 0)
         {
             Debug.LogWarning($"[TutorialGuidance] No dialogue found for section '{sectionName}' in {currentSceneType} dialogues.");
-            dialogueUI.SetActive(false); // Hide dialogue UI if no dialogue
+            if (UIManager.Instance != null && UIManager.Instance.anim != null)
+            {
+                UIManager.Instance.anim.Play("hideUI");
+                Debug.Log("[TutorialGuidance] Played hideUI animation due to empty dialogue.");
+            }
+            else
+            {
+                dialogueUI.SetActive(false);
+                Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly.");
+            }
             onComplete?.Invoke();
             if (currentSceneType == SceneType.Tutorial)
             {
@@ -384,15 +397,23 @@ public class TutorialGuidance : MonoBehaviour
         }
         else
         {
-            anim.SetTrigger("isStart");
-            dialogueUI.SetActive(false);
+            if (UIManager.Instance != null && UIManager.Instance.anim != null)
+            {
+                UIManager.Instance.anim.Play("hideUI");
+                Debug.Log("[TutorialGuidance] Played hideUI animation at end of dialogue.");
+            }
+            else
+            {
+                dialogueUI.SetActive(false);
+                Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly.");
+            }
             isTutorialActive = false;
             onComplete?.Invoke();
             if (currentSceneType == SceneType.Tutorial)
             {
                 EnableMovements();
             }
-            Debug.Log($"[TutorialGuidance] Dialogue section completed. Hiding dialogue UI.");
+            Debug.Log("[TutorialGuidance] Dialogue section completed.");
         }
     }
 
@@ -431,8 +452,33 @@ public class TutorialGuidance : MonoBehaviour
         else
         {
             currentLineIndex++;
-            if (isTutorialActive)
+            if (isTutorialActive && currentLineIndex >= currentDialogueLines.Count)
+            {
+                if (UIManager.Instance != null && UIManager.Instance.anim != null)
+                {
+                    UIManager.Instance.anim.Play("hideUI");
+                    Debug.Log("[TutorialGuidance] Played hideUI animation on extra Next press.");
+                }
+                else
+                {
+                    dialogueUI.SetActive(false);
+                    Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly on extra Next press.");
+                }
+                isTutorialActive = false;
+                if (currentSceneType == SceneType.Tutorial)
+                {
+                    EnableMovements();
+                }
+                if (UIManager.Instance != null)
+                {
+                    UIManager.Instance.startWaveButton.interactable = !startWaveLocked;
+                    Debug.Log("[TutorialGuidance] Set startWaveButton interactable based on startWaveLocked.");
+                }
+            }
+            else if (isTutorialActive)
+            {
                 ShowCurrentLine(null);
+            }
         }
     }
 
@@ -469,7 +515,16 @@ public class TutorialGuidance : MonoBehaviour
     {
         if (currentSceneType != SceneType.Tutorial) return;
         SetDialogueSection("Camera Practice", OnMovementPracticeCompleted.Invoke);
-        anim.SetTrigger("hideUI");
+        if (UIManager.Instance != null && UIManager.Instance.anim != null)
+        {
+            UIManager.Instance.anim.Play("hideUI");
+            Debug.Log("[TutorialGuidance] Played hideUI animation for movement practice.");
+        }
+        else
+        {
+            dialogueUI.SetActive(false);
+            Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly for movement practice.");
+        }
         if (buildingDestination != null) buildingDestination.SetActive(true);
     }
 
@@ -477,7 +532,16 @@ public class TutorialGuidance : MonoBehaviour
     {
         if (currentSceneType != SceneType.Tutorial) return;
         SetDialogueSection("Building", OnBuildingCompleted.Invoke);
-        anim.SetTrigger("hideUI");
+        if (UIManager.Instance != null && UIManager.Instance.anim != null)
+        {
+            UIManager.Instance.anim.Play("hideUI");
+            Debug.Log("[TutorialGuidance] Played hideUI animation for building tutorial.");
+        }
+        else
+        {
+            dialogueUI.SetActive(false);
+            Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly for building tutorial.");
+        }
         CurrencyManager.Instance.currentCurrency = 80;
     }
 
@@ -486,7 +550,16 @@ public class TutorialGuidance : MonoBehaviour
         if (currentSceneType != SceneType.Tutorial) return;
         EnableStartWave();
         SetDialogueSection("Corrupted Zone Intro", OnCorruptedIntroCompleted.Invoke);
-        anim.SetTrigger("hideUI");
+        if (UIManager.Instance != null && UIManager.Instance.anim != null)
+        {
+            UIManager.Instance.anim.Play("hideUI");
+            Debug.Log("[TutorialGuidance] Played hideUI animation for corrupted intro.");
+        }
+        else
+        {
+            dialogueUI.SetActive(false);
+            Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly for corrupted intro.");
+        }
         corruptedIntroCompleted = true;
     }
 
@@ -517,21 +590,48 @@ public class TutorialGuidance : MonoBehaviour
             {
                 hasShownPostFirstWaveDialogue = true;
                 DisableMovements();
-                anim.SetTrigger("hideUI");
+                if (UIManager.Instance != null && UIManager.Instance.anim != null)
+                {
+                    UIManager.Instance.anim.Play("hideUI");
+                    Debug.Log("[TutorialGuidance] Played hideUI animation for post first wave.");
+                }
+                else
+                {
+                    dialogueUI.SetActive(false);
+                    Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly for post first wave.");
+                }
                 SetDialogueSection("Post First Wave", null);
             }
             else if (!hasShownPostSecondWaveDialogue && waveIndex == 1)
             {
                 hasShownPostSecondWaveDialogue = true;
                 DisableMovements();
-                anim.SetTrigger("hideUI");
+                if (UIManager.Instance != null && UIManager.Instance.anim != null)
+                {
+                    UIManager.Instance.anim.Play("hideUI");
+                    Debug.Log("[TutorialGuidance] Played hideUI animation for post second wave.");
+                }
+                else
+                {
+                    dialogueUI.SetActive(false);
+                    Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly for post second wave.");
+                }
                 SetDialogueSection("Post Second Wave", null);
             }
             else if (!hasShownPostThirdWaveDialogue && waveIndex == 2)
             {
                 hasShownPostThirdWaveDialogue = true;
                 DisableMovements();
-                anim.SetTrigger("hideUI");
+                if (UIManager.Instance != null && UIManager.Instance.anim != null)
+                {
+                    UIManager.Instance.anim.Play("hideUI");
+                    Debug.Log("[TutorialGuidance] Played hideUI animation for post third wave.");
+                }
+                else
+                {
+                    dialogueUI.SetActive(false);
+                    Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly for post third wave.");
+                }
                 SetDialogueSection("Post Third Wave", null);
             }
         }

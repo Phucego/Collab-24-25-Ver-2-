@@ -8027,6 +8027,7 @@ GameObject:
   - component: {fileID: 597401161}
   - component: {fileID: 597401163}
   - component: {fileID: 597401164}
+  - component: {fileID: 597401165}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -8319,7 +8320,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 597401151}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b6a95105a0cd2f4db7fe98ee5400db4, type: 3}
   m_Name: 
@@ -8376,6 +8377,31 @@ MonoBehaviour:
   movementDetected: 0
   buildingManager: {fileID: 2108838503}
   currentSceneType: 2
+--- !u!114 &597401165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 597401151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88a07aad343812f41b5b743ff8569f54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterNameText: {fileID: 414118922}
+  dialogueText: {fileID: 414118921}
+  nextButton: {fileID: 414118923}
+  dialogueUI: {fileID: 414118924}
+  level2Dialogues:
+  - {fileID: 11400000, guid: 174c4b2297a65404c98cadaf067007e2, type: 2}
+  level2Scene:
+    m_SceneAsset: {fileID: 102900000, guid: 3799f1b6dad89934aae272ad3a1a5dca, type: 3}
+    m_SceneName: '[Main] Level 2'
+  level3Scene:
+    m_SceneAsset: {fileID: 0}
+    m_SceneName: 
+  currentSceneType: 1
 --- !u!4 &605402456 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2035405497521351004, guid: d76f8cf6d6d23834d97c23574821f38e, type: 3}
@@ -21338,7 +21364,6 @@ MonoBehaviour:
   optionsContainer: {fileID: 616983100}
   coinCounterText: {fileID: 1130766934}
   lightningNotificationText: {fileID: 1514145157}
-  dialogueManager: {fileID: 0}
   mainMenuScene:
     m_SceneAsset: {fileID: 102900000, guid: 5ab70225f46419e44b0924c46a99e266, type: 3}
     m_SceneName: '[Main] MainMenuScene'
@@ -21361,9 +21386,9 @@ MonoBehaviour:
   tutorialLevel:
     m_SceneAsset: {fileID: 102900000, guid: 186f304aae5338f4c9e7450d34cd2b39, type: 3}
     m_SceneName: '[Main] TutorialScene'
-  nextScene:
-    m_SceneAsset: {fileID: 102900000, guid: 5ab70225f46419e44b0924c46a99e266, type: 3}
-    m_SceneName: '[Main] MainMenuScene'
+  level1Scene:
+    m_SceneAsset: {fileID: 0}
+    m_SceneName: 
 --- !u!95 &1676139304
 Animator:
   serializedVersion: 5

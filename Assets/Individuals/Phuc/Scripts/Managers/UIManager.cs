@@ -58,7 +58,6 @@ public class UIManager : MonoBehaviour
     [Header("Other References")]
     public TextMeshProUGUI coinCounterText;
     public TextMeshProUGUI lightningNotificationText;
-    public IGuidance guidanceManager; // Reference to Level1Guidance, Level2Guidance, etc.
     public SceneField mainMenuScene; // Assumed: "MainMenu"
     public GameObject vineEntangleNotificationPanel;
     public Image fadePanel;
@@ -251,13 +250,6 @@ public class UIManager : MonoBehaviour
             waveProgressText.rectTransform.anchoredPosition = new Vector2(241, -900);
             waveProgressText.gameObject.SetActive(false);
         }
-
-        // Find guidance manager
-        guidanceManager = FindObjectOfType<MonoBehaviour>() as IGuidance;
-        if (guidanceManager == null)
-        {
-            Debug.LogWarning("[UIManager] No IGuidance component found in scene. Dialogue UI animations will be skipped.");
-        }
     }
 
     private void Update()
@@ -309,22 +301,36 @@ public class UIManager : MonoBehaviour
     public void StartVictorySequence()
     {
         Debug.Log($"[UIManager] Starting victory sequence for {currentLevelName}. Current wave: {currentWave}, Total waves: {totalWaves}");
-        if (guidanceManager != null)
+        anim.Play("hideUI");
+        Debug.Log("[UIManager] Played hideUI animation for victory sequence.");
+
+        // Mark level as completed based on scene
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        if (currentSceneName == level1Scene.SceneName && Level1Guidance.Instance != null)
         {
-            guidanceManager.GetAnimator()?.SetTrigger("hideUI");
-            Debug.Log("[UIManager] Triggered hideUI animation for victory sequence.");
+            Level1Guidance.Instance.CompleteScene(Level1Guidance.SceneType.Level1);
         }
+        else if (currentSceneName == "Level2" && Level2Guidance.Instance != null)
+        {
+            Level2Guidance.Instance.CompleteScene(Level2Guidance.SceneType.Level2);
+        }
+        // else if (currentSceneName == "Level3" && Level3Guidance.Instance != null)
+        // {
+        //     Level3Guidance.Instance.CompleteScene(Level3Guidance.SceneType.Level3);
+        // }
+        else
+        {
+            Debug.LogWarning("[UIManager] No matching guidance script found for scene: " + currentSceneName);
+        }
+
         StartCoroutine(VictorySequence());
     }
 
     public void StartLoseSequence()
     {
         Debug.Log($"[UIManager] Starting lose sequence for {currentLevelName}. Current wave: {currentWave}, Total waves: {totalWaves}");
-        if (guidanceManager != null)
-        {
-            guidanceManager.GetAnimator()?.SetTrigger("hideUI");
-            Debug.Log("[UIManager] Triggered hideUI animation for lose sequence.");
-        }
+        anim.Play("hideUI");
+        Debug.Log("[UIManager] Played hideUI animation for lose sequence.");
         StartCoroutine(LoseSequence());
     }
 
@@ -488,7 +494,7 @@ public class UIManager : MonoBehaviour
             mainMenuOriginalScale = mainMenuRect.localScale;
             mainMenuOriginalPos = mainMenuRect.anchoredPosition;
             mainMenuRect.localScale = mainMenuOriginalScale;
-            mainMenuRect.anchoredPosition = mainMenuOriginalPos;
+            mainMenuRect.anchoredPosition = mainMenuRect.anchoredPosition = mainMenuOriginalPos;
             loseMainMenuButton.gameObject.SetActive(false);
         }
 
@@ -672,12 +678,9 @@ public class UIManager : MonoBehaviour
             waveButtonSeq.Join(startWaveButton.image.DOFade(0f, 0.5f));
             waveButtonSeq.OnComplete(() => startWaveButton.gameObject.SetActive(false));
 
-            // Trigger hideUI animation for guidance UI
-            if (guidanceManager != null)
-            {
-                guidanceManager.GetAnimator()?.SetTrigger("hideUI");
-                Debug.Log("[UIManager] Triggered hideUI animation on wave start.");
-            }
+            // Play hideUI animation
+            anim.Play("hideUI");
+            Debug.Log("[UIManager] Played hideUI animation on wave start.");
         }
         else
         {
@@ -719,12 +722,9 @@ public class UIManager : MonoBehaviour
         UpdateWaveProgress();
         StartCountdown();
 
-        // Trigger hideUI animation for guidance UI
-        if (guidanceManager != null)
-        {
-            guidanceManager.GetAnimator()?.SetTrigger("hideUI");
-            Debug.Log("[UIManager] Triggered hideUI animation for next wave countdown.");
-        }
+        // Play hideUI animation
+        anim.Play("hideUI");
+        Debug.Log("[UIManager] Played hideUI animation for next wave countdown.");
     }
 
     private void StartCountdown()

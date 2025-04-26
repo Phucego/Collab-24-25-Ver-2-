@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-public class Level1Guidance : MonoBehaviour
+public class Level2Guidance : MonoBehaviour
 {
     [Header("UI Elements")]
     public TextMeshProUGUI characterNameText;
@@ -15,12 +15,12 @@ public class Level1Guidance : MonoBehaviour
     public Button nextButton;
     public GameObject dialogueUI;
 
-    [Header("Level 1 Dialogues")]
-    public List<Dialogue> level1Dialogues;
+    [Header("Level 2 Dialogues")]
+    public List<Dialogue> level2Dialogues;
 
     [Header("Scene Configuration")]
-    [SerializeField] private SceneField level1Scene; // Assumed: "Level1"
     [SerializeField] private SceneField level2Scene; // Assumed: "Level2"
+    [SerializeField] private SceneField level3Scene; // Assumed: "Level3"
 
     private List<Dialogue.DialogueLine> currentDialogueLines;
     private int currentLineIndex = 0;
@@ -30,7 +30,7 @@ public class Level1Guidance : MonoBehaviour
 
     private FreeFlyCamera _freeFlyCamera;
 
-    public static Level1Guidance Instance;
+    public static Level2Guidance Instance;
 
     public enum SceneType
     {
@@ -39,7 +39,7 @@ public class Level1Guidance : MonoBehaviour
         Level3
     }
 
-    public SceneType currentSceneType = SceneType.Level1;
+    public SceneType currentSceneType = SceneType.Level2;
     private const string PROGRESS_KEY = "HighestCompletedLevel";
     private static readonly SceneType[] SceneOrder = { SceneType.Level1, SceneType.Level2, SceneType.Level3 };
 
@@ -53,13 +53,13 @@ public class Level1Guidance : MonoBehaviour
         {
             if (!IsSceneUnlocked(currentSceneType))
             {
-                Debug.LogWarning($"[Level1Guidance] Scene {currentSceneType} is not unlocked. Loading highest unlocked scene.");
+                Debug.LogWarning($"[Level2Guidance] Scene {currentSceneType} is not unlocked. Loading highest unlocked scene.");
                 LoadHighestUnlockedScene();
             }
         }
         else
         {
-            Debug.Log($"[Level1Guidance] Running in Editor: Allowing access to {currentSceneType}.");
+            Debug.Log($"[Level2Guidance] Running in Editor: Allowing access to {currentSceneType}.");
         }
     }
 
@@ -70,7 +70,7 @@ public class Level1Guidance : MonoBehaviour
         nextButton.onClick.AddListener(OnNextButtonClicked);
         _freeFlyCamera = FindObjectOfType<FreeFlyCamera>();
 
-        SetupLevel1Scene();
+        SetupLevel2Scene();
     }
 
     private SceneType DetermineSceneType()
@@ -78,11 +78,11 @@ public class Level1Guidance : MonoBehaviour
         Scene currentScene = SceneManager.GetActiveScene();
         string currentSceneName = currentScene.name;
 
-        if (level1Scene != null && currentSceneName == level1Scene.SceneName)
-            return SceneType.Level1;
+        if (level2Scene != null && currentSceneName == level2Scene.SceneName)
+            return SceneType.Level2;
 
-        Debug.LogWarning($"[Level1Guidance] Current scene '{currentSceneName}' not mapped. Defaulting to Level1.");
-        return SceneType.Level1;
+        Debug.LogWarning($"[Level2Guidance] Current scene '{currentSceneName}' not mapped. Defaulting to Level2.");
+        return SceneType.Level2;
     }
 
     private bool IsSceneUnlocked(SceneType sceneType)
@@ -107,7 +107,7 @@ public class Level1Guidance : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"[Level1Guidance] Failed to load scene for {nextSceneType}. Scene name not found.");
+            Debug.LogError($"[Level2Guidance] Failed to load scene for {nextSceneType}. Scene name not found.");
         }
     }
 
@@ -115,10 +115,10 @@ public class Level1Guidance : MonoBehaviour
     {
         switch (sceneType)
         {
-            case SceneType.Level1:
-                return level1Scene?.SceneName;
             case SceneType.Level2:
                 return level2Scene?.SceneName;
+            case SceneType.Level3:
+                return level3Scene?.SceneName;
             default:
                 return null;
         }
@@ -133,21 +133,21 @@ public class Level1Guidance : MonoBehaviour
         {
             PlayerPrefs.SetInt(PROGRESS_KEY, currentIndex);
             PlayerPrefs.Save();
-            Debug.Log($"[Level1Guidance] Marked {sceneType} as completed. HighestCompletedLevel: {currentIndex}");
+            Debug.Log($"[Level2Guidance] Marked {sceneType} as completed. HighestCompletedLevel: {currentIndex}");
         }
     }
 
-    private void SetupLevel1Scene()
+    private void SetupLevel2Scene()
     {
-        Debug.Log("[Level1Guidance] Setting up Level 1 scene.");
+        Debug.Log("[Level2Guidance] Setting up Level 2 scene.");
         DisableMovements();
-        SetDialogueSection("Level 1 Intro", () =>
+        SetDialogueSection("Level 2 Intro", () =>
         {
-            Debug.Log("[Level1Guidance] Level 1 Intro dialogue completed.");
+            Debug.Log("[Level2Guidance] Level 2 Intro dialogue completed.");
             if (UIManager.Instance != null)
             {
                 UIManager.Instance.startWaveButton.interactable = true;
-                Debug.Log("[Level1Guidance] Enabled startWaveButton for Level 1.");
+                Debug.Log("[Level2Guidance] Enabled startWaveButton for Level 2.");
             }
             EnableMovements();
         });
@@ -155,21 +155,21 @@ public class Level1Guidance : MonoBehaviour
 
     public void SetDialogueSection(string sectionName, UnityAction onComplete)
     {
-        Debug.Log($"[Level1Guidance] Setting dialogue section: {sectionName}");
-        Dialogue dialogue = level1Dialogues?.Find(d => d.sectionName == sectionName);
+        Debug.Log($"[Level2Guidance] Setting dialogue section: {sectionName}");
+        Dialogue dialogue = level2Dialogues?.Find(d => d.sectionName == sectionName);
 
         if (dialogue == null || dialogue.dialogueLines.Count == 0)
         {
-            Debug.LogWarning($"[Level1Guidance] No dialogue found for section '{sectionName}' in Level 1 dialogues.");
+            Debug.LogWarning($"[Level2Guidance] No dialogue found for section '{sectionName}' in Level 2 dialogues.");
             if (UIManager.Instance != null && UIManager.Instance.anim != null)
             {
                 UIManager.Instance.anim.Play("hideUI");
-                Debug.Log("[Level1Guidance] Played hideUI animation due to empty dialogue.");
+                Debug.Log("[Level2Guidance] Played hideUI animation due to empty dialogue.");
             }
             else
             {
                 dialogueUI.SetActive(false);
-                Debug.LogWarning("[Level1Guidance] UIManager or anim is null. Hid dialogueUI directly.");
+                Debug.LogWarning("[Level2Guidance] UIManager or anim is null. Hid dialogueUI directly.");
             }
             onComplete?.Invoke();
             EnableMovements();
@@ -183,7 +183,7 @@ public class Level1Guidance : MonoBehaviour
             Time.timeScale = 1f;
             AudioManager.Instance?.PlaySoundEffect("SlowDown_SFX");
             UIManager.Instance.anim.SetTrigger("isSpeedChange");
-            Debug.Log("[Level1Guidance] Reset Time.timeScale to 1 for dialogue.");
+            Debug.Log("[Level2Guidance] Reset Time.timeScale to 1 for dialogue.");
         }
 
         currentDialogueLines = dialogue.dialogueLines;
@@ -205,17 +205,17 @@ public class Level1Guidance : MonoBehaviour
             if (UIManager.Instance != null && UIManager.Instance.anim != null)
             {
                 UIManager.Instance.anim.Play("hideUI");
-                Debug.Log("[Level1Guidance] Played hideUI animation at end of dialogue.");
+                Debug.Log("[Level2Guidance] Played hideUI animation at end of dialogue.");
             }
             else
             {
                 dialogueUI.SetActive(false);
-                Debug.LogWarning("[Level1Guidance] UIManager or anim is null. Hid dialogueUI directly.");
+                Debug.LogWarning("[Level2Guidance] UIManager or anim is null. Hid dialogueUI directly.");
             }
             isDialogueActive = false;
             onComplete?.Invoke();
             EnableMovements();
-            Debug.Log("[Level1Guidance] Dialogue section completed.");
+            Debug.Log("[Level2Guidance] Dialogue section completed.");
         }
     }
 
@@ -259,19 +259,19 @@ public class Level1Guidance : MonoBehaviour
                 if (UIManager.Instance != null && UIManager.Instance.anim != null)
                 {
                     UIManager.Instance.anim.Play("hideUI");
-                    Debug.Log("[Level1Guidance] Played hideUI animation on extra Next press.");
+                    Debug.Log("[Level2Guidance] Played hideUI animation on extra Next press.");
                 }
                 else
                 {
                     dialogueUI.SetActive(false);
-                    Debug.LogWarning("[Level1Guidance] UIManager or anim is null. Hid dialogueUI directly on extra Next press.");
+                    Debug.LogWarning("[Level2Guidance] UIManager or anim is null. Hid dialogueUI directly on extra Next press.");
                 }
                 isDialogueActive = false;
                 EnableMovements();
                 if (UIManager.Instance != null)
                 {
                     UIManager.Instance.startWaveButton.interactable = true;
-                    Debug.Log("[Level1Guidance] Enabled startWaveButton on extra Next press.");
+                    Debug.Log("[Level2Guidance] Enabled startWaveButton on extra Next press.");
                 }
             }
             else if (isDialogueActive)
@@ -287,7 +287,7 @@ public class Level1Guidance : MonoBehaviour
         {
             _freeFlyCamera._enableRotation = true;
             _freeFlyCamera._enableMovement = true;
-            Debug.Log("[Level1Guidance] Enabled camera movements.");
+            Debug.Log("[Level2Guidance] Enabled camera movements.");
         }
     }
 
@@ -297,7 +297,7 @@ public class Level1Guidance : MonoBehaviour
         {
             _freeFlyCamera._enableRotation = false;
             _freeFlyCamera._enableMovement = false;
-            Debug.Log("[Level1Guidance] Disabled camera movements.");
+            Debug.Log("[Level2Guidance] Disabled camera movements.");
         }
     }
 
