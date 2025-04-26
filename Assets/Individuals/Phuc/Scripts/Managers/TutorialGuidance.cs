@@ -37,10 +37,10 @@ public class TutorialGuidance : MonoBehaviour
     public UnityEvent OnTowerDamaged;
 
     [Header("Scene Configuration")]
-    [SerializeField] private SceneField tutorialScene;
-    [SerializeField] private SceneField level1Scene;
-    [SerializeField] private SceneField level2Scene;
-    [SerializeField] private SceneField level3Scene;
+    [SerializeField] private SceneField tutorialScene; // Assumed: "Tutorial"
+    [SerializeField] private SceneField level1Scene; // Assumed: "Level1"
+    [SerializeField] private SceneField level2Scene; // Assumed: "Level2"
+    [SerializeField] private SceneField level3Scene; // Assumed: "Level3"
 
     [Header("Tutorial Destinations")]
     public GameObject buildingDestination;
@@ -106,13 +106,13 @@ public class TutorialGuidance : MonoBehaviour
         {
             if (!IsSceneUnlocked(currentSceneType))
             {
-                Debug.LogWarning($"Scene {currentSceneType} is not unlocked. Loading highest unlocked scene.");
+                Debug.LogWarning($"[TutorialGuidance] Scene {currentSceneType} is not unlocked. Loading highest unlocked scene.");
                 LoadHighestUnlockedScene();
             }
         }
         else
         {
-            Debug.Log($"Running in Editor: Allowing access to {currentSceneType} regardless of progression.");
+            Debug.Log($"[TutorialGuidance] Running in Editor: Allowing access to {currentSceneType} regardless of progression.");
         }
     }
 
@@ -142,6 +142,8 @@ public class TutorialGuidance : MonoBehaviour
 
         if (WaveManager.Instance != null)
             WaveManager.Instance.OnWaveComplete += HandleWaveCompleted;
+        else
+            Debug.LogWarning("[TutorialGuidance] WaveManager.Instance is null in Start.");
 
         if (sceneSetupActions.ContainsKey(currentSceneType))
         {
@@ -149,7 +151,7 @@ public class TutorialGuidance : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"No setup defined for scene type: {currentSceneType}");
+            Debug.LogWarning($"[TutorialGuidance] No setup defined for scene type: {currentSceneType}");
         }
     }
 
@@ -167,7 +169,7 @@ public class TutorialGuidance : MonoBehaviour
         else if (level3Scene != null && currentSceneName == level3Scene.SceneName)
             return SceneType.Level3;
 
-        Debug.LogWarning($"Current scene '{currentSceneName}' not mapped to any SceneType. Defaulting to Tutorial.");
+        Debug.LogWarning($"[TutorialGuidance] Current scene '{currentSceneName}' not mapped to any SceneType. Defaulting to Tutorial.");
         return SceneType.Tutorial;
     }
 
@@ -193,7 +195,7 @@ public class TutorialGuidance : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"Failed to load scene for {nextSceneType}. Scene name not found.");
+            Debug.LogError($"[TutorialGuidance] Failed to load scene for {nextSceneType}. Scene name not found.");
         }
     }
 
@@ -223,6 +225,7 @@ public class TutorialGuidance : MonoBehaviour
         {
             PlayerPrefs.SetInt(PROGRESS_KEY, currentIndex);
             PlayerPrefs.Save();
+            Debug.Log($"[TutorialGuidance] Marked {sceneType} as completed. HighestCompletedLevel: {currentIndex}");
         }
     }
 
@@ -230,37 +233,55 @@ public class TutorialGuidance : MonoBehaviour
     {
         if (UIManager.Instance != null)
             UIManager.Instance.startWaveButton.interactable = false;
+        else
+            Debug.LogWarning("[TutorialGuidance] UIManager.Instance is null in SetupTutorialScene.");
 
         StartIntro();
     }
 
     private void SetupLevel1Scene()
     {
+        Debug.Log("[TutorialGuidance] Setting up Level 1 scene.");
         SetDialogueSection("Level 1 Intro", () =>
         {
+            Debug.Log("[TutorialGuidance] Level 1 Intro dialogue completed.");
             startWaveLocked = false;
             if (UIManager.Instance != null)
+            {
                 UIManager.Instance.startWaveButton.interactable = true;
+                Debug.Log("[TutorialGuidance] Enabled startWaveButton for Level 1.");
+            }
+            dialogueUI.SetActive(false); // Ensure dialogue UI is hidden
             EnableMovements();
         });
     }
 
     private void SetupLevel2Scene()
     {
+        Debug.Log("[TutorialGuidance] Setting up Level 2 scene.");
         SetDialogueSection("Level 2 Intro", () =>
         {
+            Debug.Log("[TutorialGuidance] Level 2 Intro dialogue completed.");
             startWaveLocked = false;
             if (UIManager.Instance != null)
+            {
                 UIManager.Instance.startWaveButton.interactable = true;
+                Debug.Log("[TutorialGuidance] Enabled startWaveButton for Level 2.");
+            }
+            dialogueUI.SetActive(false); // Ensure dialogue UI is hidden
             EnableMovements();
         });
     }
 
     private void SetupLevel3Scene()
     {
+        Debug.Log("[TutorialGuidance] Setting up Level 3 scene.");
         startWaveLocked = false;
         if (UIManager.Instance != null)
+        {
             UIManager.Instance.startWaveButton.interactable = true;
+            Debug.Log("[TutorialGuidance] Enabled startWaveButton for Level 3.");
+        }
         dialogueUI.SetActive(false);
         EnableMovements();
     }
@@ -298,6 +319,7 @@ public class TutorialGuidance : MonoBehaviour
 
     public void SetDialogueSection(string sectionName, UnityAction onComplete)
     {
+        Debug.Log($"[TutorialGuidance] Setting dialogue section: {sectionName}");
         Dialogue dialogue = null;
         List<Dialogue> activeDialogues = GetDialogueListForCurrentScene();
 
@@ -308,7 +330,8 @@ public class TutorialGuidance : MonoBehaviour
 
         if (dialogue == null || dialogue.dialogueLines.Count == 0)
         {
-            Debug.LogWarning($"No dialogue found for section '{sectionName}' in {currentSceneType} dialogues.");
+            Debug.LogWarning($"[TutorialGuidance] No dialogue found for section '{sectionName}' in {currentSceneType} dialogues.");
+            dialogueUI.SetActive(false); // Hide dialogue UI if no dialogue
             onComplete?.Invoke();
             if (currentSceneType == SceneType.Tutorial)
             {
@@ -324,6 +347,7 @@ public class TutorialGuidance : MonoBehaviour
             Time.timeScale = 1f;
             AudioManager.Instance?.PlaySoundEffect("SlowDown_SFX");
             UIManager.Instance.anim.SetTrigger("isSpeedChange");
+            Debug.Log("[TutorialGuidance] Reset Time.timeScale to 1 for dialogue.");
         }
 
         currentDialogueLines = dialogue.dialogueLines;
@@ -347,7 +371,7 @@ public class TutorialGuidance : MonoBehaviour
             case SceneType.Level3:
                 return level3Dialogues;
             default:
-                Debug.LogWarning($"No dialogue list defined for scene type: {currentSceneType}");
+                Debug.LogWarning($"[TutorialGuidance] No dialogue list defined for scene type: {currentSceneType}");
                 return null;
         }
     }
@@ -368,6 +392,7 @@ public class TutorialGuidance : MonoBehaviour
             {
                 EnableMovements();
             }
+            Debug.Log($"[TutorialGuidance] Dialogue section completed. Hiding dialogue UI.");
         }
     }
 
@@ -469,15 +494,22 @@ public class TutorialGuidance : MonoBehaviour
     {
         startWaveLocked = false;
         if (UIManager.Instance != null && UIManager.Instance.startWaveButton != null)
+        {
             UIManager.Instance.startWaveButton.interactable = true;
+            Debug.Log("[TutorialGuidance] Enabled startWaveButton for wave start.");
+        }
     }
 
     private void HandleWaveCompleted()
     {
         if (WaveManager.Instance == null || UIManager.Instance == null)
+        {
+            Debug.LogWarning("[TutorialGuidance] WaveManager or UIManager is null in HandleWaveCompleted.");
             return;
+        }
 
         int waveIndex = UIManager.Instance.currentWave;
+        Debug.Log($"[TutorialGuidance] Wave completed. Wave index: {waveIndex}, Scene: {currentSceneType}");
 
         if (currentSceneType == SceneType.Tutorial)
         {
@@ -517,6 +549,7 @@ public class TutorialGuidance : MonoBehaviour
         {
             _freeFlyCamera._enableRotation = true;
             _freeFlyCamera._enableMovement = true;
+            Debug.Log("[TutorialGuidance] Enabled camera movements.");
         }
     }
 
@@ -526,6 +559,7 @@ public class TutorialGuidance : MonoBehaviour
         {
             _freeFlyCamera._enableRotation = false;
             _freeFlyCamera._enableMovement = false;
+            Debug.Log("[TutorialGuidance] Disabled camera movements.");
         }
     }
 

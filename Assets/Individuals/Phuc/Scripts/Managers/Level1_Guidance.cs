@@ -5,8 +5,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
-public class Level1_Guidance : MonoBehaviour
+public class Level1Guidance : MonoBehaviour, IGuidance
 {
     [Header("UI Elements")]
     public TextMeshProUGUI characterNameText;
@@ -14,100 +15,185 @@ public class Level1_Guidance : MonoBehaviour
     public Button nextButton;
     public GameObject dialogueUI;
 
-    [Header("Tutorial Data")]
-    public List<Dialogue> dialogueScriptables;
+    [Header("Level 1 Dialogues")]
+    public List<Dialogue> level1Dialogues;
 
     [Header("Animation Controller")]
-    public Animator anim;
+    public Animator anim; // Assigned in Inspector, must have "hideUI" trigger
 
-    private Level1_Guidance Instance;
-    // EVENTS
-  
+    [Header("Scene Configuration")]
+    [SerializeField] private SceneField level1Scene; // Assumed: "Level1"
+    [SerializeField] private SceneField level2Scene; // Assumed: "Level2"
+
     private List<Dialogue.DialogueLine> currentDialogueLines;
     private int currentLineIndex = 0;
-    private bool isTutorialActive = false;
-
-    [SerializeField] private bool movementDetected = false;
+    private bool isDialogueActive = false;
     private Coroutine typingCoroutine;
     private bool isTyping = false;
-    
-    //WAVE DIALOGUES
-    private bool hasShownPostFirstWaveDialogue;
-    private bool hasShownPostSecondWaveDialogue;
 
     private FreeFlyCamera _freeFlyCamera;
-    
-    [SerializeField] private BuildingManager buildingManager;
-    
-    
-    void Start()
+
+    public static Level1Guidance Instance;
+
+    public enum SceneType
+    {
+        Level1,
+        Level2,
+        Level3
+    }
+
+    public SceneType currentSceneType = SceneType.Level1;
+    private const string PROGRESS_KEY = "HighestCompletedLevel";
+    private static readonly SceneType[] SceneOrder = { SceneType.Level1, SceneType.Level2, SceneType.Level3 };
+
+    private void Awake()
+    {
+        Instance = this;
+
+        currentSceneType = DetermineSceneType();
+
+        if (!Application.isEditor)
+        {
+            if (!IsSceneUnlocked(currentSceneType))
+            {
+                Debug.LogWarning($"[Level1Guidance] Scene {currentSceneType} is not unlocked. Loading highest unlocked scene.");
+                LoadHighestUnlockedScene();
+            }
+        }
+        else
+        {
+            Debug.Log($"[Level1Guidance] Running in Editor: Allowing access to {currentSceneType}.");
+        }
+    }
+
+    private void Start()
     {
         dialogueUI.SetActive(false);
+
         nextButton.onClick.AddListener(OnNextButtonClicked);
-
         _freeFlyCamera = FindObjectOfType<FreeFlyCamera>();
-        buildingManager = FindObjectOfType<BuildingManager>();
 
-        WaveManager.Instance.OnWaveComplete += HandleWaveCompleted;
-        
-
-        StartIntro();
+        SetupLevel1Scene();
     }
-    private void HandleWaveCompleted()
+
+    public Animator GetAnimator()
     {
-        if (WaveManager.Instance == null || UIManager.Instance == null)
-            return;
+        return anim;
+    }
 
-        int waveIndex = UIManager.Instance.currentWave;
+    private SceneType DetermineSceneType()
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+        string currentSceneName = currentScene.name;
 
-        // First wave completed (index 0)
-        if (!hasShownPostFirstWaveDialogue && waveIndex == 0)
+        if (level1Scene != null && currentSceneName == level1Scene.SceneName)
+            return SceneType.Level1;
+
+        Debug.LogWarning($"[Level1Guidance] Current scene '{currentSceneName}' not mapped. Defaulting to Level1.");
+        return SceneType.Level1;
+    }
+
+    private bool IsSceneUnlocked(SceneType sceneType)
+    {
+        int highestCompletedIndex = PlayerPrefs.GetInt(PROGRESS_KEY, -1);
+        int currentSceneIndex = Array.IndexOf(SceneOrder, sceneType);
+        return currentSceneIndex <= highestCompletedIndex + 1;
+    }
+
+    private void LoadHighestUnlockedScene()
+    {
+        int highestCompletedIndex = PlayerPrefs.GetInt(PROGRESS_KEY, -1);
+        int nextSceneIndex = highestCompletedIndex + 1;
+        if (nextSceneIndex >= SceneOrder.Length)
+            nextSceneIndex = SceneOrder.Length - 1;
+
+        SceneType nextSceneType = SceneOrder[nextSceneIndex];
+        string sceneName = GetSceneName(nextSceneType);
+        if (!string.IsNullOrEmpty(sceneName))
         {
-            hasShownPostFirstWaveDialogue = true;
-            DisableMovements();
-            anim.SetTrigger("hideUI");
-            SetDialogueSection("Post First Wave", null);
+            SceneManager.LoadScene(sceneName);
         }
-
-        // Second wave completed (index 1)
-        else if (!hasShownPostSecondWaveDialogue && waveIndex == 1)
+        else
         {
-            hasShownPostSecondWaveDialogue = true;
-            DisableMovements();
-            anim.SetTrigger("hideUI");
-            SetDialogueSection("Post Second Wave", null);
+            Debug.LogError($"[Level1Guidance] Failed to load scene for {nextSceneType}. Scene name not found.");
         }
     }
-    
 
-    private void StartIntro()
+    private string GetSceneName(SceneType sceneType)
     {
+        switch (sceneType)
+        {
+            case SceneType.Level1:
+                return level1Scene?.SceneName;
+            case SceneType.Level2:
+                return level2Scene?.SceneName;
+            default:
+                return null;
+        }
+    }
+
+    public void CompleteScene(SceneType sceneType)
+    {
+        int currentIndex = Array.IndexOf(SceneOrder, sceneType);
+        int highestCompletedIndex = PlayerPrefs.GetInt(PROGRESS_KEY, -1);
+
+        if (currentIndex > highestCompletedIndex)
+        {
+            PlayerPrefs.SetInt(PROGRESS_KEY, currentIndex);
+            PlayerPrefs.Save();
+            Debug.Log($"[Level1Guidance] Marked {sceneType} as completed. HighestCompletedLevel: {currentIndex}");
+        }
+    }
+
+    private void SetupLevel1Scene()
+    {
+        Debug.Log("[Level1Guidance] Setting up Level 1 scene.");
         DisableMovements();
-        SetDialogueSection("Level 1 Start", null);
+        SetDialogueSection("Level 1 Intro", () =>
+        {
+            Debug.Log("[Level1Guidance] Level 1 Intro dialogue completed.");
+            if (UIManager.Instance != null)
+            {
+                UIManager.Instance.startWaveButton.interactable = true;
+                Debug.Log("[Level1Guidance] Enabled startWaveButton for Level 1.");
+            }
+            dialogueUI.SetActive(false);
+            EnableMovements();
+        });
     }
 
     public void SetDialogueSection(string sectionName, UnityAction onComplete)
     {
-        Dialogue dialogue = dialogueScriptables.Find(d => d.sectionName == sectionName);
+        Debug.Log($"[Level1Guidance] Setting dialogue section: {sectionName}");
+        Dialogue dialogue = level1Dialogues?.Find(d => d.sectionName == sectionName);
+
         if (dialogue == null || dialogue.dialogueLines.Count == 0)
         {
-            Debug.LogWarning($"No dialogue found for section: {sectionName}");
+            Debug.LogWarning($"[Level1Guidance] No dialogue found for section '{sectionName}' in Level 1 dialogues.");
+            dialogueUI.SetActive(false);
             onComplete?.Invoke();
+            EnableMovements();
             return;
+        }
+
+        // Reset timescale to 1 if sped up
+        if (UIManager.Instance != null && UIManager.Instance.isSpeedUp)
+        {
+            UIManager.Instance.isSpeedUp = false;
+            Time.timeScale = 1f;
+            AudioManager.Instance?.PlaySoundEffect("SlowDown_SFX");
+            UIManager.Instance.anim.SetTrigger("isSpeedChange");
+            Debug.Log("[Level1Guidance] Reset Time.timeScale to 1 for dialogue.");
         }
 
         currentDialogueLines = dialogue.dialogueLines;
         currentLineIndex = 0;
-        isTutorialActive = true;
+        isDialogueActive = true;
         dialogueUI.SetActive(true);
 
         ShowCurrentLine(onComplete);
     }
-    private void OnDestroy()
-    {
-        if (WaveManager.Instance != null)
-            WaveManager.Instance.OnWaveComplete -= HandleWaveCompleted;
-    }
+
     private void ShowCurrentLine(UnityAction onComplete)
     {
         if (currentLineIndex < currentDialogueLines.Count)
@@ -116,11 +202,13 @@ public class Level1_Guidance : MonoBehaviour
         }
         else
         {
-            anim.SetTrigger("isStart");
+            if (anim != null)
+                anim.SetTrigger("hideUI"); // Trigger hideUI animation
             dialogueUI.SetActive(false);
-            isTutorialActive = false;
+            isDialogueActive = false;
             onComplete?.Invoke();
             EnableMovements();
+            Debug.Log("[Level1Guidance] Dialogue section completed. Hiding dialogue UI.");
         }
     }
 
@@ -159,22 +247,31 @@ public class Level1_Guidance : MonoBehaviour
         else
         {
             currentLineIndex++;
-            if (isTutorialActive)
+            if (isDialogueActive)
                 ShowCurrentLine(null);
         }
     }
-    
+
     private void EnableMovements()
     {
-        _freeFlyCamera._enableRotation = true;
-        _freeFlyCamera._enableMovement = true;
+        if (_freeFlyCamera != null)
+        {
+            _freeFlyCamera._enableRotation = true;
+            _freeFlyCamera._enableMovement = true;
+            Debug.Log("[Level1Guidance] Enabled camera movements.");
+        }
     }
 
     private void DisableMovements()
     {
-        _freeFlyCamera._enableRotation = false;
-        _freeFlyCamera._enableMovement = false;
+        if (_freeFlyCamera != null)
+        {
+            _freeFlyCamera._enableRotation = false;
+            _freeFlyCamera._enableMovement = false;
+            Debug.Log("[Level1Guidance] Disabled camera movements.");
+        }
     }
+
     public void Cleanup()
     {
         if (nextButton != null)
@@ -188,14 +285,13 @@ public class Level1_Guidance : MonoBehaviour
             typingCoroutine = null;
         }
 
-        // Clear references
         currentDialogueLines = null;
         characterNameText = null;
         dialogueText = null;
         nextButton = null;
         dialogueUI = null;
+        anim = null;
 
-        // Destroy the GameObject
         if (Instance == this)
         {
             Instance = null;
