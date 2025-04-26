@@ -58,11 +58,11 @@ public class UIManager : MonoBehaviour
     [Header("Other References")]
     public TextMeshProUGUI coinCounterText;
     public TextMeshProUGUI lightningNotificationText;
-    public TutorialGuidance dialogueManager;
-    public SceneField mainMenuScene;
+    public IGuidance guidanceManager; // Reference to Level1Guidance, Level2Guidance, etc.
+    public SceneField mainMenuScene; // Assumed: "MainMenu"
     public GameObject vineEntangleNotificationPanel;
     public Image fadePanel;
-    public SceneField nextLevel;
+    public SceneField nextLevel; // Assumed: "Level2" if current is "Level1"
 
     [Header("Wave Start UI")]
     public Button startWaveButton;
@@ -79,10 +79,10 @@ public class UIManager : MonoBehaviour
     public string currentLevelName = "Level 1";
     public List<int> miniBossWaves = new List<int> { 3, 6, 9 };
 
-    private Animator anim;
+    public Animator anim;
     private Camera cam;
     private bool isRotated = false;
-    private bool isSpeedUp = false;
+    public bool isSpeedUp = false;
     private bool isMuteButtonPressed = false;
     private GameStates previousState;
 
@@ -90,8 +90,8 @@ public class UIManager : MonoBehaviour
 
     private int totalWaves;
 
-    [SerializeField] private SceneField tutorialLevel;
-    [SerializeField] private SceneField nextScene;
+    [SerializeField] private SceneField tutorialLevel; // Assumed: "Tutorial"
+    [SerializeField] private SceneField level1Scene; // Assumed: "Level1"
 
     // Track active tween for wave progress slider
     private Tween waveSliderTween;
@@ -103,15 +103,22 @@ public class UIManager : MonoBehaviour
         // Set DOTween capacity to prevent max tweens warning
         DOTween.SetTweensCapacity(500, 50);
 
-        // Load mute state from PlayerPrefs, default to unmuted (normal volume)
-        isMuteButtonPressed = PlayerPrefs.GetInt("MuteState", 0) == 1;
+        // Set audio to unmuted at start
+        isMuteButtonPressed = false;
+        PlayerPrefs.SetInt("MuteState", 0); // Save unmuted state
         if (AudioManager.Instance != null)
         {
-            AudioManager.Instance.SetAudioPaused(isMuteButtonPressed);
+            AudioManager.Instance.SetAudioPaused(false); // Unmute audio
         }
         else
         {
-            Debug.LogWarning("AudioManager.Instance is null in UIManager.Start. Mute state not applied.");
+            Debug.LogWarning("[UIManager] AudioManager.Instance is null in Start. Mute state not applied.");
+        }
+
+        // Update mute button sprite
+        if (muteButton != null && muteSprite != null && unmuteSprite != null)
+        {
+            muteButton.image.sprite = unmuteSprite;
         }
 
         // Ensure time scale is set to 1 at start
@@ -123,12 +130,13 @@ public class UIManager : MonoBehaviour
         anim = GetComponent<Animator>();
         anim.SetBool("isTowerSelectPanelOpened", false);
 
+        // Initialize currency based on scene
         if (SceneManager.GetActiveScene().name == tutorialLevel.SceneName)
         {
             CurrencyManager.Instance.InitializeCurrency(0);
             UpdateCoinCounterUI();
         }
-        else if (SceneManager.GetActiveScene().name == nextScene.SceneName)
+        else if (SceneManager.GetActiveScene().name == level1Scene.SceneName)
         {
             CurrencyManager.Instance.InitializeCurrency(50);
             UpdateCoinCounterUI();
@@ -136,6 +144,7 @@ public class UIManager : MonoBehaviour
         
         lightningNotificationText.alpha = 0f;
 
+        // Set up button listeners
         toggleTowerSelectButton.onClick.AddListener(ToggleTowerSelectPanel);
         resumeButton.onClick.AddListener(() => SetPauseState(false));
         quitButton.onClick.AddListener(() => ToggleConfirmationMenu(true));
@@ -181,31 +190,34 @@ public class UIManager : MonoBehaviour
             lightningEvent.OnLightningStrike.AddListener(UpdateLightningNotification);
         }
 
+        // Initialize wave manager and total waves
         if (WaveManager.Instance != null)
         {
             WaveManager.Instance.OnWaveComplete += StartNextWaveCountdown;
             WaveManager.Instance.OnLevelComplete += StartVictorySequence;
             try
             {
-                if (WaveManager.Instance._curData != null && WaveManager.Instance._curData.Count > 0)
+                if (WaveManager.Instance._curData != null && WaveManager.Instance._curData.Count > 0 && WaveManager.Instance._curData[0].Waves != null)
                 {
                     totalWaves = WaveManager.Instance._curData[0].Waves.Count;
+                    Debug.Log($"[UIManager] Initialized for {SceneManager.GetActiveScene().name}. Total waves: {totalWaves}, Current wave: {currentWave}");
                 }
                 else
                 {
-                    Debug.LogWarning("WaveManager._curData is empty or null. Setting totalWaves to 0.");
-                    totalWaves = 0;
+                    Debug.LogError("[UIManager] WaveManager._curData is empty, null, or Waves is null. Setting totalWaves to 1 as fallback.");
+                    totalWaves = 1; // Fallback to prevent immediate victory
                 }
-                }
+            }
             catch (Exception e)
             {
-                Debug.LogError($"Failed to access WaveManager._curData: {e.Message}");
-                totalWaves = 0;
+                Debug.LogError($"[UIManager] Failed to access WaveManager._curData: {e.Message}. Setting totalWaves to 1 as fallback.");
+                totalWaves = 1;
             }
         }
         else
         {
-            Debug.LogWarning("WaveManager.Instance is null. Victory sequence may not trigger.");
+            Debug.LogError("[UIManager] WaveManager.Instance is null. Cannot subscribe to wave events. Setting totalWaves to 1 as fallback.");
+            totalWaves = 1;
         }
 
         Color c = nextWaveCountdownText.color;
@@ -222,7 +234,7 @@ public class UIManager : MonoBehaviour
             }
             catch (Exception e)
             {
-                Debug.LogError($"Failed to initialize waveProgressSlider: {e.Message}");
+                Debug.LogError($"[UIManager] Failed to initialize waveProgressSlider: {e.Message}");
                 waveProgressSlider.gameObject.SetActive(false);
             }
         }
@@ -240,10 +252,11 @@ public class UIManager : MonoBehaviour
             waveProgressText.gameObject.SetActive(false);
         }
 
-        // Initialize mute button sprite
-        if (muteButton != null && muteSprite != null && unmuteSprite != null)
+        // Find guidance manager
+        guidanceManager = FindObjectOfType<MonoBehaviour>() as IGuidance;
+        if (guidanceManager == null)
         {
-            muteButton.image.sprite = isMuteButtonPressed ? muteSprite : unmuteSprite;
+            Debug.LogWarning("[UIManager] No IGuidance component found in scene. Dialogue UI animations will be skipped.");
         }
     }
 
@@ -288,27 +301,30 @@ public class UIManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogWarning($"Failed to update wave progress: {e.Message}");
+            Debug.LogWarning($"[UIManager] Failed to update wave progress: {e.Message}");
             waveProgressSlider.gameObject.SetActive(false);
         }
     }
 
     public void StartVictorySequence()
     {
-        if (TutorialGuidance._instance != null)
+        Debug.Log($"[UIManager] Starting victory sequence for {currentLevelName}. Current wave: {currentWave}, Total waves: {totalWaves}");
+        if (guidanceManager != null)
         {
-            TutorialGuidance._instance.CompleteScene(TutorialGuidance._instance.currentSceneType);
+            guidanceManager.GetAnimator()?.SetTrigger("hideUI");
+            Debug.Log("[UIManager] Triggered hideUI animation for victory sequence.");
         }
-        else
-        {
-            Debug.LogWarning("TutorialGuidance._instance is null. Cannot mark scene as completed.");
-        }
-
         StartCoroutine(VictorySequence());
     }
 
     public void StartLoseSequence()
     {
+        Debug.Log($"[UIManager] Starting lose sequence for {currentLevelName}. Current wave: {currentWave}, Total waves: {totalWaves}");
+        if (guidanceManager != null)
+        {
+            guidanceManager.GetAnimator()?.SetTrigger("hideUI");
+            Debug.Log("[UIManager] Triggered hideUI animation for lose sequence.");
+        }
         StartCoroutine(LoseSequence());
     }
 
@@ -336,7 +352,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Firework Prefab or Castle not assigned in UIManager.");
+            Debug.LogWarning("[UIManager] Firework Prefab or Castle not assigned in UIManager.");
         }
 
         yield return StartCoroutine(ShowVictoryPanel());
@@ -395,6 +411,8 @@ public class UIManager : MonoBehaviour
         Vector3 mainMenuOriginalScale = Vector3.one;
         Vector2 mainMenuOriginalPos = Vector2.zero;
 
+        bool hasNextLevel = !string.IsNullOrEmpty(nextLevel.SceneName);
+
         if (victoryNextLevelButton != null)
         {
             RectTransform nextLevelRect = victoryNextLevelButton.GetComponent<RectTransform>();
@@ -402,7 +420,7 @@ public class UIManager : MonoBehaviour
             nextLevelOriginalPos = nextLevelRect.anchoredPosition;
             nextLevelRect.localScale = nextLevelOriginalScale;
             nextLevelRect.anchoredPosition = nextLevelOriginalPos;
-            victoryNextLevelButton.gameObject.SetActive(false);
+            victoryNextLevelButton.gameObject.SetActive(hasNextLevel); // Only show if nextLevel exists
         }
 
         if (victoryMainMenuButton != null)
@@ -412,12 +430,12 @@ public class UIManager : MonoBehaviour
             mainMenuOriginalPos = mainMenuRect.anchoredPosition;
             mainMenuRect.localScale = mainMenuOriginalScale;
             mainMenuRect.anchoredPosition = mainMenuOriginalPos;
-            victoryMainMenuButton.gameObject.SetActive(false);
+            victoryMainMenuButton.gameObject.SetActive(true);
         }
 
         yield return panelRect.DOAnchorPos(originalPanelPos, 0.8f).SetEase(Ease.OutQuad).WaitForCompletion();
 
-        if (victoryNextLevelButton != null)
+        if (victoryNextLevelButton != null && hasNextLevel)
         {
             RectTransform nextLevelRect = victoryNextLevelButton.GetComponent<RectTransform>();
             nextLevelRect.localScale = nextLevelOriginalScale;
@@ -529,7 +547,7 @@ public class UIManager : MonoBehaviour
     {
         if (fadePanel == null)
         {
-            Debug.LogWarning("Fade Panel not assigned. Loading scene without fade.");
+            Debug.LogWarning("[UIManager] Fade Panel not assigned. Loading scene without fade.");
             SceneManager.LoadScene(sceneName);
             yield break;
         }
@@ -557,7 +575,7 @@ public class UIManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(sceneField.SceneName))
         {
-            Debug.LogError("SceneField is empty. Cannot load scene.");
+            Debug.LogError("[UIManager] SceneField is empty. Cannot load scene.");
             yield break;
         }
         yield return StartCoroutine(LoadSceneWithFade(sceneField.SceneName));
@@ -591,14 +609,14 @@ public class UIManager : MonoBehaviour
     {
         isMuteButtonPressed = !isMuteButtonPressed;
         PlayerPrefs.SetInt("MuteState", isMuteButtonPressed ? 1 : 0);
-        Debug.Log($"Mute state: {isMuteButtonPressed}");
+        Debug.Log($"[UIManager] Mute state: {isMuteButtonPressed}");
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.SetAudioPaused(isMuteButtonPressed);
         }
         else
         {
-            Debug.LogWarning("AudioManager.Instance is null in ToggleMute. Mute state not applied.");
+            Debug.LogWarning("[UIManager] AudioManager.Instance is null in ToggleMute. Mute state not applied.");
         }
         
         if (muteButton != null && muteSprite != null && unmuteSprite != null)
@@ -639,6 +657,7 @@ public class UIManager : MonoBehaviour
 
         if (WaveManager.Instance != null)
         {
+            Debug.Log($"[UIManager] Starting first wave for {SceneManager.GetActiveScene().name}. Current wave: {currentWave}, Total waves: {totalWaves}");
             WaveManager.Instance.StartWave();
             currentWave = 0;
             UpdateWaveProgress();
@@ -652,10 +671,17 @@ public class UIManager : MonoBehaviour
             waveButtonSeq.Append(startWaveRect.DOAnchorPosY(200f, 0.5f).SetEase(Ease.InBack));
             waveButtonSeq.Join(startWaveButton.image.DOFade(0f, 0.5f));
             waveButtonSeq.OnComplete(() => startWaveButton.gameObject.SetActive(false));
+
+            // Trigger hideUI animation for guidance UI
+            if (guidanceManager != null)
+            {
+                guidanceManager.GetAnimator()?.SetTrigger("hideUI");
+                Debug.Log("[UIManager] Triggered hideUI animation on wave start.");
+            }
         }
         else
         {
-            Debug.LogWarning("WaveManager.Instance is null. Cannot start wave.");
+            Debug.LogWarning("[UIManager] WaveManager.Instance is null in OnStartWaveClicked. Cannot start wave.");
         }
     }
 
@@ -673,16 +699,43 @@ public class UIManager : MonoBehaviour
 
     public void StartNextWaveCountdown()
     {
-        currentWave++;
-
-        if (currentWave >= totalWaves)
+        Debug.Log($"[UIManager] StartNextWaveCountdown called. Current wave: {currentWave}, Total waves: {totalWaves}, Scene: {SceneManager.GetActiveScene().name}");
+        if (totalWaves <= 0)
         {
-            Debug.Log("All waves completed. Skipping countdown.");
+            Debug.LogError("[UIManager] totalWaves is invalid (<= 0). Cannot proceed with wave countdown.");
+            StartLoseSequence();
             return;
         }
 
+        if (currentWave + 1 >= totalWaves)
+        {
+            Debug.Log("[UIManager] All waves completed. Triggering victory sequence.");
+            StartVictorySequence();
+            return;
+        }
+
+        currentWave++;
+        Debug.Log($"[UIManager] Incremented currentWave to: {currentWave}");
         UpdateWaveProgress();
-        StartCoroutine(NextWaveCountdownRoutine());
+        StartCountdown();
+
+        // Trigger hideUI animation for guidance UI
+        if (guidanceManager != null)
+        {
+            guidanceManager.GetAnimator()?.SetTrigger("hideUI");
+            Debug.Log("[UIManager] Triggered hideUI animation for next wave countdown.");
+        }
+    }
+
+    private void StartCountdown()
+    {
+        Debug.Log($"[UIManager] Starting countdown for wave {currentWave + 1}");
+        if (countdownCoroutine != null)
+        {
+            StopCoroutine(countdownCoroutine);
+            Debug.Log("[UIManager] Stopped existing countdown coroutine.");
+        }
+        countdownCoroutine = StartCoroutine(NextWaveCountdownRoutine());
     }
 
     private IEnumerator NextWaveCountdownRoutine()
@@ -706,7 +759,7 @@ public class UIManager : MonoBehaviour
         while (timer > 0)
         {
             nextWaveCountdownText.text = $"Next Wave in: {Mathf.CeilToInt(timer)}s";
-            timer -= Time.deltaTime;
+            timer -= Time.unscaledDeltaTime; // Use unscaled time to avoid pause issues
             yield return null;
         }
 
@@ -719,9 +772,16 @@ public class UIManager : MonoBehaviour
 
         if (WaveManager.Instance != null)
         {
+            Debug.Log($"[UIManager] Countdown complete. Starting wave {currentWave + 1}");
             WaveManager.Instance.StartWave();
             AudioManager.Instance?.PlaySoundEffect("StartWave_SFX"); // Wave start sound
         }
+        else
+        {
+            Debug.LogWarning("[UIManager] WaveManager.Instance is null in NextWaveCountdownRoutine. Cannot start wave.");
+        }
+
+        countdownCoroutine = null;
     }
 
     private void ShowMiniBossNotification(string message)

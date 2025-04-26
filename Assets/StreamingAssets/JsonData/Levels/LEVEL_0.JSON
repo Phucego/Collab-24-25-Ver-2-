@@ -4,18 +4,174 @@
       {
         "Groups": [
           {
-            "Name": "GROUP 1",
+            "Name": "3 GOLEMS ",
             "Enemies": [
               {
-                "Name": "CLOAK",
-                "Amount": 4,
-                "SpawnInterval": 1.0
+                "Name": "GOLEM",
+                "Amount": 3,
+                "SpawnInterval": 7.0
               }
             ],
             "Path": "PATH1",
             "IsLoop": false,
             "LoopAmount": 1,
             "Delay": 0.0
+          },
+          {
+            "Name": "5 GOLEMS",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 5,
+                "SpawnInterval": 6.0
+              }
+            ],
+            "Path": "PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 25.0
+          },
+          {
+            "Name": "4 GOLEMS",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 4,
+                "SpawnInterval": 7.0
+              }
+            ],
+            "Path": "PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 20.0
+          }
+        ],
+        "IsBossWave": false
+      },
+      {
+        "Groups": [
+          {
+            "Name": "4 DEMS [1]",
+            "Enemies": [
+              {
+                "Name": "DEMON",
+                "Amount": 4,
+                "SpawnInterval": 17.0
+              }
+            ],
+            "Path": "PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 0.0
+          },
+          {
+            "Name": "4 DEMS [2]",
+            "Enemies": [
+              {
+                "Name": "DEMON",
+                "Amount": 4,
+                "SpawnInterval": 16.0
+              }
+            ],
+            "Path": "PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 22.0
+          }
+        ],
+        "IsBossWave": false
+      },
+      {
+        "Groups": [
+          {
+            "Name": "4 INVIS ",
+            "Enemies": [
+              {
+                "Name": "CLOAK",
+                "Amount": 4,
+                "SpawnInterval": 9.0
+              }
+            ],
+            "Path": "PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 0.0
+          },
+          {
+            "Name": "3 INVIS",
+            "Enemies": [
+              {
+                "Name": "CLOAK",
+                "Amount": 3,
+                "SpawnInterval": 6.0
+              }
+            ],
+            "Path": "PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 16.0
+          }
+        ],
+        "IsBossWave": false
+      },
+      {
+        "Groups": [
+          {
+            "Name": "2G 2D",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 2,
+                "SpawnInterval": 0.0
+              },
+              {
+                "Name": "DEMON",
+                "Amount": 2,
+                "SpawnInterval": 1.5
+              }
+            ],
+            "Path": "PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 0.0
+          },
+          {
+            "Name": "2G 2D [2]",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 2,
+                "SpawnInterval": 1.0
+              },
+              {
+                "Name": "DEMON",
+                "Amount": 2,
+                "SpawnInterval": 0.0
+              }
+            ],
+            "Path": "PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 5.0
+          },
+          {
+            "Name": "1G 2C",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 1,
+                "SpawnInterval": 0.0
+              },
+              {
+                "Name": "CLOAK",
+                "Amount": 2,
+                "SpawnInterval": 1.0
+              }
+            ],
+            "Path": "PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 9.0
           }
         ],
         "IsBossWave": false

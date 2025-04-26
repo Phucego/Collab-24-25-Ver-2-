@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerPrefab: {fileID: 696605464391488558, guid: 5960e39c09b5c1942b9bd8883a34039f, type: 3}
   TowerType: 1
-  TargetType: 000000000100000002000000
+  TargetType: 0000000001000000
   Damage: 60
   Health: 0
   Radius: 10

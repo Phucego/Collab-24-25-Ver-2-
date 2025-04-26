@@ -11156,6 +11156,7 @@ GameObject:
   - component: {fileID: 597401161}
   - component: {fileID: 597401162}
   - component: {fileID: 597401163}
+  - component: {fileID: 597401164}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -11388,7 +11389,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 597401151}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b6a95105a0cd2f4db7fe98ee5400db4, type: 3}
   m_Name: 
@@ -11539,6 +11540,32 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!114 &597401164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 597401151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0051ecc893c7e214b93e2660bd364543, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterNameText: {fileID: 293480196}
+  dialogueText: {fileID: 1827791699}
+  nextButton: {fileID: 532672940}
+  dialogueUI: {fileID: 1763728615}
+  level1Dialogues:
+  - {fileID: 11400000, guid: fe9a899e1e6cbf14cb282614f77d61ab, type: 2}
+  anim: {fileID: 0}
+  level1Scene:
+    m_SceneAsset: {fileID: 102900000, guid: 34179791d1c203f4ea700e21832d5758, type: 3}
+    m_SceneName: '[Main] Level 1'
+  level2Scene:
+    m_SceneAsset: {fileID: 102900000, guid: 3799f1b6dad89934aae272ad3a1a5dca, type: 3}
+    m_SceneName: '[Main] Level 2'
+  currentSceneType: 0
 --- !u!4 &605402456 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2035405497521351004, guid: d76f8cf6d6d23834d97c23574821f38e, type: 3}
@@ -15325,7 +15352,19 @@ PrefabInstance:
     m_TransformParent: {fileID: 1676139302}
     m_Modifications:
     - target: {fileID: 2276829068851237732, guid: c4d08d8f8daa224409c0426ddc1fa9b7, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 516.8119
+      objectReference: {fileID: 0}
+    - target: {fileID: 2276829068851237732, guid: c4d08d8f8daa224409c0426ddc1fa9b7, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2349631633532605697, guid: c4d08d8f8daa224409c0426ddc1fa9b7, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4538716221562532224, guid: c4d08d8f8daa224409c0426ddc1fa9b7, type: 3}
+      propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4735030432292662325, guid: c4d08d8f8daa224409c0426ddc1fa9b7, type: 3}
@@ -23592,7 +23631,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -24494,6 +24533,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1055963257599086911, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1956942608100029524, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
@@ -24510,6 +24553,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3617745657457403988, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4222951074045330936, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
@@ -24522,6 +24569,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5802677789001526602, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6645422600723829166, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8030277789370507594, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
@@ -24532,6 +24587,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8921344232675880896, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9056135798927395900, guid: 6465f6faa62950349b84237a6c13ecf7, type: 3}
+      propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -28523,18 +28582,20 @@ MonoBehaviour:
   startWaveButton: {fileID: 2072931426}
   startWaveRect: {fileID: 2072931425}
   nextWaveCountdownText: {fileID: 2117611034}
-  currentWave: 1
+  currentWave: 0
   waveProgressSlider: {fileID: 676336286}
   waveProgressText: {fileID: 1277937407}
   minibossNotificationText: {fileID: 67165265}
   currentLevelName: Level 1
   miniBossWaves: 03000000
+  anim: {fileID: 1676139304}
+  isSpeedUp: 0
   tutorialLevel:
     m_SceneAsset: {fileID: 102900000, guid: 186f304aae5338f4c9e7450d34cd2b39, type: 3}
     m_SceneName: '[Main] TutorialScene'
-  nextScene:
-    m_SceneAsset: {fileID: 102900000, guid: 3799f1b6dad89934aae272ad3a1a5dca, type: 3}
-    m_SceneName: '[Main] Level 2'
+  level1Scene:
+    m_SceneAsset: {fileID: 0}
+    m_SceneName: 
 --- !u!95 &1676139304
 Animator:
   serializedVersion: 5
@@ -29133,7 +29194,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

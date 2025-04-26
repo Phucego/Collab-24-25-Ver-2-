@@ -10,7 +10,7 @@ public class WizardRangeDetection : TowerRangeDetection
         if (target.gameObject.CompareTag("Enemy") && !towerController._EnemyList.Contains(target.gameObject))
         {
             towerController._EnemyList.Add(target.gameObject);
-            /*if (towerController._EnemyList.Count == 1)
+            /*if (towerController._EnemyList.Count == 1) 
                 towerController.TargetPos = target.gameObject.transform.position;*/
         }
         else if (target.gameObject.CompareTag("Tower") && !_TowerList.Contains(target.gameObject))
@@ -23,17 +23,24 @@ public class WizardRangeDetection : TowerRangeDetection
 
     private void OnTriggerExit(Collider target)
     {
-        towerController._EnemyList.RemoveAll(gameobject => gameobject == null);
         _TowerList.RemoveAll(gameobject => gameobject == null);
-
+        towerController._EnemyList.RemoveAll(gameobject => gameobject == null);
+        towerController._EnemyList.RemoveAll(gameobject => !gameobject.activeSelf);
         if (target.gameObject.CompareTag("Enemy"))
         {
             towerController._EnemyList.Remove(target.gameObject);
             if (towerController._EnemyList.Count <= 0)
             {
                 towerController.Target = null;
-                towerController.TargetPos = new Vector3(999, 999, 999);
+                towerController.TargetPos = new Vector3(0, 0, 0);
             }
+            else if (target.gameObject == towerController.Target)
+            {
+                towerController.Target = null;
+                towerController.TargetPos = new Vector3(0, 0, 0);
+                towerController.FindNearestEnemy();
+            }
+
         }
         else if (target.gameObject.CompareTag("Tower") && !target.isTrigger)
         {
