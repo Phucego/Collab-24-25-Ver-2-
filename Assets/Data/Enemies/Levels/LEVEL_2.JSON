@@ -8,13 +8,13 @@
             "Enemies": [
               {
                 "Name": "GOLEM",
-                "Amount": 4,
-                "SpawnInterval": 1.0
+                "Amount": 5,
+                "SpawnInterval": 1.25
               }
             ],
             "Path": "PATH1",
             "IsLoop": false,
-            "LoopAmount": 1,
+            "LoopAmount": 0,
             "Delay": 0.0
           },
           {
@@ -22,11 +22,11 @@
             "Enemies": [
               {
                 "Name": "GOLEM",
-                "Amount": 6,
-                "SpawnInterval": 1.5
+                "Amount": 5,
+                "SpawnInterval": 1.25
               }
             ],
-            "Path": "TUT_PATH1",
+            "Path": "PATH1",
             "IsLoop": false,
             "LoopAmount": 0,
             "Delay": 15.0
@@ -35,12 +35,12 @@
             "Name": "P1 G3",
             "Enemies": [
               {
-                "Name": "DEMON",
-                "Amount": 4,
-                "SpawnInterval": 1.0
+                "Name": "GOLEM",
+                "Amount": 5,
+                "SpawnInterval": 1.25
               }
             ],
-            "Path": "TUT_PATH1",
+            "Path": "PATH1",
             "IsLoop": false,
             "LoopAmount": 0,
             "Delay": 30.0
@@ -49,28 +49,80 @@
             "Name": "P1 G4",
             "Enemies": [
               {
-                "Name": "GOLEM",
+                "Name": "DEMON",
                 "Amount": 5,
-                "SpawnInterval": 2.5
+                "SpawnInterval": 1.25
+              }
+            ],
+            "Path": "PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 45.0
+          },
+          {
+            "Name": "P1 G5",
+            "Enemies": [
+              {
+                "Name": "CLOAK",
+                "Amount": 5,
+                "SpawnInterval": 1.25
+              }
+            ],
+            "Path": "PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 60.0
+          },
+          {
+            "Name": "P1 G6",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 10,
+                "SpawnInterval": 3.75
               },
               {
                 "Name": "DEMON",
                 "Amount": 5,
-                "SpawnInterval": 2.5
+                "SpawnInterval": 3.75
               }
             ],
-            "Path": "TUT_PATH1",
+            "Path": "PATH1",
             "IsLoop": false,
             "LoopAmount": 0,
-            "Delay": 45.0
+            "Delay": 75.0
+          },
+          {
+            "Name": "P1 G7",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 5,
+                "SpawnInterval": 3.75
+              },
+              {
+                "Name": "DEMON",
+                "Amount": 5,
+                "SpawnInterval": 3.75
+              },
+              {
+                "Name": "CLOAK",
+                "Amount": 5,
+                "SpawnInterval": 3.75
+              }
+            ],
+            "Path": "PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 95.0
           },
           {
             "Name": "P2 G1",
             "Enemies": [
               {
                 "Name": "GOLEM",
-                "Amount": 4,
-                "SpawnInterval": 1.0
+                "Amount": 5,
+                "SpawnInterval": 1.25
               }
             ],
             "Path": "PATH2",
@@ -83,8 +135,8 @@
             "Enemies": [
               {
                 "Name": "GOLEM",
-                "Amount": 6,
-                "SpawnInterval": 1.5
+                "Amount": 5,
+                "SpawnInterval": 1.25
               }
             ],
             "Path": "PATH2",
@@ -96,9 +148,9 @@
             "Name": "P2 G3",
             "Enemies": [
               {
-                "Name": "DEMON",
-                "Amount": 4,
-                "SpawnInterval": 1.0
+                "Name": "GOLEM",
+                "Amount": 5,
+                "SpawnInterval": 1.25
               }
             ],
             "Path": "PATH2",
@@ -110,20 +162,72 @@
             "Name": "P2 G4",
             "Enemies": [
               {
-                "Name": "GOLEM",
-                "Amount": 5,
-                "SpawnInterval": 2.5
-              },
-              {
                 "Name": "DEMON",
                 "Amount": 5,
-                "SpawnInterval": 2.5
+                "SpawnInterval": 1.25
               }
             ],
             "Path": "PATH2",
             "IsLoop": false,
             "LoopAmount": 0,
             "Delay": 55.0
+          },
+          {
+            "Name": "P2 G5",
+            "Enemies": [
+              {
+                "Name": "CLOAK",
+                "Amount": 5,
+                "SpawnInterval": 1.25
+              }
+            ],
+            "Path": "PATH2",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 70.0
+          },
+          {
+            "Name": "P2 G6",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 10,
+                "SpawnInterval": 3.75
+              },
+              {
+                "Name": "DEMON",
+                "Amount": 5,
+                "SpawnInterval": 3.75
+              }
+            ],
+            "Path": "PATH2",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 85.0
+          },
+          {
+            "Name": "P2 G7",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 5,
+                "SpawnInterval": 3.75
+              },
+              {
+                "Name": "DEMON",
+                "Amount": 5,
+                "SpawnInterval": 3.75
+              },
+              {
+                "Name": "CLOAK",
+                "Amount": 5,
+                "SpawnInterval": 3.75
+              }
+            ],
+            "Path": "PATH2",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 105.0
           }
         ],
         "IsBossWave": false
@@ -136,7 +240,12 @@
               {
                 "Name": "GOLEM",
                 "Amount": 10,
-                "SpawnInterval": 2.5
+                "SpawnInterval": 3.75
+              },
+              {
+                "Name": "DEMON",
+                "Amount": 5,
+                "SpawnInterval": 3.75
               }
             ],
             "Path": "PATH1",
@@ -150,7 +259,12 @@
               {
                 "Name": "DEMON",
                 "Amount": 5,
-                "SpawnInterval": 1.25
+                "SpawnInterval": 2.5
+              },
+              {
+                "Name": "CLOAK",
+                "Amount": 5,
+                "SpawnInterval": 2.5
               }
             ],
             "Path": "PATH1",
@@ -162,27 +276,8 @@
             "Name": "P1 G3",
             "Enemies": [
               {
-                "Name": "CLOAK",
-                "Amount": 2,
-                "SpawnInterval": 0.5
-              }
-            ],
-            "Path": "PATH1",
-            "IsLoop": false,
-            "LoopAmount": 0,
-            "Delay": 25.0
-          },
-          {
-            "Name": "P1 G4",
-            "Enemies": [
-              {
                 "Name": "GOLEM",
-                "Amount": 10,
-                "SpawnInterval": 3.75
-              },
-              {
-                "Name": "DEMON",
-                "Amount": 5,
+                "Amount": 15,
                 "SpawnInterval": 3.75
               }
             ],
@@ -192,22 +287,12 @@
             "Delay": 30.0
           },
           {
-            "Name": "P1 G5",
+            "Name": "P1 G4",
             "Enemies": [
               {
-                "Name": "GOLEM",
-                "Amount": 5,
-                "SpawnInterval": 3.75
-              },
-              {
                 "Name": "DEMON",
-                "Amount": 5,
-                "SpawnInterval": 3.75
-              },
-              {
-                "Name": "CLOAK",
-                "Amount": 5,
-                "SpawnInterval": 3.75
+                "Amount": 10,
+                "SpawnInterval": 2.5
               }
             ],
             "Path": "PATH1",
@@ -216,10 +301,10 @@
             "Delay": 45.0
           },
           {
-            "Name": "P1 G6",
+            "Name": "P1 G5",
             "Enemies": [
               {
-                "Name": "GOLEM",
+                "Name": "CLOAK",
                 "Amount": 10,
                 "SpawnInterval": 2.5
               }
@@ -230,12 +315,17 @@
             "Delay": 60.0
           },
           {
-            "Name": "P1 G7",
+            "Name": "P1 G6",
             "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 10,
+                "SpawnInterval": 5.0
+              },
               {
                 "Name": "DEMON",
                 "Amount": 10,
-                "SpawnInterval": 2.5
+                "SpawnInterval": 5.0
               }
             ],
             "Path": "PATH1",
@@ -244,26 +334,17 @@
             "Delay": 75.0
           },
           {
-            "Name": "P1 G8",
-            "Enemies": [
-              {
-                "Name": "CLOAK",
-                "Amount": 8,
-                "SpawnInterval": 2.0
-              }
-            ],
-            "Path": "PATH1",
-            "IsLoop": false,
-            "LoopAmount": 0,
-            "Delay": 90.0
-          },
-          {
             "Name": "P2 G1",
             "Enemies": [
               {
                 "Name": "GOLEM",
                 "Amount": 10,
-                "SpawnInterval": 2.5
+                "SpawnInterval": 3.75
+              },
+              {
+                "Name": "DEMON",
+                "Amount": 5,
+                "SpawnInterval": 3.75
               }
             ],
             "Path": "PATH2",
@@ -277,7 +358,12 @@
               {
                 "Name": "DEMON",
                 "Amount": 5,
-                "SpawnInterval": 1.25
+                "SpawnInterval": 2.5
+              },
+              {
+                "Name": "CLOAK",
+                "Amount": 5,
+                "SpawnInterval": 2.5
               }
             ],
             "Path": "PATH2",
@@ -289,27 +375,8 @@
             "Name": "P2 G3",
             "Enemies": [
               {
-                "Name": "CLOAK",
-                "Amount": 2,
-                "SpawnInterval": 0.5
-              }
-            ],
-            "Path": "PATH2",
-            "IsLoop": false,
-            "LoopAmount": 0,
-            "Delay": 35.0
-          },
-          {
-            "Name": "P2 G4",
-            "Enemies": [
-              {
                 "Name": "GOLEM",
-                "Amount": 10,
-                "SpawnInterval": 3.75
-              },
-              {
-                "Name": "DEMON",
-                "Amount": 5,
+                "Amount": 15,
                 "SpawnInterval": 3.75
               }
             ],
@@ -319,22 +386,12 @@
             "Delay": 40.0
           },
           {
-            "Name": "P2 G5",
+            "Name": "P2 G4",
             "Enemies": [
               {
-                "Name": "GOLEM",
-                "Amount": 5,
-                "SpawnInterval": 3.75
-              },
-              {
                 "Name": "DEMON",
-                "Amount": 5,
-                "SpawnInterval": 3.75
-              },
-              {
-                "Name": "CLOAK",
-                "Amount": 5,
-                "SpawnInterval": 3.75
+                "Amount": 10,
+                "SpawnInterval": 2.5
               }
             ],
             "Path": "PATH2",
@@ -343,10 +400,10 @@
             "Delay": 55.0
           },
           {
-            "Name": "P2 G6",
+            "Name": "P2 G5",
             "Enemies": [
               {
-                "Name": "GOLEM",
+                "Name": "CLOAK",
                 "Amount": 10,
                 "SpawnInterval": 2.5
               }
@@ -357,32 +414,23 @@
             "Delay": 70.0
           },
           {
-            "Name": "P2 G7",
+            "Name": "P2 G6",
             "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 10,
+                "SpawnInterval": 5.0
+              },
               {
                 "Name": "DEMON",
                 "Amount": 10,
-                "SpawnInterval": 2.5
+                "SpawnInterval": 5.0
               }
             ],
             "Path": "PATH2",
             "IsLoop": false,
             "LoopAmount": 0,
             "Delay": 85.0
-          },
-          {
-            "Name": "P2 G8",
-            "Enemies": [
-              {
-                "Name": "CLOAK",
-                "Amount": 8,
-                "SpawnInterval": 2.0
-              }
-            ],
-            "Path": "PATH2",
-            "IsLoop": false,
-            "LoopAmount": 0,
-            "Delay": 100.0
           }
         ],
         "IsBossWave": false
@@ -394,8 +442,13 @@
             "Enemies": [
               {
                 "Name": "GOLEM",
+                "Amount": 20,
+                "SpawnInterval": 7.5
+              },
+              {
+                "Name": "DEMON",
                 "Amount": 10,
-                "SpawnInterval": 2.5
+                "SpawnInterval": 7.5
               }
             ],
             "Path": "PATH1",
@@ -409,7 +462,12 @@
               {
                 "Name": "DEMON",
                 "Amount": 5,
-                "SpawnInterval": 1.25
+                "SpawnInterval": 3.75
+              },
+              {
+                "Name": "CLOAK",
+                "Amount": 10,
+                "SpawnInterval": 3.75
               }
             ],
             "Path": "PATH1",
@@ -421,51 +479,33 @@
             "Name": "P1 G3",
             "Enemies": [
               {
+                "Name": "GOLEM",
+                "Amount": 15,
+                "SpawnInterval": 8.75
+              },
+              {
+                "Name": "DEMON",
+                "Amount": 15,
+                "SpawnInterval": 8.75
+              },
+              {
                 "Name": "CLOAK",
-                "Amount": 4,
-                "SpawnInterval": 1.0
+                "Amount": 5,
+                "SpawnInterval": 8.75
               }
             ],
             "Path": "PATH1",
             "IsLoop": false,
             "LoopAmount": 0,
-            "Delay": 20.0
+            "Delay": 30.0
           },
           {
             "Name": "P1 G4",
             "Enemies": [
               {
-                "Name": "GOLEM",
-                "Amount": 15,
-                "SpawnInterval": 3.75
-              }
-            ],
-            "Path": "PATH1",
-            "IsLoop": false,
-            "LoopAmount": 0,
-            "Delay": 25.0
-          },
-          {
-            "Name": "P1 G5",
-            "Enemies": [
-              {
                 "Name": "DEMON",
-                "Amount": 6,
-                "SpawnInterval": 1.5
-              }
-            ],
-            "Path": "PATH1",
-            "IsLoop": false,
-            "LoopAmount": 0,
-            "Delay": 40.0
-          },
-          {
-            "Name": "P1 G6",
-            "Enemies": [
-              {
-                "Name": "CLOAK",
-                "Amount": 4,
-                "SpawnInterval": 1.0
+                "Amount": 10,
+                "SpawnInterval": 2.5
               }
             ],
             "Path": "PATH1",
@@ -474,7 +514,7 @@
             "Delay": 45.0
           },
           {
-            "Name": "P1 G7",
+            "Name": "P1 G5",
             "Enemies": [
               {
                 "Name": "GOLEM",
@@ -482,7 +522,7 @@
                 "SpawnInterval": 2.5
               },
               {
-                "Name": "DEMON",
+                "Name": "CLOAK",
                 "Amount": 5,
                 "SpawnInterval": 2.5
               }
@@ -490,15 +530,39 @@
             "Path": "PATH1",
             "IsLoop": false,
             "LoopAmount": 0,
-            "Delay": 50.0
+            "Delay": 60.0
+          },
+          {
+            "Name": "P1 G6",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 10,
+                "SpawnInterval": 5.0
+              },
+              {
+                "Name": "DEMON",
+                "Amount": 10,
+                "SpawnInterval": 5.0
+              }
+            ],
+            "Path": "PATH1",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 75.0
           },
           {
             "Name": "P2 G1",
             "Enemies": [
               {
                 "Name": "GOLEM",
+                "Amount": 20,
+                "SpawnInterval": 7.5
+              },
+              {
+                "Name": "DEMON",
                 "Amount": 10,
-                "SpawnInterval": 2.5
+                "SpawnInterval": 7.5
               }
             ],
             "Path": "PATH2",
@@ -512,7 +576,12 @@
               {
                 "Name": "DEMON",
                 "Amount": 5,
-                "SpawnInterval": 1.25
+                "SpawnInterval": 3.75
+              },
+              {
+                "Name": "CLOAK",
+                "Amount": 10,
+                "SpawnInterval": 3.75
               }
             ],
             "Path": "PATH2",
@@ -524,51 +593,33 @@
             "Name": "P2 G3",
             "Enemies": [
               {
+                "Name": "GOLEM",
+                "Amount": 15,
+                "SpawnInterval": 8.75
+              },
+              {
+                "Name": "DEMON",
+                "Amount": 15,
+                "SpawnInterval": 8.75
+              },
+              {
                 "Name": "CLOAK",
-                "Amount": 4,
-                "SpawnInterval": 1.0
+                "Amount": 5,
+                "SpawnInterval": 8.75
               }
             ],
             "Path": "PATH2",
             "IsLoop": false,
             "LoopAmount": 0,
-            "Delay": 30.0
+            "Delay": 40.0
           },
           {
             "Name": "P2 G4",
             "Enemies": [
               {
-                "Name": "GOLEM",
-                "Amount": 15,
-                "SpawnInterval": 3.75
-              }
-            ],
-            "Path": "PATH2",
-            "IsLoop": false,
-            "LoopAmount": 0,
-            "Delay": 35.0
-          },
-          {
-            "Name": "P2 G5",
-            "Enemies": [
-              {
                 "Name": "DEMON",
-                "Amount": 6,
-                "SpawnInterval": 1.5
-              }
-            ],
-            "Path": "PATH2",
-            "IsLoop": false,
-            "LoopAmount": 0,
-            "Delay": 50.0
-          },
-          {
-            "Name": "P2 G6",
-            "Enemies": [
-              {
-                "Name": "CLOAK",
-                "Amount": 4,
-                "SpawnInterval": 1.0
+                "Amount": 10,
+                "SpawnInterval": 2.5
               }
             ],
             "Path": "PATH2",
@@ -577,7 +628,7 @@
             "Delay": 55.0
           },
           {
-            "Name": "P2 G7",
+            "Name": "P2 G5",
             "Enemies": [
               {
                 "Name": "GOLEM",
@@ -585,7 +636,7 @@
                 "SpawnInterval": 2.5
               },
               {
-                "Name": "DEMON",
+                "Name": "CLOAK",
                 "Amount": 5,
                 "SpawnInterval": 2.5
               }
@@ -593,7 +644,26 @@
             "Path": "PATH2",
             "IsLoop": false,
             "LoopAmount": 0,
-            "Delay": 60.0
+            "Delay": 70.0
+          },
+          {
+            "Name": "P2 G6",
+            "Enemies": [
+              {
+                "Name": "GOLEM",
+                "Amount": 10,
+                "SpawnInterval": 5.0
+              },
+              {
+                "Name": "DEMON",
+                "Amount": 10,
+                "SpawnInterval": 5.0
+              }
+            ],
+            "Path": "PATH2",
+            "IsLoop": false,
+            "LoopAmount": 0,
+            "Delay": 85.0
           }
         ],
         "IsBossWave": false

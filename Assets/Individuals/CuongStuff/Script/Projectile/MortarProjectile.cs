@@ -134,9 +134,9 @@ public class MortarProjectile : ProjectileController
         blastradius = radius;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
-        if (collision != null && !collisionCount)
+        if (collision != null && !collisionCount && !collision.gameObject.CompareTag("MainCamera"))
         {
             collisionCount = true;
             flying = false;
