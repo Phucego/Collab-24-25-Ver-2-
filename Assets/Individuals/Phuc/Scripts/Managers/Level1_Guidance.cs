@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-public class Level1Guidance : MonoBehaviour, IGuidance
+public class Level1Guidance : MonoBehaviour
 {
     [Header("UI Elements")]
     public TextMeshProUGUI characterNameText;
@@ -17,9 +17,6 @@ public class Level1Guidance : MonoBehaviour, IGuidance
 
     [Header("Level 1 Dialogues")]
     public List<Dialogue> level1Dialogues;
-
-    [Header("Animation Controller")]
-    public Animator anim; // Assigned in Inspector, must have "hideUI" trigger
 
     [Header("Scene Configuration")]
     [SerializeField] private SceneField level1Scene; // Assumed: "Level1"
@@ -74,11 +71,6 @@ public class Level1Guidance : MonoBehaviour, IGuidance
         _freeFlyCamera = FindObjectOfType<FreeFlyCamera>();
 
         SetupLevel1Scene();
-    }
-
-    public Animator GetAnimator()
-    {
-        return anim;
     }
 
     private SceneType DetermineSceneType()
@@ -202,8 +194,6 @@ public class Level1Guidance : MonoBehaviour, IGuidance
         }
         else
         {
-            if (anim != null)
-                anim.SetTrigger("hideUI"); // Trigger hideUI animation
             dialogueUI.SetActive(false);
             isDialogueActive = false;
             onComplete?.Invoke();
@@ -290,7 +280,6 @@ public class Level1Guidance : MonoBehaviour, IGuidance
         dialogueText = null;
         nextButton = null;
         dialogueUI = null;
-        anim = null;
 
         if (Instance == this)
         {
