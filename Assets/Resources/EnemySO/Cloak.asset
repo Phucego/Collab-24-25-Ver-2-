@@ -22,7 +22,7 @@ MonoBehaviour:
   animationSpeedMult: 1
   name: Cloak
   description: An invisble enemy, that's it
-  typing: 02000000
+  typing: 0200000000000000
   reward: 15
   maxHealth: 100
   maxSpeed: 3
