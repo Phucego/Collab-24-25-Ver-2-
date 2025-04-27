@@ -3025,6 +3025,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1944521950}
     m_Modifications:
+    - target: {fileID: 1526216506046124786, guid: db953d0647673df41b1f20de31a6d37f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1780305044302188591, guid: db953d0647673df41b1f20de31a6d37f, type: 3}
       propertyPath: m_Name
       value: ChooseOptions
@@ -5314,9 +5318,9 @@ MonoBehaviour:
   loseRestartButton: {fileID: 0}
   loseMainMenuButton: {fileID: 0}
   toggleTowerSelectButton: {fileID: 1570777478}
-  resumeButton: {fileID: 859379811}
-  quitButton: {fileID: 1002851599}
-  mainMenuButton: {fileID: 295890854}
+  resumeButton: {fileID: 0}
+  quitButton: {fileID: 0}
+  mainMenuButton: {fileID: 0}
   Quit_Yes: {fileID: 234704532}
   Quit_No: {fileID: 808905502}
   MainMenu_No: {fileID: 1222307355}
