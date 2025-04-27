@@ -26,7 +26,7 @@
                 "SpawnInterval": 1.5
               }
             ],
-            "Path": "TUT_PATH1",
+            "Path": "PATH1",
             "IsLoop": false,
             "LoopAmount": 0,
             "Delay": 15.0
@@ -40,7 +40,7 @@
                 "SpawnInterval": 1.0
               }
             ],
-            "Path": "TUT_PATH1",
+            "Path": "PATH1",
             "IsLoop": false,
             "LoopAmount": 0,
             "Delay": 30.0
@@ -59,7 +59,7 @@
                 "SpawnInterval": 2.5
               }
             ],
-            "Path": "TUT_PATH1",
+            "Path": "PATH1",
             "IsLoop": false,
             "LoopAmount": 0,
             "Delay": 45.0

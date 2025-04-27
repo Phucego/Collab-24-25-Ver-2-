@@ -53,7 +53,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite muteSprite;
     [SerializeField] private Sprite unmuteSprite;
     public Button restartButton;
-    public Button skipWaveButton; // Skip wave button
+    public Button skipWaveButton;
 
     public GameObject optionsContainer;
 
@@ -86,7 +86,7 @@ public class UIManager : MonoBehaviour
     public bool isSpeedUp = false;
     private bool isMuteButtonPressed = false;
     private GameStates previousState;
-
+    public string currentSceneName;
     public static UIManager Instance { get; private set; }
 
     private int totalWaves;
@@ -104,6 +104,8 @@ public class UIManager : MonoBehaviour
     {
         DOTween.SetTweensCapacity(500, 50);
 
+        currentSceneName = SceneManager.GetActiveScene().name;
+        
         isMuteButtonPressed = false;
         PlayerPrefs.SetInt("MuteState", 0);
         if (AudioManager.Instance != null)
@@ -124,14 +126,14 @@ public class UIManager : MonoBehaviour
         if (anim != null && HasParameter("isTowerSelectPanelOpened"))
             anim.SetBool("isTowerSelectPanelOpened", false);
 
-        string currentSceneName = SceneManager.GetActiveScene().name;
+       // string currentSceneName = SceneManager.GetActiveScene().name;
         if (currentSceneName == tutorialLevel?.SceneName)
         {
             if (CurrencyManager.Instance != null)
                 CurrencyManager.Instance.InitializeCurrency(0);
             UpdateCoinCounterUI();
             if (startWaveButton != null)
-                startWaveButton.interactable = false; // Disable start wave button in tutorial
+                startWaveButton.interactable = false;
         }
         else if (currentSceneName == level1Scene?.SceneName)
         {
@@ -160,7 +162,7 @@ public class UIManager : MonoBehaviour
         }
 
         if (skipWaveButton != null)
-            skipWaveButton.gameObject.SetActive(false); // Initially hide skip wave button
+            skipWaveButton.gameObject.SetActive(false);
 
         LightningStrikeEvent lightningEvent = FindObjectOfType<LightningStrikeEvent>();
         if (lightningEvent != null)
@@ -180,9 +182,7 @@ public class UIManager : MonoBehaviour
                 : 1;
         }
         else
-        {
             totalWaves = 1;
-        }
 
         if (nextWaveCountdownText != null)
         {
@@ -266,9 +266,6 @@ public class UIManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
             SetPauseState(true);
-
-        if (anim != null && HasParameter("onNotifyCancel") && BuildingManager.Instance != null)
-            anim.SetBool("onNotifyCancel", BuildingManager.Instance.pendingObj != null);
     }
 
     private void UpdateCoinCounterUI()
@@ -302,11 +299,8 @@ public class UIManager : MonoBehaviour
     {
         PlayHideUIAnimation();
         if (TutorialGuidance._instance != null)
-        {
             TutorialGuidance._instance.CompleteScene(TutorialGuidance._instance.currentSceneType);
-        }
-        PlayHideUIAnimation();
-        MarkLevelComplete();
+      
         StartCoroutine(VictorySequence());
     }
 
@@ -322,15 +316,6 @@ public class UIManager : MonoBehaviour
             anim.Play("hideUI");
         else if (mainUI != null)
             mainUI.SetActive(false);
-    }
-
-    private void MarkLevelComplete()
-    {
-        string currentSceneName = SceneManager.GetActiveScene().name;
-        if (currentSceneName == level1Scene?.SceneName && Level1Guidance.Instance != null)
-            Level1Guidance.Instance.CompleteScene(Level1Guidance.SceneType.Level1);
-        else if (currentSceneName == "Level2" && Level2Guidance.Instance != null)
-            Level2Guidance.Instance.CompleteScene(Level2Guidance.SceneType.Level2);
     }
 
     private IEnumerator VictorySequence()
@@ -550,7 +535,6 @@ public class UIManager : MonoBehaviour
 
     public void OnDialogueNextPressed(int currentLineIndex, int totalLines)
     {
-        Debug.Log($"Dialogue advanced to line {currentLineIndex + 1} of {totalLines}");
     }
 
     private void ToggleMute()
@@ -611,7 +595,7 @@ public class UIManager : MonoBehaviour
 
         AnimateWaveTextReveal();
 
-        if (startWaveRect != null && startWaveButton != null)
+        if  (startWaveRect != null && startWaveButton != null)
         {
             Sequence waveButtonSeq = DOTween.Sequence();
             waveButtonSeq.Append(startWaveRect.DOAnchorPosY(200f, 0.5f).SetEase(Ease.InBack));
@@ -639,7 +623,7 @@ public class UIManager : MonoBehaviour
 
     public void StartNextWaveCountdown()
     {
-        if (totalWaves <= 0)
+        if (totalWaves < 0)
         {
             StartLoseSequence();
             return;
@@ -650,11 +634,18 @@ public class UIManager : MonoBehaviour
             StartVictorySequence();
             return;
         }
-
-        currentWave++;
-        UpdateWaveProgress();
-        StartCountdown();
-        PlayHideUIAnimation();
+        if (currentSceneName != tutorialLevel?.SceneName)
+        {
+            Debug.Log($"Starting countdown for wave {currentWave + 1} in scene {currentSceneName}");
+            currentWave++;
+            UpdateWaveProgress();
+            StartCountdown();
+            PlayHideUIAnimation();
+        }
+        else
+        {
+            Debug.Log($"Skipping countdown, tutorial scene detected: {currentSceneName}");
+        }
     }
 
     private void StartCountdown()
@@ -664,12 +655,18 @@ public class UIManager : MonoBehaviour
 
         countdownCoroutine = StartCoroutine(NextWaveCountdownRoutine());
         if (GameStatesManager.Instance != null)
-            GameStatesManager.Instance.ChangeState(GameStates.WaveSetup);
+        {
+            Debug.Log("Setting game state to WaveCountdown");
+            GameStatesManager.Instance.ChangeState(GameStates.WaveCountdown);
+        }
     }
 
     private IEnumerator NextWaveCountdownRoutine()
     {
         float timer = 30f;
+
+        if (startWaveButton != null)
+            startWaveButton.interactable = false;
 
         if (miniBossWaves.Contains(currentWave + 1))
             ShowMiniBossNotification($"Mini Boss Incoming at Wave {currentWave + 1}!");
@@ -687,13 +684,24 @@ public class UIManager : MonoBehaviour
         }
 
         if (skipWaveButton != null)
-            skipWaveButton.gameObject.SetActive(true); // Show skip wave button during countdown
+            skipWaveButton.gameObject.SetActive(true);
+
+        float minCountdownDuration = 1f; // Ensure at least 1 second for WaveCountdown state
+        float elapsed = 0f;
 
         while (timer > 0)
         {
             if (nextWaveCountdownText != null)
                 nextWaveCountdownText.text = $"Next Wave in: {Mathf.CeilToInt(timer)}s";
-            timer -= Time.unscaledDeltaTime * (isSpeedUp ? 4f : 1f); // Speed up countdown with time scale
+            timer -= Time.unscaledDeltaTime * (isSpeedUp ? 4f : 1f);
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        // Ensure minimum duration
+        while (elapsed < minCountdownDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
             yield return null;
         }
 
@@ -703,20 +711,25 @@ public class UIManager : MonoBehaviour
             Sequence endSeq = DOTween.Sequence();
             endSeq.Append(nextWaveCountdownText.DOFade(0f, 0.3f));
             endSeq.Join(nextWaveCountdownText.transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack));
-            endSeq.OnComplete(() => { if (nextWaveCountdownText != null) nextWaveCountdownText.gameObject.SetActive(false); });
+            endSeq.OnComplete(() =>
+            {
+                if (nextWaveCountdownText != null)
+                    nextWaveCountdownText.gameObject.SetActive(false);
+                if (WaveManager.Instance != null)
+                {
+                    WaveManager.Instance.StartWave();
+                    if (AudioManager.Instance != null)
+                        AudioManager.Instance.PlaySoundEffect("StartWave_SFX");
+                    if (GameStatesManager.Instance != null)
+                    {
+                        Debug.Log("Setting game state to WaveActive");
+                        GameStatesManager.Instance.ChangeState(GameStates.WaveActive);
+                    }
+                }
+            });
         }
-
         if (skipWaveButton != null)
-            skipWaveButton.gameObject.SetActive(false); // Hide skip wave button after countdown
-
-        if (WaveManager.Instance != null)
-        {
-            WaveManager.Instance.StartWave();
-            if (AudioManager.Instance != null)
-                AudioManager.Instance.PlaySoundEffect("StartWave_SFX");
-            if (GameStatesManager.Instance != null)
-                GameStatesManager.Instance.ChangeState(GameStates.WaveActive);
-        }
+            skipWaveButton.gameObject.SetActive(false);
 
         countdownCoroutine = null;
     }
@@ -771,20 +784,23 @@ public class UIManager : MonoBehaviour
             if (countdownCoroutine != null)
                 StopCoroutine(countdownCoroutine);
             if (skipWaveButton != null)
-                skipWaveButton.gameObject.SetActive(false); // Hide skip wave button
+                skipWaveButton.gameObject.SetActive(false);
             if (nextWaveCountdownText != null)
-                nextWaveCountdownText.gameObject.SetActive(false); // Hide countdown text
+                nextWaveCountdownText.gameObject.SetActive(false);
             if (WaveManager.Instance != null)
             {
                 WaveManager.Instance.StartWave();
                 if (AudioManager.Instance != null)
                     AudioManager.Instance.PlaySoundEffect("StartWave_SFX");
                 if (GameStatesManager.Instance != null)
+                {
+                    Debug.Log("Setting game state to WaveActive (skip wave)");
                     GameStatesManager.Instance.ChangeState(GameStates.WaveActive);
+                }
             }
-            if (AudioManager.Instance != null)
-                AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
         }
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlaySoundEffect("ButtonClick_SFX");
     }
 
     private void UpdateLightningNotification(string placeholderName, int pathID)
