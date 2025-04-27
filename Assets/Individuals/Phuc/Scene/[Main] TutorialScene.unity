@@ -8263,6 +8263,7 @@ MonoBehaviour:
   movementDetected: 0
   _uimManager: {fileID: 1676139303}
   buildingManager: {fileID: 0}
+  startWaveLocked: 0
   currentSceneType: 0
 --- !u!114 &597401163
 MonoBehaviour:
@@ -9119,7 +9120,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -336.81982, y: -70.59387}
+  m_AnchoredPosition: {x: -336.81982, y: 0}
   m_SizeDelta: {x: 373.34668, y: 58.8122}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &651371899
@@ -11998,7 +11999,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5913404074935750590, guid: c4d08d8f8daa224409c0426ddc1fa9b7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 35.14093
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -18622,7 +18623,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -336.81982, y: -70.59387}
+  m_AnchoredPosition: {x: -336.81982, y: 0}
   m_SizeDelta: {x: 373.34668, y: 58.8122}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1487527916
@@ -20691,6 +20692,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 006b65b0d432b984b976b5597544bc15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 0
 --- !u!1 &1667654264
 GameObject:
   m_ObjectHideFlags: 0
@@ -20930,6 +20932,8 @@ MonoBehaviour:
   miniBossWaves: 03000000
   anim: {fileID: 1676139304}
   isSpeedUp: 0
+  previousState: 0
+  currentSceneName: 
   tutorialLevel:
     m_SceneAsset: {fileID: 102900000, guid: 186f304aae5338f4c9e7450d34cd2b39, type: 3}
     m_SceneName: '[Main] TutorialScene'

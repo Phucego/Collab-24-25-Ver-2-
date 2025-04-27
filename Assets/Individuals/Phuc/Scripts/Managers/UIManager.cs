@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DG.Tweening;
-using UnityEditor.Animations;
 
 public class UIManager : MonoBehaviour
 {
@@ -311,10 +310,22 @@ public class UIManager : MonoBehaviour
 
     private void PlayHideUIAnimation()
     {
-        if (anim != null && IsAnimatorStateValid(anim, "hideUI"))
-            anim.Play("hideUI");
+        if (anim != null && mainUI != null)
+        {
+            // Attempt to play the "hideUI" animation; fallback to deactivating mainUI if Animator is not set up
+            try
+            {
+                anim.Play("hideUI");
+            }
+            catch
+            {
+                mainUI.SetActive(false);
+            }
+        }
         else if (mainUI != null)
+        {
             mainUI.SetActive(false);
+        }
     }
 
     private IEnumerator VictorySequence()
@@ -886,26 +897,6 @@ public class UIManager : MonoBehaviour
         UpdateWaveProgress();
         if (GameStatesManager.Instance != null)
             GameStatesManager.Instance.ChangeState(GameStates.WaveSetup);
-    }
-
-    private bool IsAnimatorStateValid(Animator animator, string stateName)
-    {
-        if (animator == null || string.IsNullOrEmpty(stateName) || animator.runtimeAnimatorController == null)
-            return false;
-
-        var controller = animator.runtimeAnimatorController as AnimatorController;
-        if (controller == null)
-            return false;
-
-        foreach (var layer in controller.layers)
-        {
-            foreach (var state in layer.stateMachine.states)
-            {
-                if (state.state.name == stateName)
-                    return true;
-            }
-        }
-        return false;
     }
 
     private bool HasParameter(string parameterName)
