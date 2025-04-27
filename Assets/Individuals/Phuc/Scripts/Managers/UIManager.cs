@@ -85,7 +85,7 @@ public class UIManager : MonoBehaviour
     private bool isRotated = false;
     public bool isSpeedUp = false;
     private bool isMuteButtonPressed = false;
-    private GameStates previousState;
+    public GameStates previousState;
     public string currentSceneName;
     public static UIManager Instance { get; private set; }
 
@@ -126,7 +126,6 @@ public class UIManager : MonoBehaviour
         if (anim != null && HasParameter("isTowerSelectPanelOpened"))
             anim.SetBool("isTowerSelectPanelOpened", false);
 
-       // string currentSceneName = SceneManager.GetActiveScene().name;
         if (currentSceneName == tutorialLevel?.SceneName)
         {
             if (CurrencyManager.Instance != null)
@@ -595,7 +594,7 @@ public class UIManager : MonoBehaviour
 
         AnimateWaveTextReveal();
 
-        if  (startWaveRect != null && startWaveButton != null)
+        if (startWaveRect != null && startWaveButton != null)
         {
             Sequence waveButtonSeq = DOTween.Sequence();
             waveButtonSeq.Append(startWaveRect.DOAnchorPosY(200f, 0.5f).SetEase(Ease.InBack));
@@ -634,35 +633,49 @@ public class UIManager : MonoBehaviour
             StartVictorySequence();
             return;
         }
-        if (currentSceneName != tutorialLevel?.SceneName)
+
+        Debug.Log($"Starting countdown for wave {currentWave + 1} in scene {currentSceneName}");
+        currentWave++; // Increment currentWave to align with wave completion
+        UpdateWaveProgress();
+        StartCountdown();
+        PlayHideUIAnimation();
+    }
+
+    public void ResetCountdownState()
+    {
+        if (countdownCoroutine != null)
         {
-            Debug.Log($"Starting countdown for wave {currentWave + 1} in scene {currentSceneName}");
-            // currentWave++; // Commented out to prevent potential duplicate wave increments; wave progression should be managed by WaveManager or TutorialGuidance
-            UpdateWaveProgress();
-            StartCountdown();
-            PlayHideUIAnimation();
+            StopCoroutine(countdownCoroutine);
+            countdownCoroutine = null;
         }
-        else
+        if (nextWaveCountdownText != null)
         {
-            Debug.Log($"Skipping countdown, tutorial scene detected: {currentSceneName}");
+            nextWaveCountdownText.gameObject.SetActive(false);
+            nextWaveCountdownText.text = "";
+            Color c = nextWaveCountdownText.color;
+            c.a = 0f;
+            nextWaveCountdownText.color = c;
+        }
+        if (skipWaveButton != null)
+        {
+            skipWaveButton.gameObject.SetActive(false);
         }
     }
 
-    private void StartCountdown()
+    public void StartCountdown()
     {
-        if (countdownCoroutine != null)
-            StopCoroutine(countdownCoroutine);
-
+        ResetCountdownState();
         countdownCoroutine = StartCoroutine(NextWaveCountdownRoutine());
         if (GameStatesManager.Instance != null)
         {
-            Debug.Log("Setting game state to WaveCountdown");
+            Debug.Log($"StartCountdown: Setting game state to WaveCountdown for wave {currentWave + 1}");
             GameStatesManager.Instance.ChangeState(GameStates.WaveCountdown);
         }
     }
 
     private IEnumerator NextWaveCountdownRoutine()
     {
+        Debug.Log($"NextWaveCountdownRoutine: Starting countdown for wave {currentWave + 1}");
         float timer = 30f;
 
         if (startWaveButton != null)
@@ -722,7 +735,7 @@ public class UIManager : MonoBehaviour
                         AudioManager.Instance.PlaySoundEffect("StartWave_SFX");
                     if (GameStatesManager.Instance != null)
                     {
-                        Debug.Log("Setting game state to WaveActive");
+                        Debug.Log($"NextWaveCountdownRoutine: Setting game state to WaveActive for wave {currentWave + 1}");
                         GameStatesManager.Instance.ChangeState(GameStates.WaveActive);
                     }
                 }
@@ -731,6 +744,7 @@ public class UIManager : MonoBehaviour
         if (skipWaveButton != null)
             skipWaveButton.gameObject.SetActive(false);
 
+        Debug.Log($"NextWaveCountdownRoutine: Countdown completed, starting wave {currentWave + 1}");
         countdownCoroutine = null;
     }
 

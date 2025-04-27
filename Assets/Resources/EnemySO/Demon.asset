@@ -24,7 +24,7 @@ MonoBehaviour:
   name: Demon
   description: Da baloon
   typing: 01000000
-  reward: 9
+  reward: 10
   maxHealth: 80
   maxSpeed: 6
   acceleration: 1

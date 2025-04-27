@@ -43,8 +43,6 @@ public class GameStatesManager : MonoBehaviour
                 break;
 
             case GameStates.WaveActive:
-                if (BuildingManager.Instance != null)
-                    BuildingManager.Instance.enabled = false;
                 if (FreeFlyCamera.instance != null)
                     FreeFlyCamera.instance.enabled = true;
                 break;

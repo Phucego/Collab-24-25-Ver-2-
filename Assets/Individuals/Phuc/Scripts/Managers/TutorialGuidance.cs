@@ -331,6 +331,8 @@ public class TutorialGuidance : MonoBehaviour
             Time.timeScale = 1f;
             if (AudioManager.Instance != null)
                 AudioManager.Instance.PlaySoundEffect("SlowDown_SFX");
+
+            UIManager.Instance.StartCountdown();
             if (UIManager.Instance != null && UIManager.Instance.anim != null)
             {
                 UIManager.Instance.anim.SetTrigger("isSpeedChange");
@@ -537,8 +539,10 @@ public class TutorialGuidance : MonoBehaviour
                 DisableMovements();
                 SetDialogueSection("Post First Wave", () =>
                 {
-                    EnableStartWave();
                     EnableMovements();
+                    DisableStartWave();
+                    UIManager.Instance.currentWave++;
+                    UIManager.Instance.StartCountdown();
                 });
             }
             else if (!hasShownPostSecondWaveDialogue && waveIndex == 1)
@@ -547,8 +551,10 @@ public class TutorialGuidance : MonoBehaviour
                 DisableMovements();
                 SetDialogueSection("Post Second Wave", () =>
                 {
-                    EnableStartWave();
                     EnableMovements();
+                    DisableStartWave();
+                    UIManager.Instance.currentWave++;
+                    UIManager.Instance.StartCountdown();
                 });
             }
             else if (!hasShownPostThirdWaveDialogue && waveIndex == 2)
@@ -557,8 +563,10 @@ public class TutorialGuidance : MonoBehaviour
                 DisableMovements();
                 SetDialogueSection("Post Third Wave", () =>
                 {
-                    EnableStartWave();
                     EnableMovements();
+                    DisableStartWave();
+                    UIManager.Instance.currentWave++;
+                    UIManager.Instance.StartCountdown();
                 });
             }
         }
@@ -567,7 +575,7 @@ public class TutorialGuidance : MonoBehaviour
             EnableMovements();
             DisableStartWave();
             UIManager.Instance.currentWave++;
-            //UIManager.Instance.StartNextWaveCountdown();
+            UIManager.Instance.StartNextWaveCountdown();
         }
     }
 
