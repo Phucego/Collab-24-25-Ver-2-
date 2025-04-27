@@ -63,7 +63,8 @@ public class BallistaProjectileController : ProjectileController
                 ApplyDamage(collision.gameObject);
             }
             GameObject Particle = ParticlesManager.Instance.SpawnParticles(0, "BallistaExplosion");
-            Particle.transform.position = collision.transform.position;
+
+            Particle.transform.position = collision.ClosestPoint(transform.position);
             Particle.SetActive(true);
         }
     }

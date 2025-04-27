@@ -45,7 +45,7 @@ public class ProjectileController : MonoBehaviour, I_TowerProjectile
                 ApplyDamage(collision.gameObject);
             }
             GameObject particle = ParticlesManager.Instance.SpawnParticles(1, "CannonExplode");
-            particle.transform.position = collision.transform.position;
+            particle.transform.position = collision.ClosestPoint(transform.position);
             particle.SetActive(true);
 
             Pooling.Despawn("CannonBall", gameObject);
