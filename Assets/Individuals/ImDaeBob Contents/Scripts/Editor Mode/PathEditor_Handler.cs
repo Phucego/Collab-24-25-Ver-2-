@@ -90,7 +90,7 @@ public class PathEditor_Handler : MonoBehaviour
         #if UNITY_EDITOR
             _jsonDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Paths"); // Editors
         #else
-            _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData"); // Works in Final Build
+            _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData/Paths"); // Works in Final Build
         #endif
 
         SearchFiles();
@@ -299,7 +299,7 @@ public class PathEditor_Handler : MonoBehaviour
         _jsonFiles.Clear();
         if (Directory.Exists(_jsonDirectory))
         {
-            string[] _files = Directory.GetFiles(_jsonDirectory, "*.json"); // Get all JSON files
+            string[] _files = Directory.GetFiles(_jsonDirectory, "*.JSON"); // Get all JSON files
 
             foreach (string f in _files)
             {

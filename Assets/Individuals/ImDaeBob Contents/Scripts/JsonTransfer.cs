@@ -14,6 +14,7 @@ public class BuildProcessor : IPreprocessBuildWithReport
     private readonly List<string> sourceFolders = new List<string>
     {
         "Assets/Data/Enemies/Levels",
+        "Assets/Data/Enemies/Paths",
         "Assets/Resources/EnemySO",
         "Assets/Resources/BossSO"
     };

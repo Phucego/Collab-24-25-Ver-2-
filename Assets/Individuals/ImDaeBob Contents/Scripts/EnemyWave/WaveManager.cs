@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
+using TMPro;
 using UnityEngine;
 using static LevelEditor_Handler;
 
@@ -37,6 +39,8 @@ public class WaveManager : MonoBehaviour
     [Header("Pooling")]
     [SerializeField] private GameObject _enemyPool;
     [SerializeField] private GameObject _visualPool;
+
+    public TMP_Text _text;
 
     //-------------------------------------------------------------- < Public Functions > --------------------------------------------------------------//
     // For general gameplay coding
@@ -119,22 +123,6 @@ public class WaveManager : MonoBehaviour
         TestCurWave(wave);
     }
     //-------------------------------------------------------------------- < Main > --------------------------------------------------------------------//
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Keypad1))
-            SpawnEnemy("GOLEM", "TUT_PATH1");
-        else if (Input.GetKeyDown(KeyCode.Keypad2) || Input.GetKeyDown(KeyCode.Minus))
-            SpawnEnemy("DEMON", "TUT_PATH1");
-        else if (Input.GetKeyDown(KeyCode.Keypad3) || Input.GetKeyDown(KeyCode.Equals))
-            SpawnEnemy("CLOAK", "TUT_PATH1");
-        else if (Input.GetKeyDown(KeyCode.Keypad4))
-            SpawnEnemy("GOLEM", "TUT_PATH2");
-        else if (Input.GetKeyDown(KeyCode.Keypad5))
-            SpawnEnemy("DEMON", "TUT_PATH2");
-        else if (Input.GetKeyDown(KeyCode.Keypad6))
-            SpawnEnemy("CLOAK", "TUT_PATH2");
-    }
-
     void Awake()
     {
         if (Instance == null)
@@ -143,12 +131,12 @@ public class WaveManager : MonoBehaviour
         #if UNITY_EDITOR
             _jsonDirectory = Path.Combine(Application.dataPath, "Data/Enemies/Levels");
         #else
-            _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData");
+            _jsonDirectory = Path.Combine(Application.streamingAssetsPath, "JsonData/Levels");
         #endif
 
         if (Directory.Exists(_jsonDirectory))
         {
-            string[] _files = Directory.GetFiles(_jsonDirectory, "*.json");
+            var _files = Directory.GetFiles(_jsonDirectory, "*.json");
 
             foreach (string f in _files)
             {
@@ -157,6 +145,8 @@ public class WaveManager : MonoBehaviour
             }
         }
     }
+
+
 
     void Start()
     {
@@ -190,6 +180,7 @@ public class WaveManager : MonoBehaviour
             }
         }
         _allEnemies = _totalEnemies;
+        _text.text = _curData[0].Waves.Count().ToString();
         _summoned = 0;
         _summonedInWave = 0;
     }
