@@ -566,8 +566,8 @@ public class TutorialGuidance : MonoBehaviour
         {
             EnableMovements();
             DisableStartWave();
-            
-            UIManager.Instance.StartNextWaveCountdown();
+            UIManager.Instance.currentWave++;
+            //UIManager.Instance.StartNextWaveCountdown();
         }
     }
 

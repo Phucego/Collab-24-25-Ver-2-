@@ -629,7 +629,7 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        if (currentWave + 1 >= totalWaves)
+        if (currentWave + 1 > totalWaves)
         {
             StartVictorySequence();
             return;
@@ -637,7 +637,7 @@ public class UIManager : MonoBehaviour
         if (currentSceneName != tutorialLevel?.SceneName)
         {
             Debug.Log($"Starting countdown for wave {currentWave + 1} in scene {currentSceneName}");
-            currentWave++;
+            // currentWave++; // Commented out to prevent potential duplicate wave increments; wave progression should be managed by WaveManager or TutorialGuidance
             UpdateWaveProgress();
             StartCountdown();
             PlayHideUIAnimation();
