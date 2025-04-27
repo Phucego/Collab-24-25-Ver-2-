@@ -13,6 +13,7 @@ public class CurrencyManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI currencyText; // UI Text element to display currency
     public SceneField tutorialScene;
     public SceneField Level1;
+    public SceneField Level2;
     private void Awake()
     {
         if (Instance == null)
@@ -26,7 +27,11 @@ public class CurrencyManager : MonoBehaviour
 
         if (SceneManager.GetActiveScene().name == Level1.SceneName)
         {
-            InitializeCurrency(50);
+            InitializeCurrency(240);
+        }
+        else if (SceneManager.GetActiveScene().name == Level2.SceneName)
+        {
+            InitializeCurrency(500);
         }
     }
 

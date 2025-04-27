@@ -40,7 +40,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] private GameObject _enemyPool;
     [SerializeField] private GameObject _visualPool;
 
-    public TMP_Text _text;
+   // public TMP_Text _text;
 
     //-------------------------------------------------------------- < Public Functions > --------------------------------------------------------------//
     // For general gameplay coding
@@ -180,7 +180,7 @@ public class WaveManager : MonoBehaviour
             }
         }
         _allEnemies = _totalEnemies;
-        _text.text = _curData[0].Waves.Count().ToString();
+//        _text.text = _curData[0].Waves.Count().ToString();
         _summoned = 0;
         _summonedInWave = 0;
     }

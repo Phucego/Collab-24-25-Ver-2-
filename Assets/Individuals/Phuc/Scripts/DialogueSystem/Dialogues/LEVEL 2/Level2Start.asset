@@ -15,4 +15,14 @@ MonoBehaviour:
   sectionName: Level 2 Intro
   dialogueLines:
   - characterName: 'General:'
-    dialogueText: Quite rainy innit?
+    dialogueText: 'Unlucky for you, the monsters declared war in a rainy weather
+      like this.
+
+'
+  - characterName: 'General:'
+    dialogueText: Each wave, a tornado will struck on the placeholder, and prevent
+      you from placing towers.
+  - characterName: 'General:'
+    dialogueText: Plan out the level carefully.
+  - characterName: 'General:'
+    dialogueText: Goodluck!

@@ -646,7 +646,7 @@ public class UIManager : MonoBehaviour
         }
 
         Debug.Log($"Starting countdown for wave {currentWave + 1} in scene {currentSceneName}");
-        currentWave++; // Increment currentWave to align with wave completion
+       // currentWave++; // Increment currentWave to align with wave completion
         UpdateWaveProgress();
         StartCountdown();
         PlayHideUIAnimation();
