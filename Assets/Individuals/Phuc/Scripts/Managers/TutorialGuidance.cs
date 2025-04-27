@@ -34,10 +34,10 @@ public class TutorialGuidance : MonoBehaviour
     public UnityEvent OnTowerDamaged;
 
     [Header("Scene Configuration")]
-    [SerializeField] private SceneField tutorialScene; // Assumed: "Tutorial"
-    [SerializeField] private SceneField level1Scene; // Assumed: "Level1"
-    [SerializeField] private SceneField level2Scene; // Assumed: "Level2"
-    [SerializeField] private SceneField level3Scene; // Assumed: "Level3"
+    [SerializeField] private SceneField tutorialScene;
+    [SerializeField] private SceneField level1Scene;
+    [SerializeField] private SceneField level2Scene;
+    [SerializeField] private SceneField level3Scene;
 
     [Header("Tutorial Destinations")]
     public GameObject buildingDestination;
@@ -65,6 +65,7 @@ public class TutorialGuidance : MonoBehaviour
     private bool hasShownPostThirdWaveDialogue = false;
     private bool corruptedIntroCompleted = false;
 
+    public UIManager _uimManager;
     [SerializeField] private BuildingManager buildingManager;
 
     private bool startWaveLocked = true;
@@ -99,57 +100,52 @@ public class TutorialGuidance : MonoBehaviour
 
         currentSceneType = DetermineSceneType();
 
-        if (!Application.isEditor)
+        if (!Application.isEditor && !IsSceneUnlocked(currentSceneType))
         {
-            if (!IsSceneUnlocked(currentSceneType))
-            {
-                Debug.LogWarning($"[TutorialGuidance] Scene {currentSceneType} is not unlocked. Loading highest unlocked scene.");
-                LoadHighestUnlockedScene();
-            }
-        }
-        else
-        {
-            Debug.Log($"[TutorialGuidance] Running in Editor: Allowing access to {currentSceneType} regardless of progression.");
+            LoadHighestUnlockedScene();
         }
     }
 
     void Start()
     {
-        dialogueUI.SetActive(false);
-
-        // Only manage destinations in Tutorial scene
+        if (dialogueUI != null)
+            dialogueUI.SetActive(false);
+        
         if (currentSceneType == SceneType.Tutorial)
         {
             if (buildingDestination != null) buildingDestination.SetActive(false);
             if (corruptedIntroDestination != null) corruptedIntroDestination.SetActive(false);
-            if (targetDestination != null) targetDestination.SetActive(true); // Enable first destination
+            if (targetDestination != null) targetDestination.SetActive(true);
+            // Disable Start Wave button initially for Tutorial
+            if (UIManager.Instance != null && UIManager.Instance.startWaveButton != null)
+            {
+                UIManager.Instance.startWaveButton.interactable = false;
+                UIManager.Instance.startWaveButton.gameObject.SetActive(true); // Ensure button is visible but not interactable
+            }
+            startWaveLocked = true;
         }
         else
         {
-            // Deactivate destinations in non-Tutorial scenes
             if (buildingDestination != null) buildingDestination.SetActive(false);
             if (corruptedIntroDestination != null) corruptedIntroDestination.SetActive(false);
             if (targetDestination != null) targetDestination.SetActive(false);
+            // Enable Start Wave button immediately for other levels
+            if (UIManager.Instance != null && UIManager.Instance.startWaveButton != null)
+                UIManager.Instance.startWaveButton.interactable = true;
+            EnableMovements();
         }
 
-        nextButton.onClick.AddListener(OnNextButtonClicked);
+        if (nextButton != null)
+            nextButton.onClick.AddListener(OnNextButtonClicked);
 
         _freeFlyCamera = FindObjectOfType<FreeFlyCamera>();
         buildingManager = FindObjectOfType<BuildingManager>();
 
         if (WaveManager.Instance != null)
             WaveManager.Instance.OnWaveComplete += HandleWaveCompleted;
-        else
-            Debug.LogWarning("[TutorialGuidance] WaveManager.Instance is null in Start.");
 
         if (sceneSetupActions.ContainsKey(currentSceneType))
-        {
             sceneSetupActions[currentSceneType]?.Invoke();
-        }
-        else
-        {
-            Debug.LogWarning($"[TutorialGuidance] No setup defined for scene type: {currentSceneType}");
-        }
     }
 
     private SceneType DetermineSceneType()
@@ -157,16 +153,15 @@ public class TutorialGuidance : MonoBehaviour
         Scene currentScene = SceneManager.GetActiveScene();
         string currentSceneName = currentScene.name;
 
-        if (tutorialScene != null && currentSceneName == tutorialScene.SceneName)
+        if (tutorialScene != null && !string.IsNullOrEmpty(tutorialScene.SceneName) && currentSceneName == tutorialScene.SceneName)
             return SceneType.Tutorial;
-        else if (level1Scene != null && currentSceneName == level1Scene.SceneName)
+        if (level1Scene != null && !string.IsNullOrEmpty(level1Scene.SceneName) && currentSceneName == level1Scene.SceneName)
             return SceneType.Level1;
-        else if (level2Scene != null && currentSceneName == level2Scene.SceneName)
+        if (level2Scene != null && !string.IsNullOrEmpty(level2Scene.SceneName) && currentSceneName == level2Scene.SceneName)
             return SceneType.Level2;
-        else if (level3Scene != null && currentSceneName == level3Scene.SceneName)
+        if (level3Scene != null && !string.IsNullOrEmpty(level3Scene.SceneName) && currentSceneName == level3Scene.SceneName)
             return SceneType.Level3;
 
-        Debug.LogWarning($"[TutorialGuidance] Current scene '{currentSceneName}' not mapped to any SceneType. Defaulting to Tutorial.");
         return SceneType.Tutorial;
     }
 
@@ -187,13 +182,7 @@ public class TutorialGuidance : MonoBehaviour
         SceneType nextSceneType = SceneOrder[nextSceneIndex];
         string sceneName = GetSceneName(nextSceneType);
         if (!string.IsNullOrEmpty(sceneName))
-        {
             SceneManager.LoadScene(sceneName);
-        }
-        else
-        {
-            Debug.LogError($"[TutorialGuidance] Failed to load scene for {nextSceneType}. Scene name not found.");
-        }
     }
 
     private string GetSceneName(SceneType sceneType)
@@ -201,13 +190,13 @@ public class TutorialGuidance : MonoBehaviour
         switch (sceneType)
         {
             case SceneType.Tutorial:
-                return tutorialScene?.SceneName;
+                return tutorialScene != null && !string.IsNullOrEmpty(tutorialScene.SceneName) ? tutorialScene.SceneName : null;
             case SceneType.Level1:
-                return level1Scene?.SceneName;
+                return level1Scene != null && !string.IsNullOrEmpty(level1Scene.SceneName) ? level1Scene.SceneName : null;
             case SceneType.Level2:
-                return level2Scene?.SceneName;
+                return level2Scene != null && !string.IsNullOrEmpty(level2Scene.SceneName) ? level2Scene.SceneName : null;
             case SceneType.Level3:
-                return level3Scene?.SceneName;
+                return level3Scene != null && !string.IsNullOrEmpty(level3Scene.SceneName) ? level3Scene.SceneName : null;
             default:
                 return null;
         }
@@ -222,71 +211,41 @@ public class TutorialGuidance : MonoBehaviour
         {
             PlayerPrefs.SetInt(PROGRESS_KEY, currentIndex);
             PlayerPrefs.Save();
-            Debug.Log($"[TutorialGuidance] Marked {sceneType} as completed. HighestCompletedLevel: {currentIndex}");
         }
     }
 
     private void SetupTutorialScene()
     {
-        if (UIManager.Instance != null)
-            UIManager.Instance.startWaveButton.interactable = false;
-        else
-            Debug.LogWarning("[TutorialGuidance] UIManager.Instance is null in SetupTutorialScene.");
-
         StartIntro();
     }
 
     private void SetupLevel1Scene()
     {
-        Debug.Log("[TutorialGuidance] Setting up Level 1 scene.");
         SetDialogueSection("Level 1 Intro", () =>
         {
-            Debug.Log("[TutorialGuidance] Level 1 Intro dialogue completed.");
-            startWaveLocked = false;
-            if (UIManager.Instance != null)
-            {
-                UIManager.Instance.startWaveButton.interactable = true;
-                Debug.Log("[TutorialGuidance] Enabled startWaveButton for Level 1.");
-            }
+            EnableStartWave();
             EnableMovements();
+            if (UIManager.Instance != null)
+                UIManager.Instance.ResetWaveState();
         });
     }
 
     private void SetupLevel2Scene()
     {
-        Debug.Log("[TutorialGuidance] Setting up Level 2 scene.");
         SetDialogueSection("Level 2 Intro", () =>
         {
-            Debug.Log("[TutorialGuidance] Level 2 Intro dialogue completed.");
-            startWaveLocked = false;
-            if (UIManager.Instance != null)
-            {
-                UIManager.Instance.startWaveButton.interactable = true;
-                Debug.Log("[TutorialGuidance] Enabled startWaveButton for Level 2.");
-            }
+            EnableStartWave();
             EnableMovements();
+            if (UIManager.Instance != null)
+                UIManager.Instance.ResetWaveState();
         });
     }
 
     private void SetupLevel3Scene()
     {
-        Debug.Log("[TutorialGuidance] Setting up Level 3 scene.");
-        startWaveLocked = false;
-        if (UIManager.Instance != null)
-        {
-            UIManager.Instance.startWaveButton.interactable = true;
-            Debug.Log("[TutorialGuidance] Enabled startWaveButton for Level 3.");
-        }
-        if (UIManager.Instance != null && UIManager.Instance.anim != null)
-        {
-            UIManager.Instance.anim.Play("hideUI");
-            Debug.Log("[TutorialGuidance] Played hideUI animation for Level 3 setup.");
-        }
-        else
-        {
+        EnableStartWave();
+        if (dialogueUI != null)
             dialogueUI.SetActive(false);
-            Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly for Level 3.");
-        }
         EnableMovements();
     }
 
@@ -318,55 +277,51 @@ public class TutorialGuidance : MonoBehaviour
     {
         isTowerPlacementChecked = false;
         DisableMovements();
-        SetDialogueSection("Introduction", OnIntroCompleted.Invoke);
+        SetDialogueSection("Introduction", () =>
+        {
+            Debug.Log("Introduction dialogue completed");
+            OnIntroCompleted.Invoke();
+        });
     }
 
     public void SetDialogueSection(string sectionName, UnityAction onComplete)
     {
-        Debug.Log($"[TutorialGuidance] Setting dialogue section: {sectionName}");
         Dialogue dialogue = null;
         List<Dialogue> activeDialogues = GetDialogueListForCurrentScene();
-
+        
         if (activeDialogues != null)
-        {
             dialogue = activeDialogues.Find(d => d.sectionName == sectionName);
-        }
-
+       
         if (dialogue == null || dialogue.dialogueLines.Count == 0)
         {
-            Debug.LogWarning($"[TutorialGuidance] No dialogue found for section '{sectionName}' in {currentSceneType} dialogues.");
-            if (UIManager.Instance != null && UIManager.Instance.anim != null)
-            {
-                UIManager.Instance.anim.Play("hideUI");
-                Debug.Log("[TutorialGuidance] Played hideUI animation due to empty dialogue.");
-            }
-            else
-            {
+            if (dialogueUI != null)
                 dialogueUI.SetActive(false);
-                Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly.");
-            }
             onComplete?.Invoke();
-            if (currentSceneType == SceneType.Tutorial)
+            if (currentSceneType == SceneType.Tutorial || currentSceneType == SceneType.Level1)
             {
+                if (!startWaveLocked)
+                    EnableStartWave();
                 EnableMovements();
             }
             return;
         }
 
-        // Reset timescale to 1 if sped up
         if (UIManager.Instance != null && UIManager.Instance.isSpeedUp)
         {
             UIManager.Instance.isSpeedUp = false;
             Time.timeScale = 1f;
-            AudioManager.Instance?.PlaySoundEffect("SlowDown_SFX");
-            UIManager.Instance.anim.SetTrigger("isSpeedChange");
-            Debug.Log("[TutorialGuidance] Reset Time.timeScale to 1 for dialogue.");
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PlaySoundEffect("SlowDown_SFX");
+            if (UIManager.Instance != null && UIManager.Instance.anim != null)
+                UIManager.Instance.anim.SetTrigger("isSpeedChange");
+            UIManager.Instance.anim.SetTrigger("hideUI");
         }
 
         currentDialogueLines = dialogue.dialogueLines;
         currentLineIndex = 0;
         isTutorialActive = true;
-        dialogueUI.SetActive(true);
+        if (dialogueUI != null)
+            dialogueUI.SetActive(true);
 
         ShowCurrentLine(onComplete);
     }
@@ -384,7 +339,6 @@ public class TutorialGuidance : MonoBehaviour
             case SceneType.Level3:
                 return level3Dialogues;
             default:
-                Debug.LogWarning($"[TutorialGuidance] No dialogue list defined for scene type: {currentSceneType}");
                 return null;
         }
     }
@@ -397,23 +351,21 @@ public class TutorialGuidance : MonoBehaviour
         }
         else
         {
-            if (UIManager.Instance != null && UIManager.Instance.anim != null)
-            {
-                UIManager.Instance.anim.Play("hideUI");
-                Debug.Log("[TutorialGuidance] Played hideUI animation at end of dialogue.");
-            }
-            else
-            {
+            if (dialogueUI != null)
                 dialogueUI.SetActive(false);
-                Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly.");
-            }
             isTutorialActive = false;
+            Debug.Log($"Dialogue section completed. startWaveLocked: {startWaveLocked}, Scene: {currentSceneType}");
             onComplete?.Invoke();
             if (currentSceneType == SceneType.Tutorial)
             {
+                // Only enable start wave if explicitly allowed by callback
+                // startWaveLocked is managed by the callback
+            }
+            else
+            {
+                EnableStartWave();
                 EnableMovements();
             }
-            Debug.Log("[TutorialGuidance] Dialogue section completed.");
         }
     }
 
@@ -423,12 +375,21 @@ public class TutorialGuidance : MonoBehaviour
             StopCoroutine(typingCoroutine);
 
         isTyping = true;
-        characterNameText.text = line.characterName;
+        if (characterNameText != null)
+            characterNameText.text = line.characterName;
+        if (dialogueText != null)
+            dialogueText.text = "";
         typingCoroutine = StartCoroutine(TypeSentence(line.dialogueText));
     }
 
     private IEnumerator TypeSentence(string sentence)
     {
+        if (dialogueText == null)
+        {
+            isTyping = false;
+            yield break;
+        }
+
         dialogueText.text = "";
         foreach (char letter in sentence.ToCharArray())
         {
@@ -441,12 +402,13 @@ public class TutorialGuidance : MonoBehaviour
 
     private void OnNextButtonClicked()
     {
-        if (isTyping && !UIManager.Instance.pauseMenu.activeSelf)
+        if (isTyping && UIManager.Instance != null && !UIManager.Instance.pauseMenu.activeSelf)
         {
             if (typingCoroutine != null)
                 StopCoroutine(typingCoroutine);
 
-            dialogueText.text = currentDialogueLines[currentLineIndex].dialogueText;
+            if (dialogueText != null && currentDialogueLines != null && currentLineIndex < currentDialogueLines.Count)
+                dialogueText.text = currentDialogueLines[currentLineIndex].dialogueText;
             isTyping = false;
         }
         else
@@ -454,30 +416,157 @@ public class TutorialGuidance : MonoBehaviour
             currentLineIndex++;
             if (isTutorialActive && currentLineIndex >= currentDialogueLines.Count)
             {
-                if (UIManager.Instance != null && UIManager.Instance.anim != null)
-                {
-                    UIManager.Instance.anim.Play("hideUI");
-                    Debug.Log("[TutorialGuidance] Played hideUI animation on extra Next press.");
-                }
-                else
-                {
+                if (dialogueUI != null)
                     dialogueUI.SetActive(false);
-                    Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly on extra Next press.");
-                }
                 isTutorialActive = false;
-                if (currentSceneType == SceneType.Tutorial)
-                {
-                    EnableMovements();
-                }
-                if (UIManager.Instance != null)
-                {
-                    UIManager.Instance.startWaveButton.interactable = !startWaveLocked;
-                    Debug.Log("[TutorialGuidance] Set startWaveButton interactable based on startWaveLocked.");
-                }
+                
+                UIManager.Instance.anim.SetTrigger("isStart");
+
+                EnableMovements();
+                Debug.Log($"Last dialogue line completed. startWaveLocked: {startWaveLocked}, Scene: {currentSceneType}");
+                
             }
             else if (isTutorialActive)
             {
                 ShowCurrentLine(null);
+            }
+        }
+    }
+
+    public void StartMovementPractice()
+    {
+        if (currentSceneType != SceneType.Tutorial) return;
+        SetDialogueSection("Camera Practice", () =>
+        {
+            OnMovementPracticeCompleted.Invoke();
+            startWaveLocked = false;
+            EnableStartWave();
+            Debug.Log("Movement practice completed, enabling start wave");
+        });
+        if (dialogueUI != null)
+            dialogueUI.SetActive(false);
+        if (buildingDestination != null)
+            buildingDestination.SetActive(true);
+    }
+
+    public void StartBuildingTutorial()
+    {
+        if (currentSceneType != SceneType.Tutorial) return;
+        SetDialogueSection("Building", () =>
+        {
+            OnBuildingCompleted.Invoke();
+            startWaveLocked = false;
+            EnableStartWave();
+            Debug.Log("Building tutorial completed, enabling start wave");
+        });
+        if (dialogueUI != null)
+            dialogueUI.SetActive(false);
+        if (CurrencyManager.Instance != null)
+            CurrencyManager.Instance.currentCurrency = 80;
+    }
+
+    public void StartCorruptedIntro()
+    {
+        if (currentSceneType != SceneType.Tutorial) return;
+        SetDialogueSection("Corrupted Zone Intro", () =>
+        {
+            OnCorruptedIntroCompleted.Invoke();
+            startWaveLocked = false;
+ 
+            Debug.Log("Corrupted intro completed, enabling start wave");
+        });
+        if (dialogueUI != null)
+            dialogueUI.SetActive(false);
+        EnableStartWave();
+        corruptedIntroCompleted = true;
+    }
+
+    private void EnableStartWave()
+    {
+        startWaveLocked = false;
+        if (UIManager.Instance != null && UIManager.Instance.startWaveButton != null)
+            UIManager.Instance.startWaveButton.interactable = true;
+    }
+
+    private void DisableStartWave()
+    {
+        startWaveLocked = true;
+        if (UIManager.Instance != null && UIManager.Instance.startWaveButton != null)
+            UIManager.Instance.startWaveButton.interactable = false;
+    }
+
+    private void HandleWaveCompleted()
+    {
+        if (WaveManager.Instance == null || UIManager.Instance == null)
+            return;
+
+        int waveIndex = UIManager.Instance.currentWave;
+
+        if (currentSceneType == SceneType.Tutorial)
+        {
+            DisableStartWave(); // Disable start wave button before showing dialogues
+            EnableMovements();
+
+            if (!hasShownPostFirstWaveDialogue && waveIndex == 0)
+            {
+                hasShownPostFirstWaveDialogue = true;
+                DisableMovements();
+                SetDialogueSection("Post First Wave", () =>
+                {
+                   
+                    EnableStartWave();
+                    EnableMovements();
+                   
+                    Debug.Log("Post First Wave dialogue completed, enabling start wave");
+                });
+            }
+            else if (!hasShownPostSecondWaveDialogue && waveIndex == 1)
+            {
+                hasShownPostSecondWaveDialogue = true;
+                DisableMovements();
+                SetDialogueSection("Post Second Wave", () =>
+                {
+                    EnableMovements();
+                    EnableStartWave();
+                    Debug.Log("Post Second Wave dialogue completed, enabling start wave");
+                });
+            }
+            else if (!hasShownPostThirdWaveDialogue && waveIndex == 2)
+            {
+                hasShownPostThirdWaveDialogue = true;
+                DisableMovements();
+                SetDialogueSection("Post Third Wave", () =>
+                {
+                    EnableStartWave();
+                    EnableMovements();
+                    Debug.Log("Post Third Wave dialogue completed, enabling start wave");
+                });
+               
+            }
+        }
+        else if (currentSceneType == SceneType.Level1)
+        {
+            EnableMovements();
+
+            if (!hasShownPostFirstWaveDialogue && waveIndex == 0)
+            {
+                hasShownPostFirstWaveDialogue = true;
+                DisableMovements();
+                SetDialogueSection("Post Wave 1", () =>
+                {
+                    EnableStartWave();
+                    EnableMovements();
+                });
+            }
+            else if (!hasShownPostSecondWaveDialogue && waveIndex == 1)
+            {
+                hasShownPostSecondWaveDialogue = true;
+                DisableMovements();
+                SetDialogueSection("Post Wave 2", () =>
+                {
+                    EnableStartWave();
+                    EnableMovements();
+                });
             }
         }
     }
@@ -492,6 +581,8 @@ public class TutorialGuidance : MonoBehaviour
                 hasReachedTargetDestination = true;
                 DisableMovements();
                 StartMovementPractice();
+                if (UIManager.Instance != null && UIManager.Instance.anim != null)
+                    UIManager.Instance.anim.SetTrigger("hideUI");
                 if (targetDestination != null) Destroy(targetDestination);
                 break;
 
@@ -499,6 +590,8 @@ public class TutorialGuidance : MonoBehaviour
                 hasReachedBuildingDestination = true;
                 DisableMovements();
                 StartBuildingTutorial();
+                if (UIManager.Instance != null && UIManager.Instance.anim != null)
+                    UIManager.Instance.anim.SetTrigger("hideUI");
                 if (buildingDestination != null) Destroy(buildingDestination);
                 break;
 
@@ -506,134 +599,10 @@ public class TutorialGuidance : MonoBehaviour
                 hasReachedCorruptedZone = true;
                 StartCorruptedIntro();
                 DisableMovements();
+                if (UIManager.Instance != null && UIManager.Instance.anim != null)
+                    UIManager.Instance.anim.SetTrigger("hideUI");
                 if (corruptedIntroDestination != null) Destroy(corruptedIntroDestination);
                 break;
-        }
-    }
-
-    public void StartMovementPractice()
-    {
-        if (currentSceneType != SceneType.Tutorial) return;
-        SetDialogueSection("Camera Practice", OnMovementPracticeCompleted.Invoke);
-        if (UIManager.Instance != null && UIManager.Instance.anim != null)
-        {
-            UIManager.Instance.anim.Play("hideUI");
-            Debug.Log("[TutorialGuidance] Played hideUI animation for movement practice.");
-        }
-        else
-        {
-            dialogueUI.SetActive(false);
-            Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly for movement practice.");
-        }
-        if (buildingDestination != null) buildingDestination.SetActive(true);
-    }
-
-    public void StartBuildingTutorial()
-    {
-        if (currentSceneType != SceneType.Tutorial) return;
-        SetDialogueSection("Building", OnBuildingCompleted.Invoke);
-        if (UIManager.Instance != null && UIManager.Instance.anim != null)
-        {
-            UIManager.Instance.anim.Play("hideUI");
-            Debug.Log("[TutorialGuidance] Played hideUI animation for building tutorial.");
-        }
-        else
-        {
-            dialogueUI.SetActive(false);
-            Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly for building tutorial.");
-        }
-        CurrencyManager.Instance.currentCurrency = 80;
-    }
-
-    public void StartCorruptedIntro()
-    {
-        if (currentSceneType != SceneType.Tutorial) return;
-        EnableStartWave();
-        SetDialogueSection("Corrupted Zone Intro", OnCorruptedIntroCompleted.Invoke);
-        if (UIManager.Instance != null && UIManager.Instance.anim != null)
-        {
-            UIManager.Instance.anim.Play("hideUI");
-            Debug.Log("[TutorialGuidance] Played hideUI animation for corrupted intro.");
-        }
-        else
-        {
-            dialogueUI.SetActive(false);
-            Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly for corrupted intro.");
-        }
-        corruptedIntroCompleted = true;
-    }
-
-    private void EnableStartWave()
-    {
-        startWaveLocked = false;
-        if (UIManager.Instance != null && UIManager.Instance.startWaveButton != null)
-        {
-            UIManager.Instance.startWaveButton.interactable = true;
-            Debug.Log("[TutorialGuidance] Enabled startWaveButton for wave start.");
-        }
-    }
-
-    private void HandleWaveCompleted()
-    {
-        if (WaveManager.Instance == null || UIManager.Instance == null)
-        {
-            Debug.LogWarning("[TutorialGuidance] WaveManager or UIManager is null in HandleWaveCompleted.");
-            return;
-        }
-
-        int waveIndex = UIManager.Instance.currentWave;
-        Debug.Log($"[TutorialGuidance] Wave completed. Wave index: {waveIndex}, Scene: {currentSceneType}");
-
-        if (currentSceneType == SceneType.Tutorial)
-        {
-            if (!hasShownPostFirstWaveDialogue && waveIndex == 0)
-            {
-                hasShownPostFirstWaveDialogue = true;
-                DisableMovements();
-                if (UIManager.Instance != null && UIManager.Instance.anim != null)
-                {
-                    UIManager.Instance.anim.Play("hideUI");
-                    Debug.Log("[TutorialGuidance] Played hideUI animation for post first wave.");
-                }
-                else
-                {
-                    dialogueUI.SetActive(false);
-                    Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly for post first wave.");
-                }
-                SetDialogueSection("Post First Wave", null);
-            }
-            else if (!hasShownPostSecondWaveDialogue && waveIndex == 1)
-            {
-                hasShownPostSecondWaveDialogue = true;
-                DisableMovements();
-                if (UIManager.Instance != null && UIManager.Instance.anim != null)
-                {
-                    UIManager.Instance.anim.Play("hideUI");
-                    Debug.Log("[TutorialGuidance] Played hideUI animation for post second wave.");
-                }
-                else
-                {
-                    dialogueUI.SetActive(false);
-                    Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly for post second wave.");
-                }
-                SetDialogueSection("Post Second Wave", null);
-            }
-            else if (!hasShownPostThirdWaveDialogue && waveIndex == 2)
-            {
-                hasShownPostThirdWaveDialogue = true;
-                DisableMovements();
-                if (UIManager.Instance != null && UIManager.Instance.anim != null)
-                {
-                    UIManager.Instance.anim.Play("hideUI");
-                    Debug.Log("[TutorialGuidance] Played hideUI animation for post third wave.");
-                }
-                else
-                {
-                    dialogueUI.SetActive(false);
-                    Debug.LogWarning("[TutorialGuidance] UIManager or anim is null. Hid dialogueUI directly for post third wave.");
-                }
-                SetDialogueSection("Post Third Wave", null);
-            }
         }
     }
 
@@ -649,7 +618,6 @@ public class TutorialGuidance : MonoBehaviour
         {
             _freeFlyCamera._enableRotation = true;
             _freeFlyCamera._enableMovement = true;
-            Debug.Log("[TutorialGuidance] Enabled camera movements.");
         }
     }
 
@@ -659,16 +627,13 @@ public class TutorialGuidance : MonoBehaviour
         {
             _freeFlyCamera._enableRotation = false;
             _freeFlyCamera._enableMovement = false;
-            Debug.Log("[TutorialGuidance] Disabled camera movements.");
         }
     }
 
     public void Cleanup()
     {
         if (nextButton != null)
-        {
             nextButton.onClick.RemoveListener(OnNextButtonClicked);
-        }
 
         if (typingCoroutine != null)
         {

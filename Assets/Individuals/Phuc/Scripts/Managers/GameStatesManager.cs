@@ -13,9 +13,10 @@ public class GameStatesManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
-        { 
+        {
             Destroy(gameObject);
         }
     }
@@ -26,7 +27,7 @@ public class GameStatesManager : MonoBehaviour
         return currentState;
     }
 
-    // Use this to change the state of the game in other scripts as well
+    // Use this to change the state of the game in other scripts
     public void ChangeState(GameStates newState)
     {
         currentState = newState;
@@ -35,26 +36,45 @@ public class GameStatesManager : MonoBehaviour
         switch (currentState)
         {
             case GameStates.WaveSetup:
-                BuildingManager.Instance.enabled = true;
-                FreeFlyCamera.instance.enabled = true;
+                if (BuildingManager.Instance != null)
+                    BuildingManager.Instance.enabled = true;
+                if (FreeFlyCamera.instance != null)
+                    FreeFlyCamera.instance.enabled = true;
                 break;
-            
+
             case GameStates.WaveActive:
-                BuildingManager.Instance.enabled = false;
-                FreeFlyCamera.instance.enabled = true;
-                break; 
-            
+                if (BuildingManager.Instance != null)
+                    BuildingManager.Instance.enabled = false;
+                if (FreeFlyCamera.instance != null)
+                    FreeFlyCamera.instance.enabled = true;
+                break;
+
+            case GameStates.WaveCountdown:
+                if (BuildingManager.Instance != null)
+                    BuildingManager.Instance.enabled = true;
+                if (FreeFlyCamera.instance != null)
+                    FreeFlyCamera.instance.enabled = true;
+                break;
+
             case GameStates.WaveCompleted:
-                // TODO: Add logic
-                break; 
-            
+                if (BuildingManager.Instance != null)
+                    BuildingManager.Instance.enabled = true;
+                if (FreeFlyCamera.instance != null)
+                    FreeFlyCamera.instance.enabled = true;
+                break;
+
             case GameStates.Pause:
-                BuildingManager.Instance.enabled = false;
-                FreeFlyCamera.instance.enabled = false;
-                break; 
-            
+                if (BuildingManager.Instance != null)
+                    BuildingManager.Instance.enabled = false;
+                if (FreeFlyCamera.instance != null)
+                    FreeFlyCamera.instance.enabled = false;
+                break;
+
             case GameStates.GameOver:
-                // TODO: Add logic
+                if (BuildingManager.Instance != null)
+                    BuildingManager.Instance.enabled = false;
+                if (FreeFlyCamera.instance != null)
+                    FreeFlyCamera.instance.enabled = false;
                 break;
         }
     }
