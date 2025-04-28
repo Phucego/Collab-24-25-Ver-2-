@@ -99,7 +99,7 @@ public class TutorialGuidance : MonoBehaviour
         };
 
         currentSceneType = DetermineSceneType();
-        Debug.Log($"TutorialGuidance Awake: Current SceneType = {currentSceneType}, Scene Name = {SceneManager.GetActiveScene().name}");
+        
 
         if (!Application.isEditor && !IsSceneUnlocked(currentSceneType))
         {
@@ -153,7 +153,7 @@ public class TutorialGuidance : MonoBehaviour
     {
         Scene currentScene = SceneManager.GetActiveScene();
         string currentSceneName = currentScene.name;
-        Debug.Log($"DetermineSceneType: Current Scene = {currentSceneName}, Tutorial = {tutorialScene?.SceneName}, Level1 = {level1Scene?.SceneName}, Level2 = {level2Scene?.SceneName}, Level3 = {level3Scene?.SceneName}");
+      
 
         if (tutorialScene != null && !string.IsNullOrEmpty(tutorialScene.SceneName) && currentSceneName == tutorialScene.SceneName)
             return SceneType.Tutorial;
@@ -164,7 +164,6 @@ public class TutorialGuidance : MonoBehaviour
         if (level3Scene != null && !string.IsNullOrEmpty(level3Scene.SceneName) && currentSceneName == level3Scene.SceneName)
             return SceneType.Level3;
 
-        Debug.LogWarning($"No matching SceneType found for scene {currentSceneName}, defaulting to Tutorial");
         return SceneType.Tutorial;
     }
 
@@ -173,7 +172,7 @@ public class TutorialGuidance : MonoBehaviour
         int highestCompletedIndex = PlayerPrefs.GetInt(PROGRESS_KEY, -1);
         int currentSceneIndex = Array.IndexOf(SceneOrder, sceneType);
         bool isUnlocked = currentSceneIndex <= highestCompletedIndex + 1;
-        Debug.Log($"IsSceneUnlocked: SceneType = {sceneType}, HighestCompletedIndex = {highestCompletedIndex}, CurrentSceneIndex = {currentSceneIndex}, IsUnlocked = {isUnlocked}");
+       
         return isUnlocked;
     }
 
@@ -188,7 +187,7 @@ public class TutorialGuidance : MonoBehaviour
         string sceneName = GetSceneName(nextSceneType);
         if (!string.IsNullOrEmpty(sceneName))
         {
-            Debug.Log($"Loading highest unlocked scene: {sceneName}");
+            
             SceneManager.LoadScene(sceneName);
         }
     }
@@ -217,7 +216,7 @@ public class TutorialGuidance : MonoBehaviour
 
         if (currentIndex > highestCompletedIndex)
         {
-            Debug.Log($"Completing scene {sceneType}, updating highest completed index to {currentIndex}");
+           
             PlayerPrefs.SetInt(PROGRESS_KEY, currentIndex);
             PlayerPrefs.Save();
         }
@@ -312,7 +311,7 @@ public class TutorialGuidance : MonoBehaviour
        
         if (dialogue == null || dialogue.dialogueLines.Count == 0)
         {
-            Debug.LogWarning($"No dialogue found for section {sectionName} or dialogue is empty");
+            
             if (dialogueUI != null)
                 dialogueUI.SetActive(false);
             onComplete?.Invoke();
@@ -503,7 +502,7 @@ public class TutorialGuidance : MonoBehaviour
         if (UIManager.Instance != null && UIManager.Instance.startWaveButton != null)
         {
             UIManager.Instance.startWaveButton.interactable = true;
-            Debug.Log($"EnableStartWave: startWaveButton.interactable = true in scene {SceneManager.GetActiveScene().name}");
+           
         }
     }
 
@@ -513,7 +512,7 @@ public class TutorialGuidance : MonoBehaviour
         if (UIManager.Instance != null && UIManager.Instance.startWaveButton != null)
         {
             UIManager.Instance.startWaveButton.interactable = false;
-            Debug.Log($"DisableStartWave: startWaveButton.interactable = false in scene {SceneManager.GetActiveScene().name}");
+            
         }
     }
 
@@ -521,12 +520,12 @@ public class TutorialGuidance : MonoBehaviour
     {
         if (WaveManager.Instance == null || UIManager.Instance == null)
         {
-            Debug.LogWarning("WaveManager or UIManager is null, cannot handle wave completion");
+            
             return;
         }
 
         int waveIndex = UIManager.Instance.currentWave;
-        Debug.Log($"HandleWaveCompleted: Wave {waveIndex} completed in scene {SceneManager.GetActiveScene().name}, SceneType = {currentSceneType}");
+        
 
         if (currentSceneType == SceneType.Tutorial)
         {
@@ -541,8 +540,8 @@ public class TutorialGuidance : MonoBehaviour
                 {
                     EnableMovements();
                     DisableStartWave();
-                    UIManager.Instance.currentWave++;
-                    UIManager.Instance.StartCountdown();
+                    UIManager.Instance.anim.SetTrigger("hideUI");
+                    UIManager.Instance.StartNextWaveCountdown();
                 });
             }
             else if (!hasShownPostSecondWaveDialogue && waveIndex == 1)
@@ -553,8 +552,8 @@ public class TutorialGuidance : MonoBehaviour
                 {
                     EnableMovements();
                     DisableStartWave();
-                    UIManager.Instance.currentWave++;
-                    UIManager.Instance.StartCountdown();
+                    UIManager.Instance.anim.SetTrigger("hideUI");
+                    UIManager.Instance.StartNextWaveCountdown();
                 });
             }
             else if (!hasShownPostThirdWaveDialogue && waveIndex == 2)
@@ -565,8 +564,8 @@ public class TutorialGuidance : MonoBehaviour
                 {
                     EnableMovements();
                     DisableStartWave();
-                    UIManager.Instance.currentWave++;
-                    UIManager.Instance.StartCountdown();
+                    UIManager.Instance.anim.SetTrigger("hideUI");
+                    UIManager.Instance.StartNextWaveCountdown();
                 });
             }
         }

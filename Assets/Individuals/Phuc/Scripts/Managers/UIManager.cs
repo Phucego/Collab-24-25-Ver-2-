@@ -136,7 +136,7 @@ public class UIManager : MonoBehaviour
         else if (currentSceneName == level1Scene?.SceneName)
         {
             if (CurrencyManager.Instance != null)
-                CurrencyManager.Instance.InitializeCurrency(50);
+                CurrencyManager.Instance.InitializeCurrency(240);
             UpdateCoinCounterUI();
         }
 
@@ -644,7 +644,7 @@ public class UIManager : MonoBehaviour
             StartVictorySequence();
             return;
         }
-
+        
         Debug.Log($"Starting countdown for wave {currentWave + 1} in scene {currentSceneName}");
        // currentWave++; // Increment currentWave to align with wave completion
         UpdateWaveProgress();

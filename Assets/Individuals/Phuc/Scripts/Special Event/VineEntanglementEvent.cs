@@ -210,10 +210,7 @@ public class VineEntangleEvent : MonoBehaviour
         {
             notificationText.text = debuffType == 1 ? "Tower Entangled: Attack Speed Debuffed!" : "Tower Entangled: Damage Debuffed!";
         }
-        else
-        {
-            Debug.LogWarning("No TextMeshProUGUI found in vineEntangleNotificationPanel or debuff type not found for tower.");
-        }
+       
 
         notificationUI.transform.localScale = Vector3.zero;
         notificationUI.SetActive(true);

@@ -99,14 +99,14 @@ public class AudioManager : Singleton<AudioManager>
     
     public void SetAudioPaused(bool isMuted)
     {
-        Debug.Log($"Setting audio paused: {isMuted}");
+        
         for (int i = 0; i < bgAmbienceSources.Count; i++)
         {
             bgAmbienceSources[i].volume = isMuted ? 0f : bgAmbienceOriginalVolumes[i];
-            Debug.Log($"Ambience {i} volume: {bgAmbienceSources[i].volume}");
+            
         }
         sfxSource.volume = isMuted ? 0f : sfxOriginalVolume;
-        Debug.Log($"SFX volume: {sfxSource.volume}");
+     
 
         // Notify subscribers of mute state change
         OnMuteStateChanged?.Invoke(isMuted);

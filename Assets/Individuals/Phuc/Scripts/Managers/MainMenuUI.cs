@@ -119,68 +119,119 @@ public class MainMenuUI : MonoBehaviour
             cg.alpha = 0f;
         }
 
-        // Initialize splash screen
+        // [FIX] Initialize splash screen and ensure videos are set up
         InitializeSplashScreens();
     }
 
     private void InitializeSplashScreens()
     {
+        // [FIX] Ensure splash screen container is active
         if (splashScreenContainer != null)
         {
             splashScreenContainer.SetActive(true);
         }
+        else
+        {
+          
+            StartCoroutine(ShowMainMenu());
+            return;
+        }
 
-        // Configure school splash video
+        // [FIX] Configure school splash video
         if (schoolSplashVideoPlayer != null)
         {
             schoolSplashVideoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
             schoolSplashVideoPlayer.targetCamera = Camera.main;
-          //  schoolSplashVideoPlayer.loop = false;
+            schoolSplashVideoPlayer.isLooping = false; // [FIX] Use isLooping instead of loop
             schoolSplashVideoPlayer.playOnAwake = false;
             schoolSplashVideoPlayer.gameObject.SetActive(true);
+            if (schoolSplashVideoPlayer.clip == null)
+            {
+                
+            }
+        }
+        else
+        {
+            
         }
 
-        // Configure team splash video
+        // [FIX] Configure team splash video
         if (teamSplashVideoPlayer != null)
         {
             teamSplashVideoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
             teamSplashVideoPlayer.targetCamera = Camera.main;
-          //  teamSplashVideoPlayer.loop = false;
+            teamSplashVideoPlayer.isLooping = false; // [FIX] Use isLooping instead of loop
             teamSplashVideoPlayer.playOnAwake = false;
             teamSplashVideoPlayer.gameObject.SetActive(false); // Hide team splash initially
+            if (teamSplashVideoPlayer.clip == null)
+            {
+                
+            }
+        }
+        else
+        {
+           
         }
 
-        // Start splash screen sequence
+        // [FIX] Start splash screen sequence
         StartCoroutine(PlaySplashScreens());
     }
 
     private IEnumerator PlaySplashScreens()
     {
-        // Play school splash screen
-        if (schoolSplashVideoPlayer != null)
+        // [FIX] Ensure main menu stays hidden
+        mainMenuCanvas.SetActive(false);
+        mainMenuGroup.alpha = 0f;
+        mainMenuGroup.interactable = false;
+        mainMenuGroup.blocksRaycasts = false;
+
+        // [FIX] Play school splash screen
+        if (schoolSplashVideoPlayer != null && schoolSplashVideoPlayer.clip != null)
         {
+           
+            schoolSplashVideoPlayer.Prepare();
+            yield return new WaitUntil(() => schoolSplashVideoPlayer.isPrepared);
+
+            
             schoolSplashVideoPlayer.Play();
-            yield return new WaitUntil(() => !schoolSplashVideoPlayer.isPlaying);
-        }
-
-        // Hide school splash and show team splash
-        if (schoolSplashVideoPlayer != null)
+            yield return new WaitUntil(() => !schoolSplashVideoPlayer.isPlaying || schoolSplashVideoPlayer.time >= schoolSplashVideoPlayer.clip.length);
+            schoolSplashVideoPlayer.Stop();
             schoolSplashVideoPlayer.gameObject.SetActive(false);
-        if (teamSplashVideoPlayer != null)
-            teamSplashVideoPlayer.gameObject.SetActive(true);
-
-        // Play team splash screen
-        if (teamSplashVideoPlayer != null)
-        {
-            teamSplashVideoPlayer.Play();
-            yield return new WaitUntil(() => !teamSplashVideoPlayer.isPlaying);
         }
 
-        // Hide splash container and show main menu
-        if (splashScreenContainer != null)
-            splashScreenContainer.SetActive(false);
 
-        // Show main menu
+        // [FIX] Play team splash screen
+        if (teamSplashVideoPlayer != null && teamSplashVideoPlayer.clip != null)
+        {
+            
+            teamSplashVideoPlayer.gameObject.SetActive(true);
+            teamSplashVideoPlayer.Prepare();
+            yield return new WaitUntil(() => teamSplashVideoPlayer.isPrepared);
+
+          
+            teamSplashVideoPlayer.Play();
+            yield return new WaitUntil(() => !teamSplashVideoPlayer.isPlaying || teamSplashVideoPlayer.time >= teamSplashVideoPlayer.clip.length);
+            teamSplashVideoPlayer.Stop();
+            teamSplashVideoPlayer.gameObject.SetActive(false);
+        }
+        else
+        {
+            
+        }
+
+        // [FIX] Hide splash container and show main menu
+        if (splashScreenContainer != null)
+        {
+            splashScreenContainer.SetActive(false);
+        }
+
+        // [FIX] Show main menu with fade-in
+        yield return StartCoroutine(ShowMainMenu());
+    }
+
+    private IEnumerator ShowMainMenu()
+    {
+        
         mainMenuCanvas.SetActive(true);
         mainMenuGroup.alpha = 0f;
         mainMenuGroup.DOFade(1f, 0.4f).SetEase(Ease.OutSine).OnComplete(() =>
@@ -188,7 +239,9 @@ public class MainMenuUI : MonoBehaviour
             mainMenuGroup.interactable = true;
             mainMenuGroup.blocksRaycasts = true;
             startButton.interactable = true;
+           
         });
+        yield return null;
     }
 
     private void Start()

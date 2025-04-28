@@ -145,7 +145,7 @@ public class BuildingManager : MonoBehaviour
         TowerController towerController = pendingObj.GetComponent<TowerController>();
         if (towerController == null)
         {
-            Debug.LogWarning("TowerController is missing on the pending object.");
+          
             return;
         }
 
@@ -154,7 +154,7 @@ public class BuildingManager : MonoBehaviour
         if (!CurrencyManager.Instance.HasEnoughCurrency(towerCost))
         {
             AudioManager.Instance.PlaySoundEffect("Insufficient_SFX");
-            Debug.Log("Not enough currency to place this tower.");
+          
             return;
         }
 
